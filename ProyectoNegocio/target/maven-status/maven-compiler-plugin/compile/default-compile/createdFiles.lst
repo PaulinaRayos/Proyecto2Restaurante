@@ -1,0 +1,5 @@
+dto\ClienteDTO.class
+dto\MesaDTO.class
+dto\ReservaDTO.class
+dto\TipoMesaDTO.class
+dto\HistorialReservasDTO.class
