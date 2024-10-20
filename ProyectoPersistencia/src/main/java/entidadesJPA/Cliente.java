@@ -32,8 +32,14 @@ public class Cliente implements Serializable {
     
     @Column(name = "nombres")
     private String nombre;
+    
+    @Column (name = "apellidoPaterno")
     private String apellidoPaterno;
+    
+    @Column (name = "apellidoMaterno")
     private String apellidoMaterno;
+    
+    @Column (name = "telefono")
     private String telefono;
 
     //Constructor vacío

@@ -4,7 +4,6 @@
  */
 package entidadesJPA;
 
-import java.sql.Timestamp;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -21,52 +20,55 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 /**
- * Clase que representa la entidad HistorialReservas en la base de datos.
- * Mapea la tabla 'historial_reservas' y define los atributos correspondientes,
- * así como las relaciones con otras entidades.
- * 
+ * Clase que representa la entidad HistorialReservas en la base de datos. Mapea
+ * la tabla 'historial_reservas' y define los atributos correspondientes, así
+ * como las relaciones con otras entidades.
+ *
  * @author Cristopher Alberto Elizalde Andrade - 240005
  * @author Paulina Rodríguez Rodríguez Rayos - 117262
  */
 @Entity
 @Table(name = "historial_reservas")
 public class HistorialReservas implements Serializable {
-    
-
 
     private static final long serialVersionUID = 1L;
     @Id
     @Column(name = "id_historial")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
+    @Column(name = "costo")
     private BigDecimal costo;
+
+    @Column(name = "ubicacion")
     private String ubicacion;
-   
+
     @Column(name = "fecha_hora_reserva")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaHoraReserva;
-    
-     private BigDecimal multa;
-    
-    
+
+    @Column(name = "multa")
+    private BigDecimal multa;
+
     //Relación ManyToOne con Reserva
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_reserva", nullable = false)
     private Reserva reserva;
-    
+
     // Relación ManyToOne con TipoMesa
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_tipo_mesa", nullable = false)
     private TipoMesa tipoMesa;
-    
+
     //Constructor vacío
     public HistorialReservas() {
     }
+
     //Constructor con Id
     public HistorialReservas(Long id) {
         this.id = id;
     }
+
     //Contructor sin Id
     public HistorialReservas(BigDecimal costo, String ubicacion, Date fechaHoraReserva, BigDecimal multa, Reserva reserva, TipoMesa tipoMesa) {
         this.costo = costo;
@@ -76,9 +78,8 @@ public class HistorialReservas implements Serializable {
         this.reserva = reserva;
         this.tipoMesa = tipoMesa;
     }
-    
-    //Constructor completo
 
+    //Constructor completo
     public HistorialReservas(Long id, BigDecimal costo, String ubicacion, Date fechaHoraReserva, BigDecimal multa, Reserva reserva, TipoMesa tipoMesa) {
         this.id = id;
         this.costo = costo;
@@ -90,7 +91,6 @@ public class HistorialReservas implements Serializable {
     }
 
     //Getters & Setters
-
     public Long getId() {
         return id;
     }
@@ -147,8 +147,6 @@ public class HistorialReservas implements Serializable {
         this.tipoMesa = tipoMesa;
     }
 
-    
-    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -174,8 +172,4 @@ public class HistorialReservas implements Serializable {
         return "HistorialReservas{" + "id=" + id + ", costo=" + costo + ", ubicacion=" + ubicacion + ", fechaHoraReserva=" + fechaHoraReserva + ", multa=" + multa + ", reserva=" + reserva + ", tipoMesa=" + tipoMesa + '}';
     }
 
-
-
-    
-    
 }

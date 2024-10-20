@@ -7,8 +7,6 @@ package entidadesJPA;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,16 +15,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 /**
- * Clase que representa la entidad Reserva en la base de datos.
- * Mapea la tabla 'reservas' y define los atributos correspondientes,
- * así como las relaciones con otras entidades.
- * 
+ * Clase que representa la entidad Reserva en la base de datos. Mapea la tabla
+ * 'reservas' y define los atributos correspondientes, así como las relaciones
+ * con otras entidades.
+ *
  * @author Cristopher Alberto Elizalde Andrade - 240005
  * @author Paulina Rodríguez Rodríguez Rayos - 117262
  */
@@ -47,13 +44,17 @@ public class Reserva implements Serializable {
     @Column(name = "numero_personas")
     private int numPersonas;
 
+    @Column(name = "costo")
     private BigDecimal costo;
+
+    @Column(name = "estado")
     private String estado;
 
     @Column(name = "fecha_cancelacion")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCancelacion;
 
+    @Column(name = "multa")
     private BigDecimal multa;
 
     // Relación ManyToOne con Cliente
@@ -172,8 +173,6 @@ public class Reserva implements Serializable {
     public void setMesa(Mesa mesa) {
         this.mesa = mesa;
     }
-    
-    
 
     @Override
     public int hashCode() {
@@ -199,7 +198,5 @@ public class Reserva implements Serializable {
     public String toString() {
         return "Reserva{" + "id=" + id + ", fechaHora=" + fechaHora + ", numPersonas=" + numPersonas + ", costo=" + costo + ", estado=" + estado + ", fechaCancelacion=" + fechaCancelacion + ", multa=" + multa + ", cliente=" + cliente + ", mesa=" + mesa + '}';
     }
-
-
 
 }

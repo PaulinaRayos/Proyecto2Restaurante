@@ -5,6 +5,7 @@
 package interfaces;
 
 import entidadesJPA.TipoMesa;
+import excepciones.PersistenciaException;
 import java.util.List;
 
 /**
@@ -18,21 +19,21 @@ import java.util.List;
 public interface ITipoMesaDAO {
 
     // Método para actualizar un tipo de mesa
-    void actualizarTipoMesa(TipoMesa tipoMesa);
+    void actualizarTipoMesa(TipoMesa tipoMesa) throws PersistenciaException;
 
     // Método para agregar un tipo de mesa
-    void agregarTipoMesa(TipoMesa tipoMesa);
+    void agregarTipoMesa(TipoMesa tipoMesa) throws PersistenciaException;
 
     // Método para cerrar el EntityManager y EntityManagerFactory
-    void cerrar();
+    void cerrar() throws PersistenciaException;
 
     // Método para eliminar un tipo de mesa por ID
-    void eliminarTipoMesa(int id);
+    void eliminarTipoMesa(int id) throws PersistenciaException;
 
     // Método para obtener un tipo de mesa por ID
-    TipoMesa obtenerTipoMesaPorId(int id);
+    TipoMesa obtenerTipoMesaPorId(int id) throws PersistenciaException;
 
     // Método para obtener todos los tipos de mesa
-    List<TipoMesa> obtenerTodosLosTiposMesa();
+    List<TipoMesa> obtenerTodosLosTiposMesa() throws PersistenciaException;
 
 }

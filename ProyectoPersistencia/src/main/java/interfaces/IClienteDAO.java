@@ -5,6 +5,7 @@
 package interfaces;
 
 import entidadesJPA.Cliente;
+import excepciones.PersistenciaException;
 import java.util.List;
 
 /**
@@ -17,22 +18,19 @@ import java.util.List;
  */
 public interface IClienteDAO {
 
-    // Método para actualizar un cliente
-    void actualizarCliente(Cliente cliente);
-
     // Método para agregar un cliente
-    void agregarCliente(Cliente cliente);
+    void agregarCliente(Cliente cliente) throws PersistenciaException;
+    
+    //Metodo para insertar 20 clientes a la base de datos
+    public void insercionMasiva();
 
     // Método para cerrar el EntityManager y EntityManagerFactory
     void cerrar();
 
-    // Método para eliminar un cliente
-    void eliminarCliente(int id);
-
     // Método para obtener un cliente por ID
-    Cliente obtenerClientePorId(int id);
+    Cliente obtenerClientePorId(int id) throws PersistenciaException;
 
     // Método para obtener todos los clientes
-    List<Cliente> obtenerTodosLosClientes();
+    List<Cliente> obtenerTodosLosClientes() throws PersistenciaException;
 
 }

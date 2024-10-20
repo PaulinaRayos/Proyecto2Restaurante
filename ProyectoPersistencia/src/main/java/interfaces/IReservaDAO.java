@@ -5,6 +5,7 @@
 package interfaces;
 
 import entidadesJPA.Reserva;
+import excepciones.PersistenciaException;
 import java.util.List;
 
 /**
@@ -18,24 +19,24 @@ import java.util.List;
 public interface IReservaDAO {
 
     // Método para actualizar una reserva
-    void actualizarReserva(Reserva reserva);
+    void actualizarReserva(Reserva reserva) throws PersistenciaException;
 
     // Método para agregar una reserva
-    void agregarReserva(Reserva reserva);
+    void agregarReserva(Reserva reserva) throws PersistenciaException;
 
     // Método para cerrar el EntityManager y EntityManagerFactory
-    void cerrar();
+    void cerrar() throws PersistenciaException;
 
     // Método para eliminar una reserva por ID
-    void eliminarReserva(int id);
+    void eliminarReserva(int id) throws PersistenciaException;
 
     // Método para obtener una reserva por ID
-    Reserva obtenerReservaPorId(int id);
+    Reserva obtenerReservaPorId(int id) throws PersistenciaException;
 
     // Método para obtener reservas por estado
-    List<Reserva> obtenerReservasPorEstado(String estado);
+    List<Reserva> obtenerReservasPorEstado(String estado) throws PersistenciaException;
 
     // Método para obtener todas las reservas
-    List<Reserva> obtenerTodasLasReservas();
+    List<Reserva> obtenerTodasLasReservas() throws PersistenciaException;
 
 }
