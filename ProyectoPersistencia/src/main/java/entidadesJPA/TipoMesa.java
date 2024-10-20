@@ -38,6 +38,7 @@ public class TipoMesa implements Serializable {
     @Column(name = "nombre_tipo")
     private String nombreTipo;
 
+    @Column (name = "capacidad")
     private int capacidad;
 
     @Column(name = "precio_reserva")

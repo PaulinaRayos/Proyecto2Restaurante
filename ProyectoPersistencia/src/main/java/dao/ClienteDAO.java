@@ -5,12 +5,15 @@
 package dao;
 
 import entidadesJPA.Cliente;
+import excepciones.PersistenciaException;
 import interfaces.IClienteDAO;
+import java.util.Arrays;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import recursos.Encriptacion;
 
 /**
  * Interfaz que define los métodos para el acceso a datos de la entidad Cliente.
@@ -32,7 +35,7 @@ public class ClienteDAO implements IClienteDAO {
     }
 
     // Método para agregar un cliente
-    public void agregarCliente(Cliente cliente) {
+    public void agregarCliente(Cliente cliente) throws PersistenciaException {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
@@ -40,52 +43,64 @@ public class ClienteDAO implements IClienteDAO {
             transaction.commit();
         } catch (Exception e) {
             if (transaction.isActive()) {
-                transaction.rollback(); // Revierte la transacción si ocurre un error
+                transaction.rollback(); // Revertir la transacción si ocurre un error
             }
-            e.printStackTrace();
+            throw new PersistenciaException("No se pudo agregar el cliente a la base de datos: " + e);
         }
+    }
+
+    @Override
+    public void insercionMasiva() {
+        List<String> nombres = Arrays.asList("Chris", "Ana", "Luis", "Maria", "Pedro", "Lucia", "Jorge", "Sofia",
+                "Diego", "Valeria", "Carlos", "Fernanda", "David", "Camila", "Oscar",
+                "Daniela", "Fernando", "Paula", "Miguel", "Andrea");
+
+        List<String> apellidosPaternos = Arrays.asList("Elizalde", "Gonzalez", "Martinez", "Hernandez", "Lopez",
+                "Perez", "Garcia", "Ramirez", "Sanchez", "Castro",
+                "Moreno", "Ortiz", "Vargas", "Mendoza", "Diaz",
+                "Silva", "Gutierrez", "Vega", "Cruz", "Ortega");
+
+        List<String> apellidosMaternos = Arrays.asList("Andrade", "Reyes", "Torres", "Flores", "Ramos",
+                "Jimenez", "Aguilar", "Soto", "Alvarez", "Ruiz",
+                "Castillo", "Romero", "Salazar", "Mora", "Herrera",
+                "Pineda", "Navarro", "Montoya", "Valdez", "Serrano");
+
+        List<String> prefix = Arrays.asList("6441", "6442", "6444");
+
+        EntityTransaction transaction = entityManager.getTransaction();
+
+        transaction.begin();
+
+        for (int i = 0; i < 20; i++) {
+            String nombre = nombres.get(i);
+            String apellidoPaterno = apellidosPaternos.get(i);
+            String apellidoMaterno = apellidosMaternos.get(i);
+            String telefono = prefix.get(i % prefix.size()) + "392630" + (i % 10);
+
+            Cliente cliente = new Cliente(nombre, apellidoPaterno, apellidoMaterno, Encriptacion.encriptar(telefono));
+
+            entityManager.persist(cliente);
+
+        }
+        transaction.commit();
+        entityManager.close();
     }
 
     // Método para obtener un cliente por ID
-    public Cliente obtenerClientePorId(int id) {
-        return entityManager.find(Cliente.class, id); // Encontrar cliente por ID
-    }
-
-    // Método para obtener todos los clientes
-    public List<Cliente> obtenerTodosLosClientes() {
-        return entityManager.createQuery("SELECT c FROM Cliente c", Cliente.class).getResultList(); // Consulta para obtener todos los clientes
-    }
-
-    // Método para actualizar un cliente
-    public void actualizarCliente(Cliente cliente) {
-        EntityTransaction transaction = entityManager.getTransaction();
+    public Cliente obtenerClientePorId(int id) throws PersistenciaException {
         try {
-            transaction.begin();
-            entityManager.merge(cliente); // Actualizar el cliente existente
-            transaction.commit();
+            return entityManager.find(Cliente.class, id); // Encontrar cliente por ID
         } catch (Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback(); // Revertir la transacción si ocurre un error
-            }
-            e.printStackTrace();
+            throw new PersistenciaException("No se pudo encontrar el cliente en la base de datos por id: " + id);
         }
     }
 
-    // Método para eliminar un cliente
-    public void eliminarCliente(int id) {
-        EntityTransaction transaction = entityManager.getTransaction();
+    // Método para obtener todos los clientes
+    public List<Cliente> obtenerTodosLosClientes() throws PersistenciaException {
         try {
-            transaction.begin();
-            Cliente cliente = entityManager.find(Cliente.class, id); // Encontrar cliente por ID
-            if (cliente != null) {
-                entityManager.remove(cliente); // Eliminar cliente
-            }
-            transaction.commit();
+            return entityManager.createQuery("SELECT c FROM Cliente c", Cliente.class).getResultList(); // Consulta para obtener todos los clientes
         } catch (Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback(); // Revertir la transacción si ocurre un error
-            }
-            e.printStackTrace();
+            throw new PersistenciaException("No se pudo encontrar el cliente en la base de datos por id: ");
         }
     }
 

@@ -36,8 +36,13 @@ public class Mesa implements Serializable {
     @Column(name = "codigo_mesa")
     private String codigoMesa;
     
+    @Column (name = "ubicacion")
     private String ubicacion;
+    
+    @Column (name = "capacidad")
     private int capacidad;
+    
+    @Column (name = "ocupado")
     private boolean ocupado;
     
     // Relación ManyToOne con TipoMesa
