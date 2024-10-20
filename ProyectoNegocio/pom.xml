@@ -11,4 +11,14 @@
         <maven.compiler.target>21</maven.compiler.target>
         <exec.mainClass>com.mycompany.proyectonegocio.ProyectoNegocio</exec.mainClass>
     </properties>
+    
+    <dependencies>
+        <!-- Dependencia del proyecto de persistencia -->
+        <dependency>
+            <groupId>com.myCompany</groupId>
+            <artifactId>ProyectoPersistencia</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+    
 </project>

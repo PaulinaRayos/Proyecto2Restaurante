@@ -14,7 +14,7 @@ package dto;
 public class ClienteDTO {
 
     private int idCliente;
-    private String nombres;
+    private String nombre;
     private String apellidoPaterno;
     private String apellidoMaterno;
     private String telefono;
@@ -25,7 +25,7 @@ public class ClienteDTO {
 
     public ClienteDTO(int idCliente, String nombre, String apellidoPaterno, String apellidoMaterno, String telefono) {
         this.idCliente = idCliente;
-        this.nombres = nombres;
+        this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
         this.telefono = telefono;
@@ -40,12 +40,12 @@ public class ClienteDTO {
         this.idCliente = idCliente;
     }
 
-    public String getNombres() {
-        return nombres;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setNombres(String nombre) {
-        this.nombres = nombre;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public String getApellidoPaterno() {
