@@ -4,13 +4,12 @@
  */
 package dao;
 
+import conexion.IConexion;
 import entidadesJPA.Mesa;
+import excepciones.PersistenciaException;
 import interfaces.IMesaDAO;
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
 
 /**
  * Interfaz que define los métodos para el acceso a datos de la entidad Mesa.
@@ -22,80 +21,88 @@ import javax.persistence.Persistence;
  */
 public class MesaDAO implements IMesaDAO {
 
-    private EntityManagerFactory entityManagerFactory;
-    private EntityManager entityManager;
+    private final IConexion conexion;
 
     // Constructor
-    public MesaDAO() {
-        entityManagerFactory = Persistence.createEntityManagerFactory("pu_restaurante");
-        entityManager = entityManagerFactory.createEntityManager();
+    public MesaDAO(IConexion conexion) {
+        this.conexion = conexion;
     }
 
     // Método para agregar una mesa
-    public void agregarMesa(Mesa mesa) {
-        EntityTransaction transaction = entityManager.getTransaction();
+    public void agregarMesa(Mesa mesa) throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
         try {
-            transaction.begin();
-            entityManager.persist(mesa); // Persiste la entidad Mesa
-            transaction.commit();
+            em.getTransaction().begin();
+            em.persist(mesa); // Persiste la entidad Mesa
+            em.getTransaction().commit();
         } catch (Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback(); // Revierte la transacción si ocurre un error
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback(); // Revierte la transacción si ocurre un error
             }
-            e.printStackTrace();
+            throw new PersistenciaException("No se pudo agregar la mesa.");
         }
     }
 
     // Método para obtener una mesa por ID
-    public Mesa obtenerMesaPorId(Long id) {
-        return entityManager.find(Mesa.class, id); // Buscar la mesa por su ID
+    public Mesa obtenerMesaPorId(Long id) throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
+        try {
+            return em.find(Mesa.class, id); // Buscar la mesa por su ID
+        } catch (Exception e) {
+            throw new PersistenciaException("No se pudo obtener la mesa con id: " + id);
+        }
+
     }
 
     // Método para obtener todas las mesas
-    public List<Mesa> obtenerTodasLasMesas() {
-        return entityManager.createQuery("SELECT m FROM Mesa m", Mesa.class).getResultList(); // Consulta para obtener todas las mesas
+    public List<Mesa> obtenerTodasLasMesas() throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
+        try {
+            return em.createQuery("SELECT m FROM Mesa m", Mesa.class).getResultList(); // Consulta para obtener todas las mesas
+        } catch (Exception e) {
+            throw new PersistenciaException("No se pudieron obtener las mesa.");
+        }
+
     }
 
     // Método para actualizar una mesa
-    public void actualizarMesa(Mesa mesa) {
-        EntityTransaction transaction = entityManager.getTransaction();
+    public void actualizarMesa(Mesa mesa) throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
         try {
-            transaction.begin();
-            entityManager.merge(mesa); // Actualizar la mesa existente
-            transaction.commit();
+            em.getTransaction().begin();
+            em.merge(mesa); // Actualizar la mesa existente
+            em.getTransaction().commit();
         } catch (Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback(); // Revierte la transacción si ocurre un error
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback(); // Revierte la transacción si ocurre un error
             }
-            e.printStackTrace();
+            throw new PersistenciaException("No se pudo actualizar la mesa con id: " + mesa.getId());
         }
     }
 
     // Método para eliminar una mesa por ID
-    public void eliminarMesa(Long id) {
-        EntityTransaction transaction = entityManager.getTransaction();
+    public void eliminarMesa(Long id) throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
         try {
-            transaction.begin();
-            Mesa mesa = entityManager.find(Mesa.class, id); // Buscar la mesa por ID
+            em.getTransaction().begin();
+            Mesa mesa = em.find(Mesa.class, id); // Buscar la mesa por ID
             if (mesa != null) {
-                entityManager.remove(mesa); // Eliminar la mesa
+                em.remove(mesa); // Eliminar la mesa
             }
-            transaction.commit();
+            em.getTransaction().commit();
         } catch (Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback(); // Revierte la transacción si ocurre un error
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback(); // Revierte la transacción si ocurre un error
             }
-            e.printStackTrace();
+            throw new PersistenciaException("No se pudo eliminar la mesa con id: " + id);
         }
     }
 
     // Método para cerrar el EntityManager y EntityManagerFactory
     public void cerrar() {
-        if (entityManager != null && entityManager.isOpen()) {
-            entityManager.close();
-        }
-        if (entityManagerFactory != null && entityManagerFactory.isOpen()) {
-            entityManagerFactory.close();
+        EntityManager em = this.conexion.crearConexion();
+        if (em != null && em.isOpen()) {
+            em.close();
         }
     }
 }

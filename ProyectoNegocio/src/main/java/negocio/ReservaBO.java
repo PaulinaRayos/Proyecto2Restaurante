@@ -5,6 +5,10 @@
  */
 package negocio;
 
+import conexion.Conexion;
+import conexion.IConexion;
+import dao.ClienteDAO;
+import dao.MesaDAO;
 import dao.ReservaDAO;
 import dto.ReservaDTO;
 import entidadesJPA.Cliente;
@@ -22,14 +26,16 @@ import java.util.List;
  */
 public class ReservaBO implements IReservaBO {
 
+    private final IConexion conexion;
     private final IReservaDAO reservaDAO;
     private final IMesaDAO mesaDAO;
     private final IClienteDAO clienteDAO;
 
-    public ReservaBO(IReservaDAO reservaDAO, IMesaDAO mesaDAO, IClienteDAO clienteDAO) {
-        this.reservaDAO = reservaDAO;
-        this.mesaDAO = mesaDAO;
-        this.clienteDAO = clienteDAO;
+    public ReservaBO() {
+        this.conexion = new Conexion();
+        this.reservaDAO = new ReservaDAO(conexion);
+        this.mesaDAO = new MesaDAO(conexion);
+        this.clienteDAO = new ClienteDAO(conexion);
     }
 
     public void agregarReserva(ReservaDTO reservaDTO) throws Exception {

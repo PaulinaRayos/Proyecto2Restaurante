@@ -26,7 +26,7 @@ public class FormMenu extends javax.swing.JFrame {
     public FormMenu() {
         initComponents();
         this.setLocationRelativeTo(this);
-        
+
         this.SetImageLabel(jLabel3, "src/main/java/Imagenes/logo.png");
     }
 
@@ -70,6 +70,7 @@ public class FormMenu extends javax.swing.JFrame {
         bConsultas = new javax.swing.JButton();
         bReportes = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
+        bClientes = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -380,6 +381,18 @@ public class FormMenu extends javax.swing.JFrame {
         jLabel4.setText(" Amadeustaurant");
         jLabel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
+        bClientes.setBackground(new java.awt.Color(255, 51, 153));
+        bClientes.setFont(new java.awt.Font("Times New Roman", 3, 20)); // NOI18N
+        bClientes.setForeground(new java.awt.Color(0, 0, 0));
+        bClientes.setText("Clientes");
+        bClientes.setBorder(null);
+        bClientes.setContentAreaFilled(false);
+        bClientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bClientesActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -391,13 +404,15 @@ public class FormMenu extends javax.swing.JFrame {
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(bReservas)
-                .addGap(54, 54, 54)
+                .addGap(43, 43, 43)
                 .addComponent(bMesas)
-                .addGap(52, 52, 52)
+                .addGap(51, 51, 51)
                 .addComponent(bConsultas)
-                .addGap(52, 52, 52)
+                .addGap(53, 53, 53)
                 .addComponent(bReportes)
-                .addGap(93, 93, 93))
+                .addGap(53, 53, 53)
+                .addComponent(bClientes)
+                .addGap(24, 24, 24))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -409,7 +424,8 @@ public class FormMenu extends javax.swing.JFrame {
                     .addComponent(bMesas)
                     .addComponent(bConsultas)
                     .addComponent(bReportes)
-                    .addComponent(jLabel4))
+                    .addComponent(jLabel4)
+                    .addComponent(bClientes))
                 .addContainerGap(26, Short.MAX_VALUE))
         );
 
@@ -459,6 +475,10 @@ public class FormMenu extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_bConfirmarActionPerformed
 
+    private void bClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bClientesActionPerformed
+        Forms.cargarForm(new FormClientes(), this);
+    }//GEN-LAST:event_bClientesActionPerformed
+
 //    /**
 //     * @param args the command line arguments
 //     */
@@ -495,6 +515,7 @@ public class FormMenu extends javax.swing.JFrame {
 //    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bClientes;
     private javax.swing.JButton bConfirmar;
     private javax.swing.JButton bConsultas;
     private javax.swing.JButton bMesas;
@@ -527,7 +548,7 @@ public class FormMenu extends javax.swing.JFrame {
 
     private void SetImageLabel(JLabel labelname, String root) {
         ImageIcon image = new ImageIcon(root);
-        Icon icon = new ImageIcon(image.getImage().getScaledInstance(labelname.getWidth(),labelname.getHeight(),Image.SCALE_DEFAULT));
+        Icon icon = new ImageIcon(image.getImage().getScaledInstance(labelname.getWidth(), labelname.getHeight(), Image.SCALE_DEFAULT));
         labelname.setIcon(icon);
         this.repaint();
     }

@@ -4,14 +4,12 @@
  */
 package dao;
 
+import conexion.IConexion;
 import entidadesJPA.Reserva;
 import excepciones.PersistenciaException;
 import interfaces.IReservaDAO;
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
 
 /**
  * Interfaz que define los métodos para el acceso a datos de la entidad Reserva.
@@ -23,91 +21,102 @@ import javax.persistence.Persistence;
  */
 public class ReservaDAO implements IReservaDAO {
 
-    private EntityManagerFactory entityManagerFactory;
-    private EntityManager entityManager;
+    private final IConexion conexion;
 
     // Constructor
-    public ReservaDAO() {
-        entityManagerFactory = Persistence.createEntityManagerFactory("pu_restaurante");
-        entityManager = entityManagerFactory.createEntityManager();
+    public ReservaDAO(IConexion conexion) {
+        this.conexion = conexion;
     }
 
     // Método para agregar una reserva
-    public void agregarReserva(Reserva reserva) {
-        EntityTransaction transaction = entityManager.getTransaction();
+    public void agregarReserva(Reserva reserva) throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
         try {
-            transaction.begin();
-            entityManager.persist(reserva); // Persiste la entidad Reserva
-            transaction.commit();
+            em.getTransaction().begin();
+            em.persist(reserva); // Persiste la entidad Reserva
+            em.getTransaction().commit();
         } catch (Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback(); // Revierte la transacción si ocurre un error
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback(); // Revierte la transacción si ocurre un error
             }
-            e.printStackTrace();
+            throw new PersistenciaException("No se pudo agregar la reserva.");
         }
     }
 
     // Método para obtener una reserva por ID
     @Override
-    public Reserva obtenerReservaPorId(Long id) {
-        if (id == null) {
-            throw new IllegalArgumentException("El ID no puede ser nulo.");
+    public Reserva obtenerReservaPorId(Long id) throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
+        try {
+            return em.find(Reserva.class, id); // Buscar la reserva por su ID
+        } catch (Exception e) {
+            throw new PersistenciaException("No se pudo obtener la reserva con id: " + id);
         }
-        return entityManager.find(Reserva.class, id); // Buscar la reserva por su ID
+
     }
 
     // Método para obtener todas las reservas
-    public List<Reserva> obtenerTodasLasReservas() {
-        return entityManager.createQuery("SELECT r FROM Reserva r", Reserva.class).getResultList(); // Consulta para obtener todas las reservas
+    public List<Reserva> obtenerTodasLasReservas() throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
+        try {
+            return em.createQuery("SELECT r FROM Reserva r", Reserva.class).getResultList(); // Consulta para obtener todas las reservas
+        } catch (Exception e) {
+            throw new PersistenciaException("No se pudo obtener las reservas.");
+        }
+
     }
 
     // Método para obtener reservas por estado
-    public List<Reserva> obtenerReservasPorEstado(String estado) {
-        return entityManager.createQuery("SELECT r FROM Reserva r WHERE r.estado = :estado", Reserva.class)
-                .setParameter("estado", estado)
-                .getResultList();
+    public List<Reserva> obtenerReservasPorEstado(String estado) throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
+        try {
+            return em.createQuery("SELECT r FROM Reserva r WHERE r.estado = :estado", Reserva.class)
+                    .setParameter("estado", estado)
+                    .getResultList();
+        } catch (Exception e) {
+            throw new PersistenciaException("No se pudo obtener las reservas con el estado: " + estado);
+        }
+
     }
 
     // Método para actualizar una reserva
-    public void actualizarReserva(Reserva reserva) {
-        EntityTransaction transaction = entityManager.getTransaction();
+    public void actualizarReserva(Reserva reserva) throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
         try {
-            transaction.begin();
-            entityManager.merge(reserva); // Actualizar la reserva existente
-            transaction.commit();
+            em.getTransaction().begin();
+            em.merge(reserva); // Actualizar la reserva existente
+            em.getTransaction().commit();
         } catch (Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback(); // Revierte la transacción si ocurre un error
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback(); // Revierte la transacción si ocurre un error
             }
-            e.printStackTrace();
+            throw new PersistenciaException("No se pudo actualizar la reserva con id: " + reserva.getId());
         }
     }
 
     // Método para eliminar una reserva por ID
-    public void eliminarReserva(Long id) {
-        EntityTransaction transaction = entityManager.getTransaction();
+    public void eliminarReserva(Long id) throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
         try {
-            transaction.begin();
-            Reserva reserva = entityManager.find(Reserva.class, id); // Buscar la reserva por ID
+            em.getTransaction().begin();
+            Reserva reserva = em.find(Reserva.class, id); // Buscar la reserva por ID
             if (reserva != null) {
-                entityManager.remove(reserva); // Eliminar la reserva
+                em.remove(reserva); // Eliminar la reserva
             }
-            transaction.commit();
+            em.getTransaction().commit();
         } catch (Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback(); // Revierte la transacción si ocurre un error
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback(); // Revierte la transacción si ocurre un error
             }
-            e.printStackTrace();
+            throw new PersistenciaException("No se pudo eliminar la reserva con id: " + id);
         }
     }
 
     // Método para cerrar el EntityManager y EntityManagerFactory
     public void cerrar() {
-        if (entityManager != null && entityManager.isOpen()) {
-            entityManager.close();
-        }
-        if (entityManagerFactory != null && entityManagerFactory.isOpen()) {
-            entityManagerFactory.close();
+        EntityManager em = this.conexion.crearConexion();
+        if (em != null && em.isOpen()) {
+            em.close();
         }
     }
 }

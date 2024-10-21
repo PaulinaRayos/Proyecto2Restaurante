@@ -106,7 +106,7 @@ public class FormMesas extends javax.swing.JFrame {
 
         jLabelaa2.setFont(new java.awt.Font("Times New Roman", 3, 24)); // NOI18N
         jLabelaa2.setForeground(new java.awt.Color(0, 0, 0));
-        jLabelaa2.setText("Nueva Reservación");
+        jLabelaa2.setText("Agrega Mesas");
         jLabelaa2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jLabel11.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N

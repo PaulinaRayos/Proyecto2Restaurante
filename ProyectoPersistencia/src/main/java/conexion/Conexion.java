@@ -21,7 +21,7 @@ public class Conexion implements IConexion {
      */
     @Override
     public EntityManager crearConexion() {
-        EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("AgenciaDelSolPU");
+        EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("pu_restaurante");
 
         EntityManager entityManager = emFactory.createEntityManager();
 
