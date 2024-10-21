@@ -5,6 +5,7 @@
 package dao;
 
 import entidadesJPA.Reserva;
+import excepciones.PersistenciaException;
 import interfaces.IReservaDAO;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -47,7 +48,11 @@ public class ReservaDAO implements IReservaDAO {
     }
 
     // Método para obtener una reserva por ID
-    public Reserva obtenerReservaPorId(int id) {
+    @Override
+    public Reserva obtenerReservaPorId(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("El ID no puede ser nulo.");
+        }
         return entityManager.find(Reserva.class, id); // Buscar la reserva por su ID
     }
 
@@ -79,7 +84,7 @@ public class ReservaDAO implements IReservaDAO {
     }
 
     // Método para eliminar una reserva por ID
-    public void eliminarReserva(int id) {
+    public void eliminarReserva(Long id) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
@@ -105,5 +110,4 @@ public class ReservaDAO implements IReservaDAO {
             entityManagerFactory.close();
         }
     }
-
 }

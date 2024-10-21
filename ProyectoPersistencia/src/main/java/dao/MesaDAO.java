@@ -47,7 +47,7 @@ public class MesaDAO implements IMesaDAO {
     }
 
     // Método para obtener una mesa por ID
-    public Mesa obtenerMesaPorId(int id) {
+    public Mesa obtenerMesaPorId(Long id) {
         return entityManager.find(Mesa.class, id); // Buscar la mesa por su ID
     }
 
@@ -72,7 +72,7 @@ public class MesaDAO implements IMesaDAO {
     }
 
     // Método para eliminar una mesa por ID
-    public void eliminarMesa(int id) {
+    public void eliminarMesa(Long id) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();

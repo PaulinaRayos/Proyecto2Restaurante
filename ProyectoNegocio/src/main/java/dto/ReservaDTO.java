@@ -22,7 +22,7 @@ public class ReservaDTO {
     private BigDecimal costo;
     private String estado;
     private Date fechaCancelacion;
-    private double multa;
+    private BigDecimal multa;
     private Long idCliente;
     private Long idMesa;
 
@@ -30,7 +30,7 @@ public class ReservaDTO {
     public ReservaDTO() {
     }
 
-    public ReservaDTO(Long idReserva, Date fechaHora, int numeroPersonas, BigDecimal costo, String estado, Date fechaCancelacion, double multa, Long idCliente, Long idMesa) {
+    public ReservaDTO(Long idReserva, Date fechaHora, int numeroPersonas, BigDecimal costo, String estado, Date fechaCancelacion, BigDecimal multa, Long idCliente, Long idMesa) {
         this.idReserva = idReserva;
         this.fechaHora = fechaHora;
         this.numeroPersonas = numeroPersonas;
@@ -91,11 +91,11 @@ public class ReservaDTO {
         this.fechaCancelacion = fechaCancelacion;
     }
 
-    public double getMulta() {
+    public BigDecimal getMulta() {
         return multa;
     }
 
-    public void setMulta(double multa) {
+    public void setMulta(BigDecimal multa) {
         this.multa = multa;
     }
 

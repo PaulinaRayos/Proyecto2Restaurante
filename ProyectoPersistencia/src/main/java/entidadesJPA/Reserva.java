@@ -7,6 +7,7 @@ package entidadesJPA;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -58,12 +59,12 @@ public class Reserva implements Serializable {
     private BigDecimal multa;
 
     // Relación ManyToOne con Cliente
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_cliente", nullable = false)
     private Cliente cliente; //columna id_cliente
 
     // Relación ManyToOne con Mesa
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_mesa", nullable = false)
     private Mesa mesa; //columna id_mesa
 

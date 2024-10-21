@@ -28,10 +28,10 @@ public interface IMesaDAO {
     void cerrar() throws PersistenciaException;
 
     // Método para eliminar una mesa por ID
-    void eliminarMesa(int id) throws PersistenciaException;
+    void eliminarMesa(Long id) throws PersistenciaException;
 
     // Método para obtener una mesa por ID
-    Mesa obtenerMesaPorId(int id) throws PersistenciaException;
+    Mesa obtenerMesaPorId(Long id) throws PersistenciaException;
 
     // Método para obtener todas las mesas
     List<Mesa> obtenerTodasLasMesas() throws PersistenciaException;

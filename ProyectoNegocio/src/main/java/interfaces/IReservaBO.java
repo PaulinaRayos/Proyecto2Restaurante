@@ -13,13 +13,13 @@ import java.util.List;
  */
 public interface IReservaBO {
 
-    boolean actualizarReserva(ReservaDTO reservaDTO) throws Exception;
+    void actualizarReserva(ReservaDTO reservaDTO) throws Exception;
 
-    boolean cancelarReserva(int idReserva) throws Exception;
+    void cancelarReserva(Long idReserva) throws Exception;
 
-    boolean crearReserva(ReservaDTO reservaDTO) throws Exception;
+    void agregarReserva(ReservaDTO reservaDTO) throws Exception;
 
-    List<ReservaDTO> obtenerReservasPorCliente(int idCliente) throws Exception;
+    List<ReservaDTO> obtenerReservasPorCliente(Long idCliente) throws Exception;
     
 
     

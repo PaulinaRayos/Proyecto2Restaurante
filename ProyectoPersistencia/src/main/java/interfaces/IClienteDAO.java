@@ -28,7 +28,7 @@ public interface IClienteDAO {
     void cerrar();
 
     // Método para obtener un cliente por ID
-    Cliente obtenerClientePorId(int id) throws PersistenciaException;
+    Cliente obtenerClientePorId(Long id) throws PersistenciaException;
 
     // Método para obtener todos los clientes
     List<Cliente> obtenerTodosLosClientes() throws PersistenciaException;

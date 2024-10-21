@@ -28,12 +28,6 @@ public interface IHistorialReservasDAO {
     // Método para cerrar el EntityManager y EntityManagerFactory
     void cerrar() throws PersistenciaException;
 
-    // Método para eliminar un historial de reserva
-    void eliminarHistorialReservas(int id) throws PersistenciaException;
-
-    // Método para obtener un historial de reserva por ID
-    HistorialReservas obtenerHistorialReservasPorId(int id) throws PersistenciaException;
-
     // Método para obtener todos los historiales de reserva
     List<HistorialReservas> obtenerTodosLosHistorialesReservas() throws PersistenciaException;
 

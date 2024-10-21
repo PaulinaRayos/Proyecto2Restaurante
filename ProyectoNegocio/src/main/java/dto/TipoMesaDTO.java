@@ -4,6 +4,8 @@
  */
 package dto;
 
+import java.math.BigDecimal;
+
 /**
  * Clase que representa un Data Transfer Object (DTO) para la entidad TipoMesa.
  * Se utiliza para transferir datos de tipos de mesa entre la capa de presentación y la capa de negocio.
@@ -13,16 +15,16 @@ package dto;
  */
 public class TipoMesaDTO {
 
-    private int idTipoMesa;
+    private Long idTipoMesa;
     private String nombreTipo;
     private int capacidad;
-    private double precioReserva;
+    private BigDecimal precioReserva;
 
     // Constructor
     public TipoMesaDTO() {
     }
 
-    public TipoMesaDTO(int idTipoMesa, String nombreTipo, int capacidad, double precioReserva) {
+    public TipoMesaDTO(Long idTipoMesa, String nombreTipo, int capacidad, BigDecimal precioReserva) {
         this.idTipoMesa = idTipoMesa;
         this.nombreTipo = nombreTipo;
         this.capacidad = capacidad;
@@ -30,11 +32,11 @@ public class TipoMesaDTO {
     }
 
     // Getters y Setters
-    public int getIdTipoMesa() {
+    public Long getIdTipoMesa() {
         return idTipoMesa;
     }
 
-    public void setIdTipoMesa(int idTipoMesa) {
+    public void setIdTipoMesa(Long idTipoMesa) {
         this.idTipoMesa = idTipoMesa;
     }
 
@@ -54,11 +56,11 @@ public class TipoMesaDTO {
         this.capacidad = capacidad;
     }
 
-    public double getPrecioReserva() {
+    public BigDecimal getPrecioReserva() {
         return precioReserva;
     }
 
-    public void setPrecioReserva(double precioReserva) {
+    public void setPrecioReserva(BigDecimal precioReserva) {
         this.precioReserva = precioReserva;
     }
 }

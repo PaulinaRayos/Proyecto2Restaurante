@@ -4,6 +4,7 @@
  */
 package dto;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -15,19 +16,19 @@ import java.util.Date;
  */
 public class HistorialReservasDTO {
 
-    private int idHistorial;
-    private double costo;
+    private Long idHistorial;
+    private BigDecimal costo;
     private String ubicacion;
     private Date fechaHoraReserva;
-    private double multa;
-    private int idReserva;
-    private int idTipoMesa;
+    private BigDecimal multa;
+    private Long idReserva;
+    private Long idTipoMesa;
 
     // Constructor
     public HistorialReservasDTO() {
     }
 
-    public HistorialReservasDTO(int idHistorial, double costo, String ubicacion, Date fechaHoraReserva, double multa, int idReserva, int idTipoMesa) {
+    public HistorialReservasDTO(Long idHistorial, BigDecimal costo, String ubicacion, Date fechaHoraReserva, BigDecimal multa, Long idReserva, Long idTipoMesa) {
         this.idHistorial = idHistorial;
         this.costo = costo;
         this.ubicacion = ubicacion;
@@ -38,19 +39,19 @@ public class HistorialReservasDTO {
     }
 
     // Getters y Setters
-    public int getIdHistorial() {
+    public Long getIdHistorial() {
         return idHistorial;
     }
 
-    public void setIdHistorial(int idHistorial) {
+    public void setIdHistorial(Long idHistorial) {
         this.idHistorial = idHistorial;
     }
 
-    public double getCosto() {
+    public BigDecimal getCosto() {
         return costo;
     }
 
-    public void setCosto(double costo) {
+    public void setCosto(BigDecimal costo) {
         this.costo = costo;
     }
 
@@ -70,27 +71,27 @@ public class HistorialReservasDTO {
         this.fechaHoraReserva = fechaHoraReserva;
     }
 
-    public double getMulta() {
+    public BigDecimal getMulta() {
         return multa;
     }
 
-    public void setMulta(double multa) {
+    public void setMulta(BigDecimal multa) {
         this.multa = multa;
     }
 
-    public int getIdReserva() {
+    public Long getIdReserva() {
         return idReserva;
     }
 
-    public void setIdReserva(int idReserva) {
+    public void setIdReserva(Long idReserva) {
         this.idReserva = idReserva;
     }
 
-    public int getIdTipoMesa() {
+    public Long getIdTipoMesa() {
         return idTipoMesa;
     }
 
-    public void setIdTipoMesa(int idTipoMesa) {
+    public void setIdTipoMesa(Long idTipoMesa) {
         this.idTipoMesa = idTipoMesa;
     }
 }

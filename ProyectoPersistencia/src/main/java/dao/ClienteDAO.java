@@ -87,7 +87,7 @@ public class ClienteDAO implements IClienteDAO {
     }
 
     // Método para obtener un cliente por ID
-    public Cliente obtenerClientePorId(int id) throws PersistenciaException {
+    public Cliente obtenerClientePorId(Long id) throws PersistenciaException {
         try {
             return entityManager.find(Cliente.class, id); // Encontrar cliente por ID
         } catch (Exception e) {
@@ -113,5 +113,6 @@ public class ClienteDAO implements IClienteDAO {
             entityManagerFactory.close();
         }
     }
+
 
 }

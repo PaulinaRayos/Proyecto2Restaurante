@@ -47,7 +47,7 @@ public class TipoMesaDAO implements ITipoMesaDAO {
     }
 
     // Método para obtener un tipo de mesa por ID
-    public TipoMesa obtenerTipoMesaPorId(int id) {
+    public TipoMesa obtenerTipoMesaPorId(Long id) {
         return entityManager.find(TipoMesa.class, id); // Buscar el tipo de mesa por su ID
     }
 
@@ -72,7 +72,7 @@ public class TipoMesaDAO implements ITipoMesaDAO {
     }
 
     // Método para eliminar un tipo de mesa por ID
-    public void eliminarTipoMesa(int id) {
+    public void eliminarTipoMesa(Long id) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();

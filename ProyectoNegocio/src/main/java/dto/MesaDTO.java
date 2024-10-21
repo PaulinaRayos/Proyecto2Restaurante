@@ -13,18 +13,18 @@ package dto;
  */
 public class MesaDTO {
 
-    private int idMesa;
+    private Long idMesa;
     private String codigoMesa;
     private String ubicacion;
     private int capacidad;
     private boolean ocupado;
-    private int idTipoMesa;
+    private Long idTipoMesa;
 
     // Constructor
     public MesaDTO() {
     }
 
-    public MesaDTO(int idMesa, String codigoMesa, String ubicacion, int capacidad, boolean ocupado, int idTipoMesa) {
+    public MesaDTO(Long idMesa, String codigoMesa, String ubicacion, int capacidad, boolean ocupado, Long idTipoMesa) {
         this.idMesa = idMesa;
         this.codigoMesa = codigoMesa;
         this.ubicacion = ubicacion;
@@ -34,11 +34,11 @@ public class MesaDTO {
     }
 
     // Getters y Setters
-    public int getIdMesa() {
+    public Long getIdMesa() {
         return idMesa;
     }
 
-    public void setIdMesa(int idMesa) {
+    public void setIdMesa(Long idMesa) {
         this.idMesa = idMesa;
     }
 
@@ -74,11 +74,11 @@ public class MesaDTO {
         this.ocupado = ocupado;
     }
 
-    public int getIdTipoMesa() {
+    public Long getIdTipoMesa() {
         return idTipoMesa;
     }
 
-    public void setIdTipoMesa(int idTipoMesa) {
+    public void setIdTipoMesa(Long idTipoMesa) {
         this.idTipoMesa = idTipoMesa;
     }
 }

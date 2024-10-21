@@ -28,10 +28,10 @@ public interface ITipoMesaDAO {
     void cerrar() throws PersistenciaException;
 
     // Método para eliminar un tipo de mesa por ID
-    void eliminarTipoMesa(int id) throws PersistenciaException;
+    void eliminarTipoMesa(Long id) throws PersistenciaException;
 
     // Método para obtener un tipo de mesa por ID
-    TipoMesa obtenerTipoMesaPorId(int id) throws PersistenciaException;
+    TipoMesa obtenerTipoMesaPorId(Long id) throws PersistenciaException;
 
     // Método para obtener todos los tipos de mesa
     List<TipoMesa> obtenerTodosLosTiposMesa() throws PersistenciaException;

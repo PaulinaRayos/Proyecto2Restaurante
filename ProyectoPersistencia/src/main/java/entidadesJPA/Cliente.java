@@ -33,10 +33,10 @@ public class Cliente implements Serializable {
     @Column(name = "nombres")
     private String nombre;
     
-    @Column (name = "apellidoPaterno")
+    @Column (name = "apellido_paterno", nullable=false)
     private String apellidoPaterno;
     
-    @Column (name = "apellidoMaterno")
+    @Column (name = "apellido_materno")
     private String apellidoMaterno;
     
     @Column (name = "telefono")

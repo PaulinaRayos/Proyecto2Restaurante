@@ -5,6 +5,7 @@
 package dao;
 
 import entidadesJPA.HistorialReservas;
+import excepciones.PersistenciaException;
 import interfaces.IHistorialReservasDAO;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -47,7 +48,7 @@ public class HistorialReservasDAO implements IHistorialReservasDAO {
     }
 
     // Método para obtener un historial de reserva por ID
-    public HistorialReservas obtenerHistorialReservasPorId(int id) {
+    public HistorialReservas obtenerHistorialReservasPorId(Long id) {
         return entityManager.find(HistorialReservas.class, id); // Buscar HistorialReservas por ID
     }
 
@@ -72,7 +73,7 @@ public class HistorialReservasDAO implements IHistorialReservasDAO {
     }
 
     // Método para eliminar un historial de reserva
-    public void eliminarHistorialReservas(int id) {
+    public void eliminarHistorialReservas(Long id) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();

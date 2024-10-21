@@ -1,2 +1,9 @@
+interfaces\IReservaBO.class
+negocio\ReservaBO.class
+pruebas\pruebaReservaBO.class
+dto\ClienteDTO.class
+pruebas\pruebas.class
 dto\MesaDTO.class
 dto\ReservaDTO.class
+dto\TipoMesaDTO.class
+dto\HistorialReservasDTO.class

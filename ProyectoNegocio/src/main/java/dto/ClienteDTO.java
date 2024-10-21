@@ -13,7 +13,7 @@ package dto;
  */
 public class ClienteDTO {
 
-    private int idCliente;
+    private Long idCliente;
     private String nombre;
     private String apellidoPaterno;
     private String apellidoMaterno;
@@ -23,7 +23,7 @@ public class ClienteDTO {
     public ClienteDTO() {
     }
 
-    public ClienteDTO(int idCliente, String nombre, String apellidoPaterno, String apellidoMaterno, String telefono) {
+    public ClienteDTO(Long idCliente, String nombre, String apellidoPaterno, String apellidoMaterno, String telefono) {
         this.idCliente = idCliente;
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
@@ -32,11 +32,11 @@ public class ClienteDTO {
     }
 
     // Getters y Setters
-    public int getIdCliente() {
+    public Long getIdCliente() {
         return idCliente;
     }
 
-    public void setIdCliente(int idCliente) {
+    public void setIdCliente(Long idCliente) {
         this.idCliente = idCliente;
     }
 
