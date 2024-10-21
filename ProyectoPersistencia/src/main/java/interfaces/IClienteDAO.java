@@ -22,7 +22,7 @@ public interface IClienteDAO {
     void agregarCliente(Cliente cliente) throws PersistenciaException;
     
     //Metodo para insertar 20 clientes a la base de datos
-    public void insercionMasiva();
+    public void insercionMasiva() throws PersistenciaException;
 
     // Método para cerrar el EntityManager y EntityManagerFactory
     void cerrar();

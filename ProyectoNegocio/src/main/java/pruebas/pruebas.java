@@ -15,18 +15,22 @@ public class pruebas {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        
-       pruebaReservaBO prueba = new pruebaReservaBO();
-        
+
+        pruebaReservaBO prueba = new pruebaReservaBO();
+
         try {
             prueba.setUp(); // Inicializa los DAOs y el ReservaBO
-            prueba.testActualizarReserva(); // Ejecuta la prueba de agregar reserva
+            prueba.testAgregarReserva();
         } catch (Exception e) {
-            System.err.println("Error durante la prueba: " + e.getMessage());
-            e.printStackTrace();
         }
+//        
+//        try {
+//            prueba.setUp(); // Inicializa los DAOs y el ReservaBO
+//            prueba.testActualizarReserva(); // Ejecuta la prueba de agregar reserva
+//        } catch (Exception e) {
+//            System.err.println("Error durante la prueba: " + e.getMessage());
+//            e.printStackTrace();
+//        }
     }
 
-    
-    
 }

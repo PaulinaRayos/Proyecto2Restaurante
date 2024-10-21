@@ -4,13 +4,12 @@
  */
 package dao;
 
+import conexion.IConexion;
 import entidadesJPA.TipoMesa;
+import excepciones.PersistenciaException;
 import interfaces.ITipoMesaDAO;
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
 
 /**
  * Interfaz que define los métodos para el acceso a datos de la entidad
@@ -22,80 +21,87 @@ import javax.persistence.Persistence;
  */
 public class TipoMesaDAO implements ITipoMesaDAO {
 
-    private EntityManagerFactory entityManagerFactory;
-    private EntityManager entityManager;
+    private final IConexion conexion;
 
     // Constructor
-    public TipoMesaDAO() {
-        entityManagerFactory = Persistence.createEntityManagerFactory("pu_restaurante");
-        entityManager = entityManagerFactory.createEntityManager();
+    public TipoMesaDAO(IConexion conexion) {
+        this.conexion = conexion;
     }
 
     // Método para agregar un tipo de mesa
-    public void agregarTipoMesa(TipoMesa tipoMesa) {
-        EntityTransaction transaction = entityManager.getTransaction();
+    public void agregarTipoMesa(TipoMesa tipoMesa) throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
         try {
-            transaction.begin();
-            entityManager.persist(tipoMesa); // Persiste la entidad TipoMesa
-            transaction.commit();
+            em.getTransaction().begin();
+            em.persist(tipoMesa); // Persiste la entidad TipoMesa
+            em.getTransaction().commit();
         } catch (Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback(); // Revierte la transacción si ocurre un error
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback(); // Revierte la transacción si ocurre un error
             }
-            e.printStackTrace();
+            throw new PersistenciaException("No se pudo agregar el tipo de mesa.");
         }
     }
 
     // Método para obtener un tipo de mesa por ID
-    public TipoMesa obtenerTipoMesaPorId(Long id) {
-        return entityManager.find(TipoMesa.class, id); // Buscar el tipo de mesa por su ID
+    public TipoMesa obtenerTipoMesaPorId(Long id) throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
+        try {
+            return em.find(TipoMesa.class, id); // Buscar el tipo de mesa por su ID
+        } catch (Exception e) {
+            throw new PersistenciaException("No se pudo obtener el tipo de mesa con id: " + id);
+        }
+
     }
 
     // Método para obtener todos los tipos de mesa
-    public List<TipoMesa> obtenerTodosLosTiposMesa() {
-        return entityManager.createQuery("SELECT t FROM TipoMesa t", TipoMesa.class).getResultList(); // Consulta para obtener todos los tipos de mesa
+    public List<TipoMesa> obtenerTodosLosTiposMesa() throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
+        try {
+            return em.createQuery("SELECT t FROM TipoMesa t", TipoMesa.class).getResultList(); // Consulta para obtener todos los tipos de mesa
+        } catch (Exception e) {
+            throw new PersistenciaException("No se pudieron obtener los tipos de mesa.");
+        }
     }
 
     // Método para actualizar un tipo de mesa
-    public void actualizarTipoMesa(TipoMesa tipoMesa) {
-        EntityTransaction transaction = entityManager.getTransaction();
+    public void actualizarTipoMesa(TipoMesa tipoMesa) throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
         try {
-            transaction.begin();
-            entityManager.merge(tipoMesa); // Actualizar el tipo de mesa existente
-            transaction.commit();
+            em.getTransaction().begin();
+            em.merge(tipoMesa); // Actualizar el tipo de mesa existente
+            em.getTransaction().commit();
         } catch (Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback(); // Revierte la transacción si ocurre un error
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback(); // Revierte la transacción si ocurre un error
             }
-            e.printStackTrace();
+            throw new PersistenciaException("No se pudo actualizar el tipo de mesa con id: " + tipoMesa.getId());
         }
     }
 
     // Método para eliminar un tipo de mesa por ID
-    public void eliminarTipoMesa(Long id) {
-        EntityTransaction transaction = entityManager.getTransaction();
+    public void eliminarTipoMesa(Long id) throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
         try {
-            transaction.begin();
-            TipoMesa tipoMesa = entityManager.find(TipoMesa.class, id); // Buscar el tipo de mesa por ID
+            em.getTransaction().begin();
+            TipoMesa tipoMesa = em.find(TipoMesa.class, id); // Buscar el tipo de mesa por ID
             if (tipoMesa != null) {
-                entityManager.remove(tipoMesa); // Eliminar el tipo de mesa
+                em.remove(tipoMesa); // Eliminar el tipo de mesa
             }
-            transaction.commit();
+            em.getTransaction().commit();
         } catch (Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback(); // Revertir la transacción si ocurre un error
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback(); // Revertir la transacción si ocurre un error
             }
-            e.printStackTrace();
+            throw new PersistenciaException("No se pudo eliminar el tipo de mesa con id: " + id);
         }
     }
 
     // Método para cerrar el EntityManager y EntityManagerFactory
     public void cerrar() {
-        if (entityManager != null && entityManager.isOpen()) {
-            entityManager.close();
-        }
-        if (entityManagerFactory != null && entityManagerFactory.isOpen()) {
-            entityManagerFactory.close();
+        EntityManager em = this.conexion.crearConexion();
+        if (em != null && em.isOpen()) {
+            em.close();
         }
     }
 

@@ -4,14 +4,12 @@
  */
 package dao;
 
+import conexion.IConexion;
 import entidadesJPA.HistorialReservas;
 import excepciones.PersistenciaException;
 import interfaces.IHistorialReservasDAO;
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
 
 /**
  * Interfaz que define los métodos para el acceso a datos de la entidad
@@ -23,80 +21,89 @@ import javax.persistence.Persistence;
  */
 public class HistorialReservasDAO implements IHistorialReservasDAO {
 
-    private EntityManagerFactory entityManagerFactory;
-    private EntityManager entityManager;
+    private final IConexion conexion;
 
     // Constructor
-    public HistorialReservasDAO() {
-        entityManagerFactory = Persistence.createEntityManagerFactory("pu_restaurante");
-        entityManager = entityManagerFactory.createEntityManager();
+    public HistorialReservasDAO(IConexion conexion) {
+        this.conexion = conexion;
     }
 
     // Método para agregar un historial de reserva
-    public void agregarHistorialReservas(HistorialReservas historialReservas) {
-        EntityTransaction transaction = entityManager.getTransaction();
+    public void agregarHistorialReservas(HistorialReservas historialReservas) throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
         try {
-            transaction.begin();
-            entityManager.persist(historialReservas); // Persiste el objeto HistorialReservas
-            transaction.commit();
+            em.getTransaction().begin();
+
+            em.persist(historialReservas); // Persiste el objeto HistorialReservas
+
+            em.getTransaction().commit();
         } catch (Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback(); // Revierte la transacción si ocurre un error
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback(); // Revierte la transacción si ocurre un error
             }
-            e.printStackTrace();
+            throw new PersistenciaException("No se pudo agregar el historial de reservas.");
         }
     }
 
     // Método para obtener un historial de reserva por ID
-    public HistorialReservas obtenerHistorialReservasPorId(Long id) {
-        return entityManager.find(HistorialReservas.class, id); // Buscar HistorialReservas por ID
+    public HistorialReservas obtenerHistorialReservasPorId(Long id) throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
+        try {
+            return em.find(HistorialReservas.class, id); // Buscar HistorialReservas por ID
+        } catch (Exception e) {
+            throw new PersistenciaException("No se pudo encontrar el historial de reservas por id: " + id);
+        }
     }
 
     // Método para obtener todos los historiales de reserva
-    public List<HistorialReservas> obtenerTodosLosHistorialesReservas() {
-        return entityManager.createQuery("SELECT hr FROM HistorialReservas hr", HistorialReservas.class).getResultList(); // Consulta para obtener todos los historiales de reservas
+    public List<HistorialReservas> obtenerTodosLosHistorialesReservas() throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
+        try {
+            return em.createQuery("SELECT hr FROM HistorialReservas hr", HistorialReservas.class).getResultList(); // Consulta para obtener todos los historiales de reservas
+        } catch (Exception e) {
+            throw new PersistenciaException("No se pudieron encontrar el historial de reservas.");
+        }
+
     }
 
     // Método para actualizar un historial de reserva
-    public void actualizarHistorialReservas(HistorialReservas historialReservas) {
-        EntityTransaction transaction = entityManager.getTransaction();
+    public void actualizarHistorialReservas(HistorialReservas historialReservas) throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
         try {
-            transaction.begin();
-            entityManager.merge(historialReservas); // Actualizar el historial existente
-            transaction.commit();
+            em.getTransaction().begin();
+            em.merge(historialReservas); // Actualizar el historial existente
+            em.getTransaction().commit();
         } catch (Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback(); // Revierte la transacción si ocurre un error
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback(); // Revierte la transacción si ocurre un error
             }
-            e.printStackTrace();
+            throw new PersistenciaException("No se pudo actualizar el historial de reservas.");
         }
     }
 
     // Método para eliminar un historial de reserva
-    public void eliminarHistorialReservas(Long id) {
-        EntityTransaction transaction = entityManager.getTransaction();
+    public void eliminarHistorialReservas(Long id) throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
         try {
-            transaction.begin();
-            HistorialReservas historialReservas = entityManager.find(HistorialReservas.class, id); // Buscar el historial por ID
+            em.getTransaction().begin();
+            HistorialReservas historialReservas = em.find(HistorialReservas.class, id); // Buscar el historial por ID
             if (historialReservas != null) {
-                entityManager.remove(historialReservas); // Eliminar el historial
+                em.remove(historialReservas); // Eliminar el historial
             }
-            transaction.commit();
+            em.getTransaction().commit();
         } catch (Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback(); // Revierte la transacción si ocurre un error
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback(); // Revierte la transacción si ocurre un error
             }
-            e.printStackTrace();
+            throw new PersistenciaException("No se pudo eliminar el historial de reservas.");
         }
     }
 
     // Método para cerrar el EntityManager y EntityManagerFactory
     public void cerrar() {
-        if (entityManager != null && entityManager.isOpen()) {
-            entityManager.close();
-        }
-        if (entityManagerFactory != null && entityManagerFactory.isOpen()) {
-            entityManagerFactory.close();
+        EntityManager em = this.conexion.crearConexion();
+        if (em != null && em.isOpen()) {
+            em.close();
         }
     }
 

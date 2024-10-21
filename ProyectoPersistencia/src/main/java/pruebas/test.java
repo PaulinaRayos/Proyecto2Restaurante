@@ -4,8 +4,13 @@
  */
 package pruebas;
 
+import conexion.Conexion;
+import conexion.IConexion;
 import dao.ClienteDAO;
 import entidadesJPA.Cliente;
+import excepciones.PersistenciaException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -19,9 +24,15 @@ public class test {
     public static void main(String[] args) {
         Cliente c = new Cliente();
 
-        ClienteDAO cdao = new ClienteDAO();
+        IConexion i = new Conexion();
 
-        cdao.insercionMasiva();
+        ClienteDAO cdao = new ClienteDAO(i);
+
+        try {
+            cdao.insercionMasiva();
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(test.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }

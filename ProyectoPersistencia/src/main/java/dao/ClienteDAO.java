@@ -4,15 +4,13 @@
  */
 package dao;
 
+import conexion.IConexion;
 import entidadesJPA.Cliente;
 import excepciones.PersistenciaException;
 import interfaces.IClienteDAO;
 import java.util.Arrays;
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
 import recursos.Encriptacion;
 
 /**
@@ -25,32 +23,34 @@ import recursos.Encriptacion;
  */
 public class ClienteDAO implements IClienteDAO {
 
-    private EntityManagerFactory entityManagerFactory;
-    private EntityManager entityManager;
+    private final IConexion conexion;
 
     // Constructor
-    public ClienteDAO() {
-        entityManagerFactory = Persistence.createEntityManagerFactory("pu_restaurante");
-        entityManager = entityManagerFactory.createEntityManager();
+    public ClienteDAO(IConexion conexion) {
+        this.conexion = conexion;
     }
 
     // Método para agregar un cliente
     public void agregarCliente(Cliente cliente) throws PersistenciaException {
-        EntityTransaction transaction = entityManager.getTransaction();
+        EntityManager em = this.conexion.crearConexion();
         try {
-            transaction.begin();
-            entityManager.persist(cliente); // Persiste el objeto Cliente
-            transaction.commit();
+            em.getTransaction().begin();
+
+            em.persist(cliente);
+
+            em.getTransaction().commit();
+
+            em.close();
         } catch (Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback(); // Revertir la transacción si ocurre un error
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
             }
             throw new PersistenciaException("No se pudo agregar el cliente a la base de datos: " + e);
         }
     }
 
     @Override
-    public void insercionMasiva() {
+    public void insercionMasiva() throws PersistenciaException {
         List<String> nombres = Arrays.asList("Chris", "Ana", "Luis", "Maria", "Pedro", "Lucia", "Jorge", "Sofia",
                 "Diego", "Valeria", "Carlos", "Fernanda", "David", "Camila", "Oscar",
                 "Daniela", "Fernando", "Paula", "Miguel", "Andrea");
@@ -67,29 +67,35 @@ public class ClienteDAO implements IClienteDAO {
 
         List<String> prefix = Arrays.asList("6441", "6442", "6444");
 
-        EntityTransaction transaction = entityManager.getTransaction();
+        EntityManager em = this.conexion.crearConexion();
 
-        transaction.begin();
+        try {
+            em.getTransaction().begin();
 
-        for (int i = 0; i < 20; i++) {
-            String nombre = nombres.get(i);
-            String apellidoPaterno = apellidosPaternos.get(i);
-            String apellidoMaterno = apellidosMaternos.get(i);
-            String telefono = prefix.get(i % prefix.size()) + "392630" + (i % 10);
+            for (int i = 0; i < 20; i++) {
+                String nombre = nombres.get(i);
+                String apellidoPaterno = apellidosPaternos.get(i);
+                String apellidoMaterno = apellidosMaternos.get(i);
+                String telefono = prefix.get(i % prefix.size()) + "392630" + (i % 10);
 
-            Cliente cliente = new Cliente(nombre, apellidoPaterno, apellidoMaterno, Encriptacion.encriptar(telefono));
+                Cliente cliente = new Cliente(nombre, apellidoPaterno, apellidoMaterno, Encriptacion.encriptar(telefono));
 
-            entityManager.persist(cliente);
+                em.persist(cliente);
 
+            }
+            em.getTransaction().commit();
+            em.close();
+        } catch (Exception e) {
+            throw new PersistenciaException("No se pudo realizar la insercion masiva.");
         }
-        transaction.commit();
-        entityManager.close();
+
     }
 
     // Método para obtener un cliente por ID
     public Cliente obtenerClientePorId(Long id) throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
         try {
-            return entityManager.find(Cliente.class, id); // Encontrar cliente por ID
+            return em.find(Cliente.class, id); // Encontrar cliente por ID
         } catch (Exception e) {
             throw new PersistenciaException("No se pudo encontrar el cliente en la base de datos por id: " + id);
         }
@@ -97,8 +103,9 @@ public class ClienteDAO implements IClienteDAO {
 
     // Método para obtener todos los clientes
     public List<Cliente> obtenerTodosLosClientes() throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
         try {
-            return entityManager.createQuery("SELECT c FROM Cliente c", Cliente.class).getResultList(); // Consulta para obtener todos los clientes
+            return em.createQuery("SELECT c FROM Cliente c", Cliente.class).getResultList(); // Consulta para obtener todos los clientes
         } catch (Exception e) {
             throw new PersistenciaException("No se pudo encontrar el cliente en la base de datos por id: ");
         }
@@ -106,13 +113,10 @@ public class ClienteDAO implements IClienteDAO {
 
     // Método para cerrar el EntityManager y EntityManagerFactory
     public void cerrar() {
-        if (entityManager != null && entityManager.isOpen()) {
-            entityManager.close();
-        }
-        if (entityManagerFactory != null && entityManagerFactory.isOpen()) {
-            entityManagerFactory.close();
+        EntityManager em = this.conexion.crearConexion();
+        if (em != null && em.isOpen()) {
+            em.close();
         }
     }
-
 
 }
