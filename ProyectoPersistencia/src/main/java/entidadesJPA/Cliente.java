@@ -5,57 +5,69 @@
 package entidadesJPA;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
- * Clase que representa la entidad Reserva en la base de datos.
- * Mapea la tabla 'reservas' y define los atributos correspondientes,
- * así como las relaciones con otras entidades.
- * 
+ * Clase que representa la entidad Reserva en la base de datos. Mapea la tabla
+ * 'reservas' y define los atributos correspondientes, así como las relaciones
+ * con otras entidades.
+ *
  * @author Cristopher Alberto Elizalde Andrade - 240005
  * @author Paulina Rodríguez Rodríguez Rayos - 117262
  */
 @Entity
-@Table(name="clientes")
+@Table(name = "clientes")
 public class Cliente implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @Column(name="id_cliente")
+    @Column(name = "id_cliente")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @Column(name = "nombres")
     private String nombre;
-    
-    @Column (name = "apellido_paterno", nullable=false)
+
+    @Column(name = "apellido_paterno", nullable = false)
     private String apellidoPaterno;
-    
-    @Column (name = "apellido_materno")
+
+    @Column(name = "apellido_materno")
     private String apellidoMaterno;
-    
-    @Column (name = "telefono")
+
+    @Column(name = "telefono", unique = true)
     private String telefono;
+    
+    @OneToMany(mappedBy = "cliente")
+    private List<Reserva> reservas;
 
     //Constructor vacío
     public Cliente() {
+        this.reservas = new ArrayList();
     }
+
     //Constructor con Id
     public Cliente(Long id) {
         this.id = id;
+        this.reservas = new ArrayList();
     }
+
     //Constructor sin Id
     public Cliente(String nombre, String apellidoPaterno, String apellidoMaterno, String telefono) {
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
         this.telefono = telefono;
+        this.reservas = new ArrayList();
     }
+
     //Constructor completo
     public Cliente(Long id, String nombre, String apellidoPaterno, String apellidoMaterno, String telefono) {
         this.id = id;
@@ -63,11 +75,11 @@ public class Cliente implements Serializable {
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
         this.telefono = telefono;
+        this.reservas = new ArrayList();
     }
 
-        //Getters & Setters
-    
-        public Long getId() {
+    //Getters & Setters
+    public Long getId() {
         return id;
     }
 
@@ -106,7 +118,6 @@ public class Cliente implements Serializable {
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
-    
 
     @Override
     public int hashCode() {
@@ -133,6 +144,4 @@ public class Cliente implements Serializable {
         return "Cliente{" + "id=" + id + ", nombre=" + nombre + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", telefono=" + telefono + '}';
     }
 
-    
-    
 }
