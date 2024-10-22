@@ -7,6 +7,7 @@ interfaces\IClienteDAO.class
 dao\TipoMesaDAO.class
 interfaces\IHistorialReservasDAO.class
 entidadesJPA\Cliente.class
+entidadesJPA\Restaurante.class
 entidadesJPA\Reserva.class
 pruebas\test.class
 entidadesJPA\Mesa.class
@@ -17,4 +18,3 @@ interfaces\ITipoMesaDAO.class
 dao\MesaDAO.class
 recursos\Encriptacion.class
 conexion\IConexion.class
-entidadesJPA\HistorialReservas.class

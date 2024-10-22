@@ -58,6 +58,10 @@ public class Reserva implements Serializable {
     @Column(name = "multa")
     private BigDecimal multa;
 
+    @Column(name = "fecha_hora_creada")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaHoraCreada;
+
     // Relación ManyToOne con Cliente
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_cliente", nullable = false)
@@ -78,19 +82,20 @@ public class Reserva implements Serializable {
     }
 
     //Constructor sin Id
-    public Reserva(Date fechaHora, int numPersonas, BigDecimal costo, String estado, Date fechaCancelacion, BigDecimal multa, Cliente cliente, Mesa mesa) {
+    public Reserva(Date fechaHora, int numPersonas, BigDecimal costo, String estado, Date fechaCancelacion, BigDecimal multa, Date fechaHoraCreada, Cliente cliente, Mesa mesa) {
         this.fechaHora = fechaHora;
         this.numPersonas = numPersonas;
         this.costo = costo;
         this.estado = estado;
         this.fechaCancelacion = fechaCancelacion;
         this.multa = multa;
+        this.fechaHoraCreada = fechaHoraCreada;
         this.cliente = cliente;
         this.mesa = mesa;
     }
 
     //Contructor completo
-    public Reserva(Long id, Date fechaHora, int numPersonas, BigDecimal costo, String estado, Date fechaCancelacion, BigDecimal multa, Cliente cliente, Mesa mesa) {
+    public Reserva(Long id, Date fechaHora, int numPersonas, BigDecimal costo, String estado, Date fechaCancelacion, BigDecimal multa, Date fechaHoraCreada, Cliente cliente, Mesa mesa) {
         this.id = id;
         this.fechaHora = fechaHora;
         this.numPersonas = numPersonas;
@@ -98,6 +103,7 @@ public class Reserva implements Serializable {
         this.estado = estado;
         this.fechaCancelacion = fechaCancelacion;
         this.multa = multa;
+        this.fechaHoraCreada = fechaHoraCreada;
         this.cliente = cliente;
         this.mesa = mesa;
     }
@@ -157,6 +163,14 @@ public class Reserva implements Serializable {
 
     public void setMulta(BigDecimal multa) {
         this.multa = multa;
+    }
+
+    public Date getFechaHoraCreada() {
+        return fechaHoraCreada;
+    }
+
+    public void setFechaHoraCreada(Date fechaHoraCreada) {
+        this.fechaHoraCreada = fechaHoraCreada;
     }
 
     public Cliente getCliente() {

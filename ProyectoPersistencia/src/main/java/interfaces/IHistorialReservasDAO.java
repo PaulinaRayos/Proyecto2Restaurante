@@ -4,7 +4,6 @@
  */
 package interfaces;
 
-import entidadesJPA.HistorialReservas;
 import excepciones.PersistenciaException;
 import java.util.List;
 
@@ -19,16 +18,16 @@ import java.util.List;
  */
 public interface IHistorialReservasDAO {
 
-    // Método para actualizar un historial de reserva
-    void actualizarHistorialReservas(HistorialReservas historialReservas) throws PersistenciaException;
-
-    // Método para agregar un historial de reserva
-    void agregarHistorialReservas(HistorialReservas historialReservas) throws PersistenciaException;
-
-    // Método para cerrar el EntityManager y EntityManagerFactory
-    void cerrar() throws PersistenciaException;
-
-    // Método para obtener todos los historiales de reserva
-    List<HistorialReservas> obtenerTodosLosHistorialesReservas() throws PersistenciaException;
+//    // Método para actualizar un historial de reserva
+//    void actualizarHistorialReservas(HistorialReservas historialReservas) throws PersistenciaException;
+//
+//    // Método para agregar un historial de reserva
+//    void agregarHistorialReservas(HistorialReservas historialReservas) throws PersistenciaException;
+//
+//    // Método para cerrar el EntityManager y EntityManagerFactory
+//    void cerrar() throws PersistenciaException;
+//
+//    // Método para obtener todos los historiales de reserva
+//    List<HistorialReservas> obtenerTodosLosHistorialesReservas() throws PersistenciaException;
 
 }
