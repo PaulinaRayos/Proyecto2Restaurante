@@ -16,22 +16,22 @@ import entidadesJPA.Mesa;
 import entidadesJPA.Reserva;
 import interfaces.IMesaDAO;
 import interfaces.IClienteDAO;
-import interfaces.IReservaBO;
 import interfaces.IReservaDAO;
 import java.util.List;
+import interfaces.IAgregarReservaBO;
 
 /**
  *
  * @author pauli
  */
-public class ReservaBO implements IReservaBO {
+public class AgregarReservaBO implements IAgregarReservaBO {
 
     private final IConexion conexion;
     private final IReservaDAO reservaDAO;
     private final IMesaDAO mesaDAO;
     private final IClienteDAO clienteDAO;
 
-    public ReservaBO() {
+    public AgregarReservaBO() {
         this.conexion = new Conexion();
         this.reservaDAO = new ReservaDAO(conexion);
         this.mesaDAO = new MesaDAO(conexion);
@@ -76,56 +76,16 @@ public class ReservaBO implements IReservaBO {
 
     }
 
+    @Override
     public void actualizarReserva(ReservaDTO reservaDTO) throws Exception {
-        // Verificar que el ID de la reserva no sea nulo
-        if (reservaDTO.getIdReserva() == null) {
-            throw new IllegalArgumentException("El ID de la reserva no puede ser nulo.");
-        }
-
-        // Buscar la reserva existente en la base de datos
-        Reserva reservaExistente = reservaDAO.obtenerReservaPorId(reservaDTO.getIdReserva());
-        if (reservaExistente == null) {
-            throw new Exception("Reserva no encontrada con ID: " + reservaDTO.getIdReserva());
-        }
-
-        // Actualizar los campos de la reserva existente
-        reservaExistente.setFechaHora(reservaDTO.getFechaHora());
-        reservaExistente.setNumPersonas(reservaDTO.getNumeroPersonas());
-        reservaExistente.setCosto(reservaDTO.getCosto()); // Asegúrate de que el costo se calcula correctamente
-        reservaExistente.setEstado(reservaDTO.getEstado()); // Si deseas permitir cambiar el estado
-
-        // Cargar la mesa y el cliente solo si sus IDs son diferentes (opcional)
-        if (!reservaExistente.getCliente().getId().equals(reservaDTO.getIdCliente())) {
-            Cliente cliente = new Cliente();
-            cliente.setId(reservaDTO.getIdCliente());
-            reservaExistente.setCliente(cliente); // Asignar el nuevo cliente
-        }
-
-        // Si deseas permitir la actualización de la mesa, carga la mesa desde la base de datos
-        Mesa mesa = mesaDAO.obtenerMesaPorId(reservaDTO.getIdMesa());
-        if (mesa == null) {
-            throw new Exception("Mesa no encontrada con ID: " + reservaDTO.getIdMesa());
-        }
-        reservaExistente.setMesa(mesa); // Asignar la mesa
-
-        try {
-            // Persistir los cambios usando el DAO
-            reservaDAO.actualizarReserva(reservaExistente);
-        } catch (Exception e) {
-            System.out.println("Error al actualizar la reserva: " + e.getMessage());
-            throw new Exception("No se pudo actualizar la reserva.", e);
-        }
-
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    public void cancelarReserva(Long idReserva) throws Exception {
 
-    }
-
+    @Override
     public List<ReservaDTO> obtenerReservasPorCliente(Long idCliente) throws Exception {
-
-        return null;
-
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
+    
 }

@@ -11,11 +11,11 @@ import java.util.List;
  *
  * @author pauli
  */
-public interface IReservaBO {
+public interface IAgregarReservaBO {
 
     void actualizarReserva(ReservaDTO reservaDTO) throws Exception;
 
-    void cancelarReserva(Long idReserva) throws Exception;
+
 
     void agregarReserva(ReservaDTO reservaDTO) throws Exception;
 
