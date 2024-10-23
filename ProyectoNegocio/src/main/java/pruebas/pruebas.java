@@ -20,7 +20,7 @@ public class pruebas {
 
         try {
             prueba.setUp(); // Inicializa los DAOs y el ReservaBO
-            prueba.testAgregarReserva();
+            prueba.testCancelarReserva();
         } catch (Exception e) {
         }
 //        

@@ -64,7 +64,7 @@ public class pruebaReservaBO {
 
     public void testCancelarReserva() throws Exception {
         // ID de una reserva existente en la base de datos que queremos cancelar
-        Long idReserva = 12L;
+        Long idReserva = 1L;
 
         try {
             // Ejecutar el método de negocio para cancelar la reserva

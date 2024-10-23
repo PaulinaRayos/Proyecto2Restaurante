@@ -4,14 +4,29 @@
  */
 package presentacion;
 
+import dto.ReservaDTO;
+import entidadesJPA.Mesa;
+import interfaces.IAgregarReservaBO;
 import java.awt.Image;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Calendar;
 import java.util.Date;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.PersistenceException;
+import javax.persistence.TypedQuery;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
+import javax.swing.JTable;
 import javax.swing.SpinnerDateModel;
+import javax.swing.table.DefaultTableModel;
+import negocio.AgregarReservaBO;
 import utilidades.Forms;
 
 /**
@@ -20,14 +35,22 @@ import utilidades.Forms;
  */
 public class FormMenu extends javax.swing.JFrame {
 
+    private final IAgregarReservaBO agregarReservaBO;
+    private JTable tablaMesas;
+    private Long idMesaSeleccionada;
+
     /**
      * Creates new form FormMenu
      */
     public FormMenu() {
         initComponents();
         this.setLocationRelativeTo(this);
+        this.agregarReservaBO = new AgregarReservaBO();
 
         this.SetImageLabel(jLabel3, "src/main/java/Imagenes/logo.png");
+
+        cargarClientes();
+        cargarMesasEnTabla();
     }
 
     /**
@@ -59,6 +82,7 @@ public class FormMenu extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         cbUbicacion = new javax.swing.JComboBox<>();
         bConfirmar = new javax.swing.JButton();
+        jComboBoxClientes = new javax.swing.JComboBox<>();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblMesas = new javax.swing.JTable();
@@ -81,18 +105,14 @@ public class FormMenu extends javax.swing.JFrame {
         jPanel4.setBackground(new java.awt.Color(204, 204, 204));
 
         jLabel1.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText("Nombre Completo:");
         jLabel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jLabelaa.setFont(new java.awt.Font("Times New Roman", 3, 24)); // NOI18N
-        jLabelaa.setForeground(new java.awt.Color(0, 0, 0));
         jLabelaa.setText("Nueva Reservación");
         jLabelaa.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        txtNombre.setBackground(new java.awt.Color(255, 255, 255));
         txtNombre.setFont(new java.awt.Font("Arial", 3, 18)); // NOI18N
-        txtNombre.setForeground(new java.awt.Color(0, 0, 0));
         txtNombre.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtNombreActionPerformed(evt);
@@ -100,13 +120,10 @@ public class FormMenu extends javax.swing.JFrame {
         });
 
         jLabel5.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(0, 0, 0));
         jLabel5.setText("Telefono:");
         jLabel5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        txtTelefono.setBackground(new java.awt.Color(255, 255, 255));
         txtTelefono.setFont(new java.awt.Font("Arial", 3, 18)); // NOI18N
-        txtTelefono.setForeground(new java.awt.Color(0, 0, 0));
         txtTelefono.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtTelefonoActionPerformed(evt);
@@ -114,13 +131,10 @@ public class FormMenu extends javax.swing.JFrame {
         });
 
         jLabel6.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(0, 0, 0));
         jLabel6.setText("Cantidad personas:");
         jLabel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        cbCantidad.setBackground(new java.awt.Color(255, 255, 255));
         cbCantidad.setFont(new java.awt.Font("Times New Roman", 3, 14)); // NOI18N
-        cbCantidad.setForeground(new java.awt.Color(0, 0, 0));
         cbCantidad.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3" }));
         cbCantidad.setBorder(null);
 
@@ -128,33 +142,34 @@ public class FormMenu extends javax.swing.JFrame {
         jHora.setEditor(de);
 
         jLabel7.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(0, 0, 0));
         jLabel7.setText("Fecha:");
         jLabel7.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jLabel8.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(0, 0, 0));
         jLabel8.setText("Hora:");
         jLabel8.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jLabel9.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
-        jLabel9.setForeground(new java.awt.Color(0, 0, 0));
         jLabel9.setText("Ubicación:");
         jLabel9.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        cbUbicacion.setBackground(new java.awt.Color(255, 255, 255));
         cbUbicacion.setFont(new java.awt.Font("Times New Roman", 3, 14)); // NOI18N
-        cbUbicacion.setForeground(new java.awt.Color(0, 0, 0));
         cbUbicacion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "General", "Terraza", "Ventana" }));
         cbUbicacion.setBorder(null);
 
         bConfirmar.setBackground(new java.awt.Color(255, 51, 153));
         bConfirmar.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
-        bConfirmar.setForeground(new java.awt.Color(0, 0, 0));
         bConfirmar.setText("Reservar");
         bConfirmar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bConfirmarActionPerformed(evt);
+            }
+        });
+
+        jComboBoxClientes.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBoxClientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxClientesActionPerformed(evt);
             }
         });
 
@@ -185,11 +200,12 @@ public class FormMenu extends javax.swing.JFrame {
                                         .addComponent(jLabel8)
                                         .addComponent(jHora)))
                                 .addComponent(jLabel9)
-                                .addComponent(cbUbicacion, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(cbUbicacion, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jComboBoxClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 358, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGap(157, 157, 157)
                         .addComponent(bConfirmar)))
-                .addContainerGap(65, Short.MAX_VALUE))
+                .addContainerGap(57, Short.MAX_VALUE))
             .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel4Layout.createSequentialGroup()
                     .addGap(16, 16, 16)
@@ -199,7 +215,9 @@ public class FormMenu extends javax.swing.JFrame {
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap(100, Short.MAX_VALUE)
+                .addContainerGap(67, Short.MAX_VALUE)
+                .addComponent(jComboBoxClientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27)
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -237,7 +255,6 @@ public class FormMenu extends javax.swing.JFrame {
 
         jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
         jScrollPane1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jScrollPane1.setForeground(new java.awt.Color(0, 0, 0));
 
         tblMesas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -261,7 +278,6 @@ public class FormMenu extends javax.swing.JFrame {
         jScrollPane1.setViewportView(tblMesas);
 
         jLabelaa1.setFont(new java.awt.Font("Times New Roman", 3, 24)); // NOI18N
-        jLabelaa1.setForeground(new java.awt.Color(0, 0, 0));
         jLabelaa1.setText("Mesas Disponibles");
         jLabelaa1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
@@ -330,7 +346,6 @@ public class FormMenu extends javax.swing.JFrame {
 
         bReservas.setBackground(new java.awt.Color(255, 51, 153));
         bReservas.setFont(new java.awt.Font("Times New Roman", 3, 20)); // NOI18N
-        bReservas.setForeground(new java.awt.Color(0, 0, 0));
         bReservas.setText("Reservas");
         bReservas.setBorder(null);
         bReservas.setContentAreaFilled(false);
@@ -342,7 +357,6 @@ public class FormMenu extends javax.swing.JFrame {
 
         bMesas.setBackground(new java.awt.Color(255, 51, 153));
         bMesas.setFont(new java.awt.Font("Times New Roman", 3, 20)); // NOI18N
-        bMesas.setForeground(new java.awt.Color(0, 0, 0));
         bMesas.setText("Mesas");
         bMesas.setBorder(null);
         bMesas.setContentAreaFilled(false);
@@ -354,7 +368,6 @@ public class FormMenu extends javax.swing.JFrame {
 
         bConsultas.setBackground(new java.awt.Color(255, 51, 153));
         bConsultas.setFont(new java.awt.Font("Times New Roman", 3, 20)); // NOI18N
-        bConsultas.setForeground(new java.awt.Color(0, 0, 0));
         bConsultas.setText("Consultas");
         bConsultas.setBorder(null);
         bConsultas.setContentAreaFilled(false);
@@ -366,7 +379,6 @@ public class FormMenu extends javax.swing.JFrame {
 
         bReportes.setBackground(new java.awt.Color(255, 51, 153));
         bReportes.setFont(new java.awt.Font("Times New Roman", 3, 20)); // NOI18N
-        bReportes.setForeground(new java.awt.Color(0, 0, 0));
         bReportes.setText("Reportes");
         bReportes.setBorder(null);
         bReportes.setContentAreaFilled(false);
@@ -377,13 +389,11 @@ public class FormMenu extends javax.swing.JFrame {
         });
 
         jLabel4.setFont(new java.awt.Font("Times New Roman", 3, 20)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
         jLabel4.setText(" Amadeustaurant");
         jLabel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         bClientes.setBackground(new java.awt.Color(255, 51, 153));
         bClientes.setFont(new java.awt.Font("Times New Roman", 3, 20)); // NOI18N
-        bClientes.setForeground(new java.awt.Color(0, 0, 0));
         bClientes.setText("Clientes");
         bClientes.setBorder(null);
         bClientes.setContentAreaFilled(false);
@@ -472,12 +482,66 @@ public class FormMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_txtTelefonoActionPerformed
 
     private void bConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bConfirmarActionPerformed
-        // TODO add your handling code here:
+        // Obtener el cliente seleccionado del JComboBox
+        String clienteSeleccionado = (String) jComboBoxClientes.getSelectedItem();
+        String selectedItem = (String) cbCantidad.getSelectedItem();
+        // Obtener el número de personas seleccionado
+        int numPersonas = Integer.parseInt(selectedItem); // Asumiendo que es un JComboBox con enteros
+
+        // Obtener la fecha seleccionada del JSpinner
+        Date fechaSeleccionada = (Date) jFecha.getDate(); // Asegúrate que jFecha está configurado correctamente
+
+        // Obtener la hora seleccionada del JSpinner
+        Date horaSeleccionada = (Date) jHora.getValue(); // Asegúrate que jHora está configurado correctamente
+
+        // Combinar fecha y hora
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(fechaSeleccionada); // Establecer la fecha seleccionada
+
+        // Extraer la hora y los minutos del JSpinner de hora
+        Calendar horaCalendar = Calendar.getInstance();
+        horaCalendar.setTime(horaSeleccionada);
+
+        // Establecer la hora y los minutos en el calendar principal
+        calendar.set(Calendar.HOUR_OF_DAY, horaCalendar.get(Calendar.HOUR_OF_DAY));
+        calendar.set(Calendar.MINUTE, horaCalendar.get(Calendar.MINUTE));
+        calendar.set(Calendar.SECOND, 0); // Puedes establecer los segundos si lo necesitas
+        calendar.set(Calendar.MILLISECOND, 0); // Puedes establecer los milisegundos si lo necesitas
+
+        // Crear el Date final combinando fecha y hora
+        Date fechaHoraFinal = calendar.getTime();
+
+        // Crear un objeto ReservaDTO
+        Long idReserva = null; // Si es autoincremental y se genera en la base de datos
+        BigDecimal costo = obtenerCostoPorIdMesa(this.idMesaSeleccionada); // Método para calcular el costo
+        String estado = "Reservado"; // Estado inicial, puede cambiar según tu lógica
+        Date fechaCancelacion = null; // O puedes establecerlo en caso de cancelación
+        BigDecimal multa = BigDecimal.ZERO; // O establecer según tu lógica
+
+        String nombreCompleto = (String) jComboBoxClientes.getSelectedItem(); // Obtener el nombre completo seleccionado
+        Long idCliente = obtenerIdClientePorNombre(nombreCompleto); // Obtener el ID del cliente
+
+        // Crear el objeto ReservaDTO con fechaHoraFinal
+        ReservaDTO reservaDTO = new ReservaDTO(idReserva, fechaHoraFinal, numPersonas, costo, estado, fechaCancelacion, multa, idCliente, this.idMesaSeleccionada);
+
+        // Llamar al método agregarReserva
+        try {
+            agregarReservaBO.agregarReserva(reservaDTO);
+            JOptionPane.showMessageDialog(this, "Reserva agregada exitosamente.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al agregar la reserva: " + e.getMessage());
+
+        }
     }//GEN-LAST:event_bConfirmarActionPerformed
 
     private void bClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bClientesActionPerformed
         Forms.cargarForm(new FormClientes(), this);
     }//GEN-LAST:event_bClientesActionPerformed
+
+    private void jComboBoxClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxClientesActionPerformed
+
+    }//GEN-LAST:event_jComboBoxClientesActionPerformed
 
 //    /**
 //     * @param args the command line arguments
@@ -523,6 +587,7 @@ public class FormMenu extends javax.swing.JFrame {
     private javax.swing.JButton bReservas;
     private javax.swing.JComboBox<String> cbCantidad;
     private javax.swing.JComboBox<String> cbUbicacion;
+    private javax.swing.JComboBox<String> jComboBoxClientes;
     private com.toedter.calendar.JDateChooser jFecha;
     private javax.swing.JSpinner jHora;
     private javax.swing.JLabel jLabel1;
@@ -551,6 +616,137 @@ public class FormMenu extends javax.swing.JFrame {
         Icon icon = new ImageIcon(image.getImage().getScaledInstance(labelname.getWidth(), labelname.getHeight(), Image.SCALE_DEFAULT));
         labelname.setIcon(icon);
         this.repaint();
+    }
+
+    private void cargarClientes() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("pu_restaurante");
+        EntityManager em = emf.createEntityManager();
+
+        try {
+            // Limpiar el JComboBox antes de cargar nuevos elementos
+            jComboBoxClientes.removeAllItems();
+
+            // Consulta JPQL para obtener los nombres concatenados
+            String jpql = "SELECT CONCAT(c.nombre, ' ', c.apellidoPaterno, ' ', c.apellidoMaterno) FROM Cliente c";
+            TypedQuery<String> query = em.createQuery(jpql, String.class);
+            List<String> nombresCompletos = query.getResultList(); // Usar TypedQuery
+
+            // Llenar el JComboBox con los nombres completos
+            for (String nombreCompleto : nombresCompletos) {
+                jComboBoxClientes.addItem(nombreCompleto);
+            }
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+        } finally {
+            em.close(); // Cerrar EntityManager
+        }
+    }
+
+    private void cargarMesasEnTabla() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("pu_restaurante");
+        EntityManager em = emf.createEntityManager();
+
+        try {
+            // Consulta JPQL para obtener la información de las mesas
+            String jpql = "SELECT m FROM Mesa m";
+            TypedQuery<Mesa> query = em.createQuery(jpql, Mesa.class);
+            List<Mesa> mesas = query.getResultList();
+
+            // Crear un modelo de tabla
+            DefaultTableModel modelo = new DefaultTableModel();
+            modelo.addColumn("ID"); // Columna para el ID de la mesa
+            modelo.addColumn("Mesa");
+            modelo.addColumn("Ubicación");
+            modelo.addColumn("Capacidad");
+            modelo.addColumn("Horario");
+
+            // Llenar el modelo con los datos de las mesas
+            for (Mesa mesa : mesas) {
+                Object[] fila = new Object[5]; // Cambia a 5 para incluir el ID
+                fila[0] = mesa.getId(); // Añadir el ID
+                fila[1] = mesa.getCodigoMesa();
+                fila[2] = mesa.getUbicacion();
+                fila[3] = mesa.getCapacidad();
+                fila[4] = "Apertura: " + mesa.getRestaurante().getHora_apartura()
+                        + ", Cierre: " + mesa.getRestaurante().getHora_cierre();
+                modelo.addRow(fila);
+            }
+
+            // Crear la JTable con el modelo
+            tablaMesas = new JTable(modelo); // Almacenar en el atributo de clase
+            tablaMesas.setFillsViewportHeight(true); // Asegúrate que la tabla llene el JScrollPane
+
+            // Agregar un listener para la selección de filas
+            tablaMesas.getSelectionModel().addListSelectionListener(event -> {
+                if (!event.getValueIsAdjusting()) { // Para evitar múltiples llamadas
+                    int selectedRow = tablaMesas.getSelectedRow();
+                    if (selectedRow != -1) {
+                        Long idMesa = (Long) tablaMesas.getValueAt(selectedRow, 0); // Obtener el ID
+                        // Aquí puedes almacenar el id en un atributo si lo necesitas
+                        guardarIdMesaSeleccionada(idMesa); // Método para guardar el ID si es necesario
+                    }
+                }
+            });
+
+            // Agregar la JTable al JScrollPane
+            jScrollPane1.setViewportView(tablaMesas); // Asumiendo que jScrollPane1 es el JScrollPane
+        } catch (Exception e) {
+            e.printStackTrace(); // Manejo de excepciones
+        } finally {
+            em.close(); // Cerrar EntityManager
+        }
+    }
+
+    private void guardarIdMesaSeleccionada(Long idMesa) {
+        this.idMesaSeleccionada = idMesa;
+    }
+
+    private Long obtenerIdClientePorNombre(String nombreCompleto) {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("pu_restaurante");
+        EntityManager em = emf.createEntityManager();
+        Long idCliente = null;
+
+        try {
+            // Consulta JPQL para obtener el ID del cliente por su nombre completo
+            String jpql = "SELECT c.id FROM Cliente c WHERE CONCAT(c.nombre, ' ', c.apellidoPaterno, ' ', c.apellidoMaterno) = :nombreCompleto";
+            TypedQuery<Long> query = em.createQuery(jpql, Long.class);
+            query.setParameter("nombreCompleto", nombreCompleto);
+
+            // Obtener el resultado
+            List<Long> resultados = query.getResultList();
+            if (!resultados.isEmpty()) {
+                idCliente = resultados.get(0); // Tomar el primer resultado
+            }
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+        } finally {
+            em.close(); // Cerrar EntityManager
+        }
+
+        return idCliente;
+    }
+
+    public BigDecimal obtenerCostoPorIdMesa(Long idMesa) {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("pu_restaurante");
+        EntityManager em = emf.createEntityManager();
+        BigDecimal precioReserva = null;
+
+        try {
+            // Buscar la mesa por ID
+            Mesa mesa = em.find(Mesa.class, idMesa);
+            if (mesa != null && mesa.getTipoMesa() != null) {
+                // Obtener el precio de reserva del tipo de mesa
+                precioReserva = mesa.getTipoMesa().getPrecioReserva();
+            } else {
+                System.out.println("La mesa o su tipo no se encontraron.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // Manejo de excepciones
+        } finally {
+            em.close(); // Cerrar EntityManager
+        }
+
+        return precioReserva; // Retornar el precio o null si no se encontró
     }
 
 }
