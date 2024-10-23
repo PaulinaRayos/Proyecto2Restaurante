@@ -19,11 +19,6 @@
             <version>1.4</version>
         </dependency>
         <dependency>
-            <groupId>unknown.binary</groupId>
-            <artifactId>swing-time-picker</artifactId>
-            <version>SNAPSHOT</version>
-        </dependency>
-        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>ProyectoNegocio</artifactId>
             <version>${project.version}</version>
