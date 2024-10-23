@@ -8,8 +8,10 @@ import conexion.IConexion;
 import entidadesJPA.TipoMesa;
 import excepciones.PersistenciaException;
 import interfaces.ITipoMesaDAO;
+import java.math.BigDecimal;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 /**
  * Interfaz que define los métodos para el acceso a datos de la entidad
@@ -54,6 +56,42 @@ public class TipoMesaDAO implements ITipoMesaDAO {
 
     }
 
+    public void insertarTiposMesaPredeterminados() throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
+        try {
+            em.getTransaction().begin();
+
+            // Verificar si ya existen los tipos de mesa predeterminados
+            Long count = (Long) em.createQuery("SELECT COUNT(tm) FROM TipoMesa tm").getSingleResult();
+
+            if (count == 0) {
+                // Insertar los tipos de mesa predeterminados
+                TipoMesa tipoPequena = new TipoMesa();
+                tipoPequena.setNombreTipo("Mesa pequeña");
+                tipoPequena.setPrecioReserva(new BigDecimal("300.00"));
+
+                TipoMesa tipoMediana = new TipoMesa();
+                tipoMediana.setNombreTipo("Mesa mediana");
+                tipoMediana.setPrecioReserva(new BigDecimal("500.00"));
+
+                TipoMesa tipoGrande = new TipoMesa();
+                tipoGrande.setNombreTipo("Mesa grande");
+                tipoGrande.setPrecioReserva(new BigDecimal("700.00"));
+
+                em.persist(tipoPequena);
+                em.persist(tipoMediana);
+                em.persist(tipoGrande);
+            }
+
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            throw new PersistenciaException("Error al insertar los tipos de mesa predeterminados", e);
+        } finally {
+            em.close();
+        }
+    }
+
     // Método para obtener todos los tipos de mesa
     public List<TipoMesa> obtenerTodosLosTiposMesa() throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
@@ -62,6 +100,38 @@ public class TipoMesaDAO implements ITipoMesaDAO {
         } catch (Exception e) {
             throw new PersistenciaException("No se pudieron obtener los tipos de mesa.");
         }
+    }
+
+    public List<TipoMesa> obtenerTodosLosTipos() throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
+        try {
+            return em.createQuery("SELECT tm FROM TipoMesa tm", TipoMesa.class).getResultList();
+        } catch (Exception e) {
+            throw new PersistenciaException("Error al obtener los tipos de mesa", e);
+        } finally {
+            em.close();
+        }
+    }
+
+    public TipoMesa obtenerTipoMesaPorNombre(String nombreTipo) throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
+        TipoMesa tipoMesa = null;
+
+        try {
+            // Crear la consulta para obtener el tipo de mesa por nombre
+            TypedQuery<TipoMesa> query = em.createQuery(
+                    "SELECT t FROM TipoMesa t WHERE t.nombreTipo = :nombreTipo", TipoMesa.class);
+            query.setParameter("nombreTipo", nombreTipo);
+
+            // Obtener el resultado de la consulta
+            tipoMesa = query.getSingleResult();
+        } catch (Exception e) {
+            throw new PersistenciaException("Error al obtener el tipo de mesa", e);
+        } finally {
+            em.close();
+        }
+
+        return tipoMesa; // Retorna el TipoMesa encontrado o null si no se encontró
     }
 
     // Método para actualizar un tipo de mesa

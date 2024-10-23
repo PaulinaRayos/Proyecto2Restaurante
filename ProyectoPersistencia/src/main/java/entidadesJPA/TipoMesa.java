@@ -18,10 +18,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
- * Clase que representa la entidad TipoMesa en la base de datos.
- * Mapea la tabla 'tipos_mesa' y define los atributos correspondientes,
- * así como las relaciones con otras entidades.
- * 
+ * Clase que representa la entidad TipoMesa en la base de datos. Mapea la tabla
+ * 'tipos_mesa' y define los atributos correspondientes, así como las relaciones
+ * con otras entidades.
+ *
  * @author Cristopher Alberto Elizalde Andrade - 240005
  * @author Paulina Rodríguez Rodríguez Rayos - 117262
  */
@@ -37,9 +37,6 @@ public class TipoMesa implements Serializable {
 
     @Column(name = "nombre_tipo")
     private String nombreTipo;
-
-    @Column (name = "capacidad")
-    private int capacidad;
 
     @Column(name = "precio_reserva")
     private BigDecimal precioReserva;
@@ -58,17 +55,15 @@ public class TipoMesa implements Serializable {
     }
 
     //Constructor sin Id
-    public TipoMesa(String nombreTipo, int capacidad, BigDecimal precioReserva) {
+    public TipoMesa(String nombreTipo, BigDecimal precioReserva) {
         this.nombreTipo = nombreTipo;
-        this.capacidad = capacidad;
         this.precioReserva = precioReserva;
     }
 
     //Constructor completo
-    public TipoMesa(Long id, String nombreTipo, int capacidad, BigDecimal precioReserva) {
+    public TipoMesa(Long id, String nombreTipo, BigDecimal precioReserva) {
         this.id = id;
         this.nombreTipo = nombreTipo;
-        this.capacidad = capacidad;
         this.precioReserva = precioReserva;
     }
 
@@ -87,14 +82,6 @@ public class TipoMesa implements Serializable {
 
     public void setNombreTipo(String nombreTipo) {
         this.nombreTipo = nombreTipo;
-    }
-
-    public int getCapacidad() {
-        return capacidad;
-    }
-
-    public void setCapacidad(int capacidad) {
-        this.capacidad = capacidad;
     }
 
     public BigDecimal getPrecioReserva() {
@@ -135,7 +122,7 @@ public class TipoMesa implements Serializable {
 
     @Override
     public String toString() {
-        return "TipoMesa{" + "id=" + id + ", nombreTipo=" + nombreTipo + ", capacidad=" + capacidad + ", precioReserva=" + precioReserva + '}';
+        return "TipoMesa{" + "id=" + id + ", nombreTipo=" + nombreTipo + ", precioReserva=" + precioReserva + '}';
     }
 
 }

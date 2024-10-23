@@ -6,6 +6,7 @@ package interfaces;
 
 import entidadesJPA.Mesa;
 import excepciones.PersistenciaException;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -23,6 +24,8 @@ public interface IMesaDAO {
 
     // Método para agregar una mesa
     void agregarMesa(Mesa mesa) throws PersistenciaException;
+    
+    void insertarMesas(List<Mesa> mesas) throws PersistenciaException;
 
     // Método para cerrar el EntityManager y EntityManagerFactory
     void cerrar() throws PersistenciaException;
@@ -35,5 +38,7 @@ public interface IMesaDAO {
 
     // Método para obtener todas las mesas
     List<Mesa> obtenerTodasLasMesas() throws PersistenciaException;
+    
+    BigDecimal obtenerCostoPorIdMesa(Long idMesa) throws PersistenciaException;
 
 }

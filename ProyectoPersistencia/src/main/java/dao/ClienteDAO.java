@@ -11,6 +11,7 @@ import interfaces.IClienteDAO;
 import java.util.Arrays;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import recursos.Encriptacion;
 
 /**
@@ -108,6 +109,50 @@ public class ClienteDAO implements IClienteDAO {
             return em.createQuery("SELECT c FROM Cliente c", Cliente.class).getResultList(); // Consulta para obtener todos los clientes
         } catch (Exception e) {
             throw new PersistenciaException("No se pudo encontrar el cliente en la base de datos por id: ");
+        }
+    }
+
+    public Long obtenerIdClientePorNombre(String nombreCompleto) throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
+        Long idCliente = null;
+
+        try {
+            String jpql = "SELECT c.id FROM Cliente c WHERE CONCAT(c.nombre, ' ', c.apellidoPaterno, ' ', c.apellidoMaterno) = :nombreCompleto";
+            TypedQuery<Long> query = em.createQuery(jpql, Long.class);
+            query.setParameter("nombreCompleto", nombreCompleto);
+
+            List<Long> resultados = query.getResultList();
+            if (!resultados.isEmpty()) {
+                idCliente = resultados.get(0);
+            }
+        } catch (Exception e) {
+            throw new PersistenciaException("No se pudo obtener el id del cliente por el nombre: " + nombreCompleto);
+        } finally {
+            em.close();
+        }
+        return idCliente;
+    }
+
+    // Método para obtener los nombres completos de todos los clientes
+    public List<Object[]> obtenerNombresYTelefonosDeClientes() throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
+        try {
+            // Consulta JPQL para obtener los nombres concatenados y los teléfonos encriptados
+            String jpql = "SELECT CONCAT(c.nombre, ' ', c.apellidoPaterno, ' ', c.apellidoMaterno), c.telefono FROM Cliente c";
+            TypedQuery<Object[]> query = em.createQuery(jpql, Object[].class);
+            List<Object[]> clientes = query.getResultList();
+
+            // Desencriptar los teléfonos antes de devolver la lista
+            for (Object[] cliente : clientes) {
+                String telefonoEncriptado = (String) cliente[1];
+                cliente[1] = Encriptacion.decriptar(telefonoEncriptado); // Desencriptar el teléfono
+            }
+
+            return clientes;
+        } catch (Exception e) {
+            throw new PersistenciaException("No se pudieron obtener los nombres y teléfonos de los clientes.");
+        } finally {
+            em.close();
         }
     }
 

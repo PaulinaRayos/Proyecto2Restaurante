@@ -47,7 +47,7 @@ public class Mesa implements Serializable {
     @JoinColumn(name = "id_tipo_mesa", nullable = false)
     private TipoMesa tipoMesa;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_restaurante", nullable = false)
     private Restaurante restaurante;
 

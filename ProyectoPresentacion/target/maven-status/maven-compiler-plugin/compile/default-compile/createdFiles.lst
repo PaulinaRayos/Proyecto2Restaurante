@@ -6,7 +6,6 @@ presentacion\FormReservas.class
 presentacion\FormClientes$4.class
 presentacion\FormConsultas.class
 presentacion\FormDetallesReserva$3.class
-presentacion\FormMenu$10.class
 presentacion\FormMenu$7.class
 presentacion\FormReservas$2.class
 presentacion\FormMenu$2.class
@@ -23,6 +22,7 @@ presentacion\FormConsultas$2.class
 presentacion\FormMesas.class
 presentacion\FormMenu$6.class
 presentacion\FormMenu.class
+presentacion\FormMesas$4.class
 utilidades\JFormActualizado.class
 presentacion\FormConsultas$4.class
 presentacion\FormReservas$4.class

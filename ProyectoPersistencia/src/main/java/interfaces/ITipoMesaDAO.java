@@ -35,5 +35,11 @@ public interface ITipoMesaDAO {
 
     // Método para obtener todos los tipos de mesa
     List<TipoMesa> obtenerTodosLosTiposMesa() throws PersistenciaException;
+    
+    void insertarTiposMesaPredeterminados() throws PersistenciaException;
+    
+    public List<TipoMesa> obtenerTodosLosTipos() throws PersistenciaException;
+    
+    TipoMesa obtenerTipoMesaPorNombre(String nombreTipo) throws PersistenciaException;
 
 }

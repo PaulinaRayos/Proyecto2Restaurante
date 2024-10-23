@@ -8,8 +8,10 @@ import conexion.IConexion;
 import entidadesJPA.Mesa;
 import excepciones.PersistenciaException;
 import interfaces.IMesaDAO;
+import java.math.BigDecimal;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 /**
  * Interfaz que define los métodos para el acceso a datos de la entidad Mesa.
@@ -43,6 +45,25 @@ public class MesaDAO implements IMesaDAO {
         }
     }
 
+    public void insertarMesas(List<Mesa> mesas) throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
+
+        try {
+            em.getTransaction().begin();
+
+            for (Mesa mesa : mesas) {
+                em.persist(mesa); // Guardar cada mesa en la base de datos
+            }
+
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            throw new PersistenciaException("Error al insertar mesas", e);
+        } finally {
+            em.close(); // Asegurarte de cerrar el EntityManager
+        }
+    }
+
     // Método para obtener una mesa por ID
     public Mesa obtenerMesaPorId(Long id) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
@@ -57,12 +78,39 @@ public class MesaDAO implements IMesaDAO {
     // Método para obtener todas las mesas
     public List<Mesa> obtenerTodasLasMesas() throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
+        List<Mesa> mesas = null;
+
         try {
-            return em.createQuery("SELECT m FROM Mesa m", Mesa.class).getResultList(); // Consulta para obtener todas las mesas
+            String jpql = "SELECT m FROM Mesa m JOIN FETCH m.restaurante";
+            TypedQuery<Mesa> query = em.createQuery(jpql, Mesa.class);
+            mesas = query.getResultList();
         } catch (Exception e) {
-            throw new PersistenciaException("No se pudieron obtener las mesa.");
+            e.printStackTrace(); // Manejo de excepciones
+        } finally {
+            em.close();
         }
 
+        return mesas;
+    }
+
+    public BigDecimal obtenerCostoPorIdMesa(Long idMesa) throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
+        BigDecimal precioReserva = null;
+
+        try {
+            Mesa mesa = em.find(Mesa.class, idMesa);
+            if (mesa != null && mesa.getTipoMesa() != null) {
+                precioReserva = mesa.getTipoMesa().getPrecioReserva();
+            } else {
+                System.out.println("La mesa o su tipo no se encontraron.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // Manejo de excepciones
+        } finally {
+            em.close(); // Cerrar EntityManager
+        }
+
+        return precioReserva; // Retornar el precio o null si no se encontró
     }
 
     // Método para actualizar una mesa

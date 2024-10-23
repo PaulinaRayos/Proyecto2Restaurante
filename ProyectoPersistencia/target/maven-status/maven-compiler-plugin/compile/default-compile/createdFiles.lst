@@ -12,6 +12,7 @@ entidadesJPA\Restaurante.class
 entidadesJPA\Reserva.class
 pruebas\test.class
 entidadesJPA\Mesa.class
+interfaces\IRestauranteDAO.class
 dao\ClienteDAO.class
 conexion\Conexion.class
 dao\ReservaDAO.class

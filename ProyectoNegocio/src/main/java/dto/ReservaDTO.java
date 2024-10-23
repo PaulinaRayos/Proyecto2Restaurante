@@ -9,8 +9,9 @@ import java.util.Date;
 
 /**
  * Clase que representa un Data Transfer Object (DTO) para la entidad Reserva.
- * Se utiliza para transferir datos de reservas entre la capa de presentación y la capa de negocio.
- * 
+ * Se utiliza para transferir datos de reservas entre la capa de presentación y
+ * la capa de negocio.
+ *
  * @author Cristopher Alberto Elizalde Andrade - 240005
  * @author Paulina Rodríguez Rodríguez Rayos - 117262
  */
@@ -25,6 +26,7 @@ public class ReservaDTO {
     private BigDecimal multa;
     private Long idCliente;
     private Long idMesa;
+    private Date fechaHoraCreada;
 
     // Constructor
     public ReservaDTO() {
@@ -40,6 +42,18 @@ public class ReservaDTO {
         this.multa = multa;
         this.idCliente = idCliente;
         this.idMesa = idMesa;
+    }
+
+    public ReservaDTO(Date fechaHora, int numeroPersonas, BigDecimal costo, String estado, Date fechaCancelacion, BigDecimal multa, Long idCliente, Long idMesa, Date fechaHoraCreada) {
+        this.fechaHora = fechaHora;
+        this.numeroPersonas = numeroPersonas;
+        this.costo = costo;
+        this.estado = estado;
+        this.fechaCancelacion = fechaCancelacion;
+        this.multa = multa;
+        this.idCliente = idCliente;
+        this.idMesa = idMesa;
+        this.fechaHoraCreada = fechaHoraCreada;
     }
 
     // Getters y Setters
@@ -114,4 +128,14 @@ public class ReservaDTO {
     public void setIdMesa(Long idMesa) {
         this.idMesa = idMesa;
     }
+
+    public Date getFechaHoraCreada() {
+        return fechaHoraCreada;
+    }
+
+    public void setFechaHoraCreada(Date fechaHoraCreada) {
+        this.fechaHoraCreada = fechaHoraCreada;
+    }
+    
+    
 }

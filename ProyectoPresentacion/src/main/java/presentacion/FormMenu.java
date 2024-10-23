@@ -4,20 +4,22 @@
  */
 package presentacion;
 
+import dto.MesaDTO;
 import dto.ReservaDTO;
-import entidadesJPA.Mesa;
+import dto.RestauranteDTO;
+import excepciones.NegocioException;
 import interfaces.IAgregarReservaBO;
+import interfaces.IClienteBO;
+import interfaces.IMesaBO;
+import interfaces.IRestauranteBO;
 import java.awt.Image;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Calendar;
 import java.util.Date;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.PersistenceException;
-import javax.persistence.TypedQuery;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -27,6 +29,9 @@ import javax.swing.JTable;
 import javax.swing.SpinnerDateModel;
 import javax.swing.table.DefaultTableModel;
 import negocio.AgregarReservaBO;
+import negocio.ClienteBO;
+import negocio.MesaBO;
+import negocio.RestauranteBO;
 import utilidades.Forms;
 
 /**
@@ -38,6 +43,10 @@ public class FormMenu extends javax.swing.JFrame {
     private final IAgregarReservaBO agregarReservaBO;
     private JTable tablaMesas;
     private Long idMesaSeleccionada;
+    private final IClienteBO clienteBO;
+    private boolean isComboBoxLoaded = false;
+    private final IMesaBO mesaBO;
+    private final IRestauranteBO restBO;
 
     /**
      * Creates new form FormMenu
@@ -46,11 +55,20 @@ public class FormMenu extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(this);
         this.agregarReservaBO = new AgregarReservaBO();
+        this.clienteBO = new ClienteBO();
+        this.mesaBO = new MesaBO();
+        this.restBO = new RestauranteBO();
 
         this.SetImageLabel(jLabel3, "src/main/java/Imagenes/logo.png");
 
         cargarClientes();
         cargarMesasEnTabla();
+
+        try {
+            System.out.println(mesaBO.obtenerTodasLasMesas());
+        } catch (NegocioException ex) {
+            Logger.getLogger(FormMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -67,9 +85,7 @@ public class FormMenu extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabelaa = new javax.swing.JLabel();
-        txtNombre = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        txtTelefono = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         cbCantidad = new javax.swing.JComboBox<>();
         jFecha = new com.toedter.calendar.JDateChooser();
@@ -83,6 +99,7 @@ public class FormMenu extends javax.swing.JFrame {
         cbUbicacion = new javax.swing.JComboBox<>();
         bConfirmar = new javax.swing.JButton();
         jComboBoxClientes = new javax.swing.JComboBox<>();
+        txtTelefono = new javax.swing.JTextField();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblMesas = new javax.swing.JTable();
@@ -112,23 +129,9 @@ public class FormMenu extends javax.swing.JFrame {
         jLabelaa.setText("Nueva Reservación");
         jLabelaa.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        txtNombre.setFont(new java.awt.Font("Arial", 3, 18)); // NOI18N
-        txtNombre.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNombreActionPerformed(evt);
-            }
-        });
-
         jLabel5.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
         jLabel5.setText("Telefono:");
         jLabel5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
-        txtTelefono.setFont(new java.awt.Font("Arial", 3, 18)); // NOI18N
-        txtTelefono.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtTelefonoActionPerformed(evt);
-            }
-        });
 
         jLabel6.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
         jLabel6.setText("Cantidad personas:");
@@ -173,6 +176,16 @@ public class FormMenu extends javax.swing.JFrame {
             }
         });
 
+        txtTelefono.setEditable(false);
+        txtTelefono.setBackground(new java.awt.Color(255, 255, 255));
+        txtTelefono.setFont(new java.awt.Font("Arial", 3, 18)); // NOI18N
+        txtTelefono.setForeground(new java.awt.Color(0, 0, 0));
+        txtTelefono.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTelefonoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -182,26 +195,24 @@ public class FormMenu extends javax.swing.JFrame {
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGap(31, 31, 31)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(jPanel4Layout.createSequentialGroup()
-                                    .addComponent(jLabel6)
-                                    .addGap(40, 40, 40)
-                                    .addComponent(cbCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(jLabel5)
-                                .addComponent(jLabel1)
-                                .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(jPanel4Layout.createSequentialGroup()
-                                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel7))
-                                    .addGap(18, 18, 18)
-                                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel8)
-                                        .addComponent(jHora)))
-                                .addComponent(jLabel9)
-                                .addComponent(cbUbicacion, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jComboBoxClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 358, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addGap(40, 40, 40)
+                                .addComponent(cbCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel1)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel7))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel8)
+                                    .addComponent(jHora, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jLabel9)
+                            .addComponent(cbUbicacion, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jComboBoxClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 358, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGap(157, 157, 157)
                         .addComponent(bConfirmar)))
@@ -215,17 +226,15 @@ public class FormMenu extends javax.swing.JFrame {
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap(67, Short.MAX_VALUE)
-                .addComponent(jComboBoxClientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
+                .addContainerGap(120, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jComboBoxClientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(42, 42, 42)
                 .addComponent(jLabel5)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(38, 38, 38)
+                .addGap(44, 44, 44)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(cbCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -457,10 +466,6 @@ public class FormMenu extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtNombreActionPerformed
-
     private void bMesasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bMesasActionPerformed
         Forms.cargarForm(new FormMesas(), this);
     }//GEN-LAST:event_bMesasActionPerformed
@@ -477,60 +482,61 @@ public class FormMenu extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_bReportesActionPerformed
 
-    private void txtTelefonoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTelefonoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtTelefonoActionPerformed
-
     private void bConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bConfirmarActionPerformed
-        // Obtener el cliente seleccionado del JComboBox
-        String clienteSeleccionado = (String) jComboBoxClientes.getSelectedItem();
-        String selectedItem = (String) cbCantidad.getSelectedItem();
-        // Obtener el número de personas seleccionado
-        int numPersonas = Integer.parseInt(selectedItem); // Asumiendo que es un JComboBox con enteros
-
-        // Obtener la fecha seleccionada del JSpinner
-        Date fechaSeleccionada = (Date) jFecha.getDate(); // Asegúrate que jFecha está configurado correctamente
-
-        // Obtener la hora seleccionada del JSpinner
-        Date horaSeleccionada = (Date) jHora.getValue(); // Asegúrate que jHora está configurado correctamente
-
-        // Combinar fecha y hora
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(fechaSeleccionada); // Establecer la fecha seleccionada
-
-        // Extraer la hora y los minutos del JSpinner de hora
-        Calendar horaCalendar = Calendar.getInstance();
-        horaCalendar.setTime(horaSeleccionada);
-
-        // Establecer la hora y los minutos en el calendar principal
-        calendar.set(Calendar.HOUR_OF_DAY, horaCalendar.get(Calendar.HOUR_OF_DAY));
-        calendar.set(Calendar.MINUTE, horaCalendar.get(Calendar.MINUTE));
-        calendar.set(Calendar.SECOND, 0); // Puedes establecer los segundos si lo necesitas
-        calendar.set(Calendar.MILLISECOND, 0); // Puedes establecer los milisegundos si lo necesitas
-
-        // Crear el Date final combinando fecha y hora
-        Date fechaHoraFinal = calendar.getTime();
-
-        // Crear un objeto ReservaDTO
-        Long idReserva = null; // Si es autoincremental y se genera en la base de datos
-        BigDecimal costo = obtenerCostoPorIdMesa(this.idMesaSeleccionada); // Método para calcular el costo
-        String estado = "Reservado"; // Estado inicial, puede cambiar según tu lógica
-        Date fechaCancelacion = null; // O puedes establecerlo en caso de cancelación
-        BigDecimal multa = BigDecimal.ZERO; // O establecer según tu lógica
-
-        String nombreCompleto = (String) jComboBoxClientes.getSelectedItem(); // Obtener el nombre completo seleccionado
-        Long idCliente = obtenerIdClientePorNombre(nombreCompleto); // Obtener el ID del cliente
-
-        // Crear el objeto ReservaDTO con fechaHoraFinal
-        ReservaDTO reservaDTO = new ReservaDTO(idReserva, fechaHoraFinal, numPersonas, costo, estado, fechaCancelacion, multa, idCliente, this.idMesaSeleccionada);
-
-        // Llamar al método agregarReserva
         try {
-            agregarReservaBO.agregarReserva(reservaDTO);
-            JOptionPane.showMessageDialog(this, "Reserva agregada exitosamente.");
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error al agregar la reserva: " + e.getMessage());
+            // Obtener el cliente seleccionado del JComboBox
+            String clienteSeleccionado = (String) jComboBoxClientes.getSelectedItem();
+            String selectedItem = (String) cbCantidad.getSelectedItem();
+            // Obtener el número de personas seleccionado
+            int numPersonas = Integer.parseInt(selectedItem); // Asumiendo que es un JComboBox con enteros
+
+            // Obtener la fecha seleccionada del JSpinner
+            Date fechaSeleccionada = (Date) jFecha.getDate(); // Asegúrate que jFecha está configurado correctamente
+
+            // Obtener la hora seleccionada del JSpinner
+            Date horaSeleccionada = (Date) jHora.getValue(); // Asegúrate que jHora está configurado correctamente
+
+            // Combinar fecha y hora
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(fechaSeleccionada); // Establecer la fecha seleccionada
+
+            // Extraer la hora y los minutos del JSpinner de hora
+            Calendar horaCalendar = Calendar.getInstance();
+            horaCalendar.setTime(horaSeleccionada);
+
+            // Establecer la hora y los minutos en el calendar principal
+            calendar.set(Calendar.HOUR_OF_DAY, horaCalendar.get(Calendar.HOUR_OF_DAY));
+            calendar.set(Calendar.MINUTE, horaCalendar.get(Calendar.MINUTE));
+            calendar.set(Calendar.SECOND, 0); // Puedes establecer los segundos si lo necesitas
+            calendar.set(Calendar.MILLISECOND, 0); // Puedes establecer los milisegundos si lo necesitas
+
+            // Crear el Date final combinando fecha y hora
+            Date fechaHoraFinal = calendar.getTime();
+
+            // Crear un objeto ReservaDTO
+            Long idReserva = null; // Si es autoincremental y se genera en la base de datos
+            BigDecimal costo = mesaBO.obtenerCostoPorIdMesa(this.idMesaSeleccionada); // Método para calcular el costo
+            String estado = "Reservado"; // Estado inicial, puede cambiar según tu lógica
+            Date fechaCancelacion = null; // O puedes establecerlo en caso de cancelación
+            BigDecimal multa = BigDecimal.ZERO; // O establecer según tu lógica
+
+            String nombreCompleto = (String) jComboBoxClientes.getSelectedItem(); // Obtener el nombre completo seleccionado
+            Long idCliente = clienteBO.obtenerIdClientePorNombre(nombreCompleto); // Obtener el ID del cliente
+
+            // Crear el objeto ReservaDTO con fechaHoraFinal
+            ReservaDTO reservaDTO = new ReservaDTO(idReserva, fechaHoraFinal, numPersonas, costo, estado, fechaCancelacion, multa, idCliente, this.idMesaSeleccionada);
+
+            // Llamar al método agregarReserva
+            try {
+                agregarReservaBO.agregarReserva(reservaDTO);
+                JOptionPane.showMessageDialog(this, "Reserva agregada exitosamente.");
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error al agregar la reserva: " + e.getMessage());
+
+            }
+        } catch (NegocioException ex) {
+            Logger.getLogger(FormMenu.class.getName()).log(Level.SEVERE, null, ex);
 
         }
     }//GEN-LAST:event_bConfirmarActionPerformed
@@ -542,6 +548,10 @@ public class FormMenu extends javax.swing.JFrame {
     private void jComboBoxClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxClientesActionPerformed
 
     }//GEN-LAST:event_jComboBoxClientesActionPerformed
+
+    private void txtTelefonoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTelefonoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTelefonoActionPerformed
 
 //    /**
 //     * @param args the command line arguments
@@ -607,7 +617,6 @@ public class FormMenu extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblMesas;
-    private javax.swing.JTextField txtNombre;
     private javax.swing.JTextField txtTelefono;
     // End of variables declaration//GEN-END:variables
 
@@ -619,134 +628,103 @@ public class FormMenu extends javax.swing.JFrame {
     }
 
     private void cargarClientes() {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("pu_restaurante");
-        EntityManager em = emf.createEntityManager();
-
         try {
-            // Limpiar el JComboBox antes de cargar nuevos elementos
+            // Limpiar el JComboBox de clientes antes de cargar nuevos elementos
             jComboBoxClientes.removeAllItems();
+            txtTelefono.setText(""); // Limpiar el JTextField del teléfono
 
-            // Consulta JPQL para obtener los nombres concatenados
-            String jpql = "SELECT CONCAT(c.nombre, ' ', c.apellidoPaterno, ' ', c.apellidoMaterno) FROM Cliente c";
-            TypedQuery<String> query = em.createQuery(jpql, String.class);
-            List<String> nombresCompletos = query.getResultList(); // Usar TypedQuery
+            // Agregar un valor inicial al JComboBox
+            jComboBoxClientes.addItem("Seleccionar cliente");
+
+            // Obtener los nombres completos y teléfonos de los clientes desde la capa de negocio
+            List<Object[]> clientes = clienteBO.obtenerNombresYTelefonosDeClientes();
 
             // Llenar el JComboBox con los nombres completos
-            for (String nombreCompleto : nombresCompletos) {
-                jComboBoxClientes.addItem(nombreCompleto);
+            for (Object[] cliente : clientes) {
+                String nombreCompleto = (String) cliente[0];
+                jComboBoxClientes.addItem(nombreCompleto); // Llenar el ComboBox con los nombres
             }
-        } catch (PersistenceException e) {
-            e.printStackTrace();
-        } finally {
-            em.close(); // Cerrar EntityManager
+
+            isComboBoxLoaded = true; // Marcar que el JComboBox ya fue cargado
+
+            jComboBoxClientes.addActionListener(e -> {
+                if (isComboBoxLoaded && jComboBoxClientes.getSelectedIndex() > 0) {
+                    // Solo ejecutar el código si el ComboBox ya fue cargado y hay una selección válida
+                    int selectedIndex = jComboBoxClientes.getSelectedIndex() - 1; // Ajustar el índice debido a la opción extra
+                    if (selectedIndex >= 0) {
+                        // Obtener el teléfono asociado y mostrarlo en el JTextField
+                        String telefono = (String) clientes.get(selectedIndex)[1];
+                        txtTelefono.setText(telefono); // Rellenar el JTextField con el teléfono
+                    }
+                } else {
+                    // Limpiar el campo de teléfono si no hay selección válida
+                    txtTelefono.setText("");
+                }
+            });
+
+        } catch (NegocioException e) {
+            e.printStackTrace(); // Manejo de errores
         }
     }
 
     private void cargarMesasEnTabla() {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("pu_restaurante");
-        EntityManager em = emf.createEntityManager();
-
         try {
-            // Consulta JPQL para obtener la información de las mesas
-            String jpql = "SELECT m FROM Mesa m";
-            TypedQuery<Mesa> query = em.createQuery(jpql, Mesa.class);
-            List<Mesa> mesas = query.getResultList();
+            List<MesaDTO> mesas = mesaBO.obtenerTodasLasMesas();
 
             // Crear un modelo de tabla
             DefaultTableModel modelo = new DefaultTableModel();
-            modelo.addColumn("ID"); // Columna para el ID de la mesa
+            modelo.addColumn("ID");
             modelo.addColumn("Mesa");
             modelo.addColumn("Ubicación");
             modelo.addColumn("Capacidad");
             modelo.addColumn("Horario");
 
             // Llenar el modelo con los datos de las mesas
-            for (Mesa mesa : mesas) {
-                Object[] fila = new Object[5]; // Cambia a 5 para incluir el ID
-                fila[0] = mesa.getId(); // Añadir el ID
+            for (MesaDTO mesa : mesas) {
+                Object[] fila = new Object[5];
+                fila[0] = mesa.getIdMesa();
                 fila[1] = mesa.getCodigoMesa();
                 fila[2] = mesa.getUbicacion();
                 fila[3] = mesa.getCapacidad();
-                fila[4] = "Apertura: " + mesa.getRestaurante().getHora_apartura()
-                        + ", Cierre: " + mesa.getRestaurante().getHora_cierre();
+
+                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+
+                RestauranteDTO restaurante = restBO.obtenerRestaurantePorId(mesa.getIdRestaurante());
+
+                String horarios = "Apertura: " + (restaurante != null && restaurante.getHoraApertura() != null
+                        ? sdf.format(restaurante.getHoraApertura()) : "N/A")
+                        + ", Cierre: " + (restaurante != null && restaurante.getHoraCierre() != null
+                        ? sdf.format(restaurante.getHoraCierre()) : "N/A");
+
+                fila[4] = horarios;
+
                 modelo.addRow(fila);
             }
 
             // Crear la JTable con el modelo
-            tablaMesas = new JTable(modelo); // Almacenar en el atributo de clase
-            tablaMesas.setFillsViewportHeight(true); // Asegúrate que la tabla llene el JScrollPane
+            tablaMesas = new JTable(modelo);
+            tablaMesas.setFillsViewportHeight(true);
 
             // Agregar un listener para la selección de filas
             tablaMesas.getSelectionModel().addListSelectionListener(event -> {
-                if (!event.getValueIsAdjusting()) { // Para evitar múltiples llamadas
+                if (!event.getValueIsAdjusting()) {
                     int selectedRow = tablaMesas.getSelectedRow();
                     if (selectedRow != -1) {
-                        Long idMesa = (Long) tablaMesas.getValueAt(selectedRow, 0); // Obtener el ID
-                        // Aquí puedes almacenar el id en un atributo si lo necesitas
-                        guardarIdMesaSeleccionada(idMesa); // Método para guardar el ID si es necesario
+                        Long idMesa = (Long) tablaMesas.getValueAt(selectedRow, 0);
+                        guardarIdMesaSeleccionada(idMesa);
                     }
                 }
             });
 
             // Agregar la JTable al JScrollPane
-            jScrollPane1.setViewportView(tablaMesas); // Asumiendo que jScrollPane1 es el JScrollPane
-        } catch (Exception e) {
-            e.printStackTrace(); // Manejo de excepciones
-        } finally {
-            em.close(); // Cerrar EntityManager
+            jScrollPane1.setViewportView(tablaMesas);
+        } catch (NegocioException ex) {
+            Logger.getLogger(FormMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     private void guardarIdMesaSeleccionada(Long idMesa) {
         this.idMesaSeleccionada = idMesa;
-    }
-
-    private Long obtenerIdClientePorNombre(String nombreCompleto) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("pu_restaurante");
-        EntityManager em = emf.createEntityManager();
-        Long idCliente = null;
-
-        try {
-            // Consulta JPQL para obtener el ID del cliente por su nombre completo
-            String jpql = "SELECT c.id FROM Cliente c WHERE CONCAT(c.nombre, ' ', c.apellidoPaterno, ' ', c.apellidoMaterno) = :nombreCompleto";
-            TypedQuery<Long> query = em.createQuery(jpql, Long.class);
-            query.setParameter("nombreCompleto", nombreCompleto);
-
-            // Obtener el resultado
-            List<Long> resultados = query.getResultList();
-            if (!resultados.isEmpty()) {
-                idCliente = resultados.get(0); // Tomar el primer resultado
-            }
-        } catch (PersistenceException e) {
-            e.printStackTrace();
-        } finally {
-            em.close(); // Cerrar EntityManager
-        }
-
-        return idCliente;
-    }
-
-    public BigDecimal obtenerCostoPorIdMesa(Long idMesa) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("pu_restaurante");
-        EntityManager em = emf.createEntityManager();
-        BigDecimal precioReserva = null;
-
-        try {
-            // Buscar la mesa por ID
-            Mesa mesa = em.find(Mesa.class, idMesa);
-            if (mesa != null && mesa.getTipoMesa() != null) {
-                // Obtener el precio de reserva del tipo de mesa
-                precioReserva = mesa.getTipoMesa().getPrecioReserva();
-            } else {
-                System.out.println("La mesa o su tipo no se encontraron.");
-            }
-        } catch (Exception e) {
-            e.printStackTrace(); // Manejo de excepciones
-        } finally {
-            em.close(); // Cerrar EntityManager
-        }
-
-        return precioReserva; // Retornar el precio o null si no se encontró
     }
 
 }

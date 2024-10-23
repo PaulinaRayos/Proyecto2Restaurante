@@ -4,6 +4,7 @@
  */
 package dto;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -19,13 +20,14 @@ public class RestauranteDTO {
     private List<MesaDTO> mesas;
 
     public RestauranteDTO() {
+        this.mesas = new ArrayList();
     }
 
-    public RestauranteDTO(Long id, Date horaApertura, Date horaCierre, List<MesaDTO> mesas) {
+    public RestauranteDTO(Long id, Date horaApertura, Date horaCierre) {
         this.id = id;
         this.horaApertura = horaApertura;
         this.horaCierre = horaCierre;
-        this.mesas = mesas;
+        this.mesas = new ArrayList();
     }
 
     // Getters y Setters

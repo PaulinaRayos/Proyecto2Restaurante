@@ -5,6 +5,7 @@
  */
 package negocio;
 
+import static com.mysql.cj.MysqlType.TIME;
 import conexion.Conexion;
 import conexion.IConexion;
 import dao.ClienteDAO;
@@ -19,6 +20,8 @@ import interfaces.IClienteDAO;
 import interfaces.IReservaDAO;
 import java.util.List;
 import interfaces.IAgregarReservaBO;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  *
@@ -49,7 +52,10 @@ public class AgregarReservaBO implements IAgregarReservaBO {
         reserva.setFechaHora(reservaDTO.getFechaHora());
         reserva.setNumPersonas(reservaDTO.getNumeroPersonas());
         reserva.setCosto(reservaDTO.getCosto()); // Suponiendo que tienes un costo calculado
-        reserva.setEstado("Pendiente"); // Estado inicial de la reserva
+        reserva.setEstado(reservaDTO.getEstado()); // Estado inicial de la reserva
+        
+        Date fechaCreada = new Date(); 
+        reserva.setFechaHoraCreada(fechaCreada);
 
         // Cargar el cliente desde la base de datos
         Cliente cliente = clienteDAO.obtenerClientePorId(reservaDTO.getIdCliente());
@@ -81,11 +87,9 @@ public class AgregarReservaBO implements IAgregarReservaBO {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-
     @Override
     public List<ReservaDTO> obtenerReservasPorCliente(Long idCliente) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    
 }

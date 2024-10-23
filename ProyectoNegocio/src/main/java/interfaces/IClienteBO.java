@@ -5,6 +5,7 @@
 package interfaces;
 
 import excepciones.NegocioException;
+import java.util.List;
 
 /**
  *
@@ -12,5 +13,9 @@ import excepciones.NegocioException;
  */
 public interface IClienteBO {
 
-    public void insercionMasiva() throws NegocioException;
+    void insercionMasiva() throws NegocioException;
+    
+    List<Object[]> obtenerNombresYTelefonosDeClientes() throws NegocioException;
+    
+    Long obtenerIdClientePorNombre(String nombreCompleto) throws NegocioException;
 }

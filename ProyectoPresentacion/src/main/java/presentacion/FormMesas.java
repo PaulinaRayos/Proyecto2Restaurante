@@ -4,14 +4,22 @@
  */
 package presentacion;
 
+import dto.TipoMesaDTO;
+import excepciones.NegocioException;
+import interfaces.IMesaBO;
+import interfaces.IRestauranteBO;
 import java.awt.Image;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
+import negocio.MesaBO;
+import negocio.RestauranteBO;
 import utilidades.Forms;
 
 /**
@@ -20,12 +28,17 @@ import utilidades.Forms;
  */
 public class FormMesas extends javax.swing.JFrame {
 
+    private IMesaBO mesaBO;
+    private IRestauranteBO restBO;
+
     /**
      * Creates new form FormMesas
      */
     public FormMesas() {
         initComponents();
         this.setLocationRelativeTo(this);
+        this.mesaBO = new MesaBO();
+        this.restBO = new RestauranteBO();
 
         this.SetImageLabel(jLabel3, "src/main/java/Imagenes/logo.png");
     }
@@ -53,6 +66,7 @@ public class FormMesas extends javax.swing.JFrame {
         txtPequeña = new javax.swing.JTextField();
         txtMediana = new javax.swing.JTextField();
         txtGrande = new javax.swing.JTextField();
+        bCreaTipos = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         jFecha = new com.toedter.calendar.JDateChooser();
         Date date = new Date();
@@ -138,6 +152,16 @@ public class FormMesas extends javax.swing.JFrame {
         txtGrande.setBackground(new java.awt.Color(255, 255, 255));
         txtGrande.setFont(new java.awt.Font("Arial", 3, 18)); // NOI18N
 
+        bCreaTipos.setBackground(new java.awt.Color(255, 51, 153));
+        bCreaTipos.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
+        bCreaTipos.setForeground(new java.awt.Color(0, 0, 0));
+        bCreaTipos.setText("Inserta tipos");
+        bCreaTipos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bCreaTiposActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -175,14 +199,18 @@ public class FormMesas extends javax.swing.JFrame {
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGap(215, 215, 215)
                         .addComponent(jLabel9)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(bCreaTipos, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addComponent(jLabelaa2)
-                .addGap(30, 30, 30)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelaa2)
+                    .addComponent(bCreaTipos))
+                .addGap(27, 27, 27)
                 .addComponent(jLabel9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cbUbicacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -440,8 +468,28 @@ public class FormMesas extends javax.swing.JFrame {
         Forms.cargarForm(new FormMenu(), this);
     }//GEN-LAST:event_jLabel3MouseClicked
 
+    private void bCreaTiposActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCreaTiposActionPerformed
+        try {
+            // Inicializar tipos de mesa predeterminados
+            mesaBO.inicializarTiposMesaPredeterminados();
+
+            // Obtener los tipos de mesa en formato DTO
+            List<TipoMesaDTO> tiposMesaDTO = mesaBO.obtenerTiposMesa();
+
+            // Mostrar los tipos de mesa en la interfaz (por ejemplo, en una tabla o comboBox)
+            for (TipoMesaDTO tipo : tiposMesaDTO) {
+                System.out.println("Tipo de mesa: " + tipo.getNombreTipo() + " - Precio: " + tipo.getPrecioReserva());
+                // Aquí puedes agregar los tipos a tu tabla, comboBox, etc.
+            }
+
+        } catch (NegocioException e) {
+            JOptionPane.showMessageDialog(this, "Error al inicializar los tipos de mesa: " + e.getMessage());
+        }
+    }//GEN-LAST:event_bCreaTiposActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bCreaTipos;
     private javax.swing.JButton bCrear;
     private javax.swing.JComboBox<String> cbUbicacion;
     private com.toedter.calendar.JDateChooser jFecha;
