@@ -30,7 +30,7 @@ public class MesaDTO {
         this.codigoMesa = codigoMesa;
         this.ubicacion = ubicacion;
         this.capacidad = capacidad;
-        this.idTipoMesa = idTipoMesa;
+
     }
 
     public MesaDTO(String codigoMesa, String ubicacion, int capacidad, Long idTipoMesa, Long idRestaurante) {
@@ -74,14 +74,6 @@ public class MesaDTO {
         this.capacidad = capacidad;
     }
 
-    public Long getIdTipoMesa() {
-        return idTipoMesa;
-    }
-
-    public void setIdTipoMesa(Long idTipoMesa) {
-        this.idTipoMesa = idTipoMesa;
-    }
-
     public Long getIdRestaurante() {
         return idRestaurante;
     }
@@ -98,6 +90,14 @@ public class MesaDTO {
         return restaurante != null ? restaurante.getHoraCierre().toString() : "N/A";
     }
 
+    public Long getIdTipoMesa() {
+        return idTipoMesa;
+    }
+
+    public void setIdTipoMesa(Long idTipoMesa) {
+        this.idTipoMesa = idTipoMesa;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -106,7 +106,6 @@ public class MesaDTO {
         sb.append(", codigoMesa=").append(codigoMesa);
         sb.append(", ubicacion=").append(ubicacion);
         sb.append(", capacidad=").append(capacidad);
-        sb.append(", idTipoMesa=").append(idTipoMesa);
         sb.append(", idRestaurante=").append(idRestaurante);
         sb.append('}');
         return sb.toString();

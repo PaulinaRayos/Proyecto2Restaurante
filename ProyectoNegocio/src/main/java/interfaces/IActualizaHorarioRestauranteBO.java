@@ -6,13 +6,13 @@ package interfaces;
 
 import dto.RestauranteDTO;
 import excepciones.NegocioException;
-import java.util.Map;
 
 /**
  *
  * @author Chris
  */
-public interface IAgregaMesasBO {
-
-    void agregarMesas(RestauranteDTO restauranteDTO, Map<String, Integer> cantidadPorTipo, String ubicacion) throws NegocioException;
+public interface IActualizaHorarioRestauranteBO {
+    
+    void guardarOActualizarRestaurante(RestauranteDTO restauranteDTO) throws NegocioException;
+    
 }

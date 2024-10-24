@@ -15,6 +15,7 @@ import java.util.List;
 public class RestauranteDTO {
 
     private Long id;
+    private Date fechaApertura;
     private Date horaApertura;
     private Date horaCierre;
     private List<MesaDTO> mesas;
@@ -28,6 +29,13 @@ public class RestauranteDTO {
         this.horaApertura = horaApertura;
         this.horaCierre = horaCierre;
         this.mesas = new ArrayList();
+    }
+
+    public RestauranteDTO(Date fechaApertura, Date horaApertura, Date horaCierre, List<MesaDTO> mesas) {
+        this.fechaApertura = fechaApertura;
+        this.horaApertura = horaApertura;
+        this.horaCierre = horaCierre;
+        this.mesas = mesas;
     }
 
     // Getters y Setters
@@ -63,13 +71,21 @@ public class RestauranteDTO {
         this.mesas = mesas;
     }
 
+    public Date getFechaApertura() {
+        return fechaApertura;
+    }
+
+    public void setFechaApertura(Date fechaApertura) {
+        this.fechaApertura = fechaApertura;
+    }
+
     @Override
     public String toString() {
-        return "RestauranteDTO{" +
-                "id=" + id +
-                ", horaApertura=" + horaApertura +
-                ", horaCierre=" + horaCierre +
-                ", mesas=" + mesas +
-                '}';
+        return "RestauranteDTO{"
+                + "id=" + id
+                + ", horaApertura=" + horaApertura
+                + ", horaCierre=" + horaCierre
+                + ", mesas=" + mesas
+                + '}';
     }
 }

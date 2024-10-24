@@ -113,18 +113,13 @@ public class MesaDAO implements IMesaDAO {
         return precioReserva; // Retornar el precio o null si no se encontró
     }
 
-    // Método para actualizar una mesa
-    public void actualizarMesa(Mesa mesa) throws PersistenciaException {
+    public long obtenerCantidadDeMesas() throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
-            em.getTransaction().begin();
-            em.merge(mesa); // Actualizar la mesa existente
-            em.getTransaction().commit();
+            String jpql = "SELECT COUNT(m) FROM Mesa m";
+            return (long) em.createQuery(jpql).getSingleResult();
         } catch (Exception e) {
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback(); // Revierte la transacción si ocurre un error
-            }
-            throw new PersistenciaException("No se pudo actualizar la mesa con id: " + mesa.getId());
+            throw new PersistenciaException("Error al contar mesas en la base de datos", e);
         }
     }
 
@@ -152,5 +147,10 @@ public class MesaDAO implements IMesaDAO {
         if (em != null && em.isOpen()) {
             em.close();
         }
+    }
+
+    @Override
+    public void actualizarMesa(Mesa mesa) throws PersistenciaException {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

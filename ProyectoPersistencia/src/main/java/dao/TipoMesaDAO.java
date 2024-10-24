@@ -113,6 +113,18 @@ public class TipoMesaDAO implements ITipoMesaDAO {
         }
     }
 
+    public TipoMesa obtenerPorNombre(String nombreTipo) throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
+        try {
+            String jpql = "SELECT t FROM TipoMesa t WHERE t.nombreTipo = :nombreTipo";
+            return em.createQuery(jpql, TipoMesa.class)
+                    .setParameter("nombreTipo", nombreTipo)
+                    .getSingleResult();
+        } catch (Exception e) {
+            throw new PersistenciaException("Error al buscar el tipo de mesa por nombre", e);
+        }
+    }
+
     public TipoMesa obtenerTipoMesaPorNombre(String nombreTipo) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         TipoMesa tipoMesa = null;

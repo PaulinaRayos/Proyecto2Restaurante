@@ -38,4 +38,13 @@ public class RestauranteBO implements IRestauranteBO {
             throw new NegocioException("No se pudo obtener el Restaurante.", e);
         }
     }
+
+    public RestauranteDTO buscarRestauranteUnico() throws NegocioException {
+        try {
+            Restaurante restaurante = restdao.buscarRestauranteUnico();
+            return ConvertidorGeneral.convertidoraDTO(restaurante, RestauranteDTO.class);
+        } catch (PersistenciaException e) {
+            throw new NegocioException("No se pudo obtener el Restaurante.");
+        }
+    }
 }

@@ -7,6 +7,8 @@ interfaces\ICancelarReservaBO.class
 pruebas\pruebas.class
 excepciones\NegocioException.class
 negocio\ClienteBO.class
+negocio\ActualizaHorarioRestauranteBO.class
+interfaces\IActualizaHorarioRestauranteBO.class
 negocio\AgregarReservaBO.class
 interfaces\IMesaBO.class
 interfaces\IRestauranteBO.class

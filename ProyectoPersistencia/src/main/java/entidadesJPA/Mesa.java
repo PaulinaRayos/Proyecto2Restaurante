@@ -43,7 +43,7 @@ public class Mesa implements Serializable {
     private int capacidad;
 
     // Relación ManyToOne con TipoMesa
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_tipo_mesa", nullable = false)
     private TipoMesa tipoMesa;
 
