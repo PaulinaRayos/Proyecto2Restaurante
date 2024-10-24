@@ -32,6 +32,10 @@ public class Restaurante implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "fechaDia")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaDia;
+
     @Column(name = "hora_apertura")
     @Temporal(TemporalType.TIMESTAMP)
     private Date hora_apartura;
@@ -90,6 +94,14 @@ public class Restaurante implements Serializable {
 
     public void setMesas(List<Mesa> mesas) {
         this.mesas = mesas;
+    }
+
+    public Date getFechaDia() {
+        return fechaDia;
+    }
+
+    public void setFechaDia(Date fechaDia) {
+        this.fechaDia = fechaDia;
     }
 
     @Override

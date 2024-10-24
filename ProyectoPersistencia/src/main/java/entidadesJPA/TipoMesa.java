@@ -6,6 +6,7 @@ package entidadesJPA;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -42,22 +43,25 @@ public class TipoMesa implements Serializable {
     private BigDecimal precioReserva;
 
     // Relación OneToMany con Mesa
-    @OneToMany(mappedBy = "tipoMesa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "tipoMesa", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<Mesa> mesas;
 
     //Constructor vacío
     public TipoMesa() {
+        this.mesas = new ArrayList();
     }
 
     //Constructor con Id
     public TipoMesa(Long id) {
         this.id = id;
+        this.mesas = new ArrayList();
     }
 
     //Constructor sin Id
     public TipoMesa(String nombreTipo, BigDecimal precioReserva) {
         this.nombreTipo = nombreTipo;
         this.precioReserva = precioReserva;
+        this.mesas = new ArrayList();
     }
 
     //Constructor completo
@@ -65,6 +69,7 @@ public class TipoMesa implements Serializable {
         this.id = id;
         this.nombreTipo = nombreTipo;
         this.precioReserva = precioReserva;
+        this.mesas = new ArrayList();
     }
 
     //Getters & Setters

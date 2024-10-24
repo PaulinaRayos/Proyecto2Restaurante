@@ -4,20 +4,31 @@
  */
 package presentacion;
 
+import dto.RestauranteDTO;
 import dto.TipoMesaDTO;
 import excepciones.NegocioException;
+import interfaces.IActualizaHorarioRestauranteBO;
+import interfaces.IAgregaMesasBO;
 import interfaces.IMesaBO;
 import interfaces.IRestauranteBO;
 import java.awt.Image;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
+import negocio.ActualizaHorarioRestauranteBO;
+import negocio.AgregaMesasBO;
 import negocio.MesaBO;
 import negocio.RestauranteBO;
 import utilidades.Forms;
@@ -30,6 +41,9 @@ public class FormMesas extends javax.swing.JFrame {
 
     private IMesaBO mesaBO;
     private IRestauranteBO restBO;
+    private IAgregaMesasBO agregadao;
+    private IActualizaHorarioRestauranteBO acthorarioBO;
+    private RestauranteDTO restauranteDTO;
 
     /**
      * Creates new form FormMesas
@@ -39,6 +53,9 @@ public class FormMesas extends javax.swing.JFrame {
         this.setLocationRelativeTo(this);
         this.mesaBO = new MesaBO();
         this.restBO = new RestauranteBO();
+        this.agregadao = new AgregaMesasBO();
+        this.restauranteDTO = new RestauranteDTO();
+        this.acthorarioBO = new ActualizaHorarioRestauranteBO();
 
         this.SetImageLabel(jLabel3, "src/main/java/Imagenes/logo.png");
     }
@@ -66,7 +83,7 @@ public class FormMesas extends javax.swing.JFrame {
         txtPequeña = new javax.swing.JTextField();
         txtMediana = new javax.swing.JTextField();
         txtGrande = new javax.swing.JTextField();
-        bCreaTipos = new javax.swing.JButton();
+        bTiposMesa = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         jFecha = new com.toedter.calendar.JDateChooser();
         Date date = new Date();
@@ -81,6 +98,7 @@ public class FormMesas extends javax.swing.JFrame {
         jHoraCierre = new javax.swing.JSpinner(sm1);
         jLabel10 = new javax.swing.JLabel();
         jLabelaa = new javax.swing.JLabel();
+        bGuardaRestaurante = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblMesas = new javax.swing.JTable();
@@ -152,13 +170,13 @@ public class FormMesas extends javax.swing.JFrame {
         txtGrande.setBackground(new java.awt.Color(255, 255, 255));
         txtGrande.setFont(new java.awt.Font("Arial", 3, 18)); // NOI18N
 
-        bCreaTipos.setBackground(new java.awt.Color(255, 51, 153));
-        bCreaTipos.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
-        bCreaTipos.setForeground(new java.awt.Color(0, 0, 0));
-        bCreaTipos.setText("Inserta tipos");
-        bCreaTipos.addActionListener(new java.awt.event.ActionListener() {
+        bTiposMesa.setBackground(new java.awt.Color(255, 51, 153));
+        bTiposMesa.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
+        bTiposMesa.setForeground(new java.awt.Color(0, 0, 0));
+        bTiposMesa.setText("Inserta tipos");
+        bTiposMesa.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bCreaTiposActionPerformed(evt);
+                bTiposMesaActionPerformed(evt);
             }
         });
 
@@ -188,19 +206,22 @@ public class FormMesas extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGap(31, 31, 31)
-                        .addComponent(jLabelaa2))
+                        .addComponent(jLabelaa2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(bTiposMesa))
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addComponent(jLabel12)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtPequeña, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(10, 10, 10)
-                        .addComponent(jLabel11))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(215, 215, 215)
-                        .addComponent(jLabel9)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(bCreaTipos, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addGap(16, 16, 16)
+                                .addComponent(jLabel12)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtPequeña, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(10, 10, 10)
+                                .addComponent(jLabel11))
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addGap(215, 215, 215)
+                                .addComponent(jLabel9)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -209,7 +230,7 @@ public class FormMesas extends javax.swing.JFrame {
                 .addGap(15, 15, 15)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelaa2)
-                    .addComponent(bCreaTipos))
+                    .addComponent(bTiposMesa))
                 .addGap(27, 27, 27)
                 .addComponent(jLabel9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -231,7 +252,7 @@ public class FormMesas extends javax.swing.JFrame {
 
         jPanel5.setBackground(new java.awt.Color(204, 204, 204));
 
-        JSpinner.DateEditor de = new JSpinner.DateEditor(jHoraApertura, "HH:mm:ss");
+        JSpinner.DateEditor de = new JSpinner.DateEditor(jHoraApertura, "HH:mm");
         jHoraApertura.setEditor(de);
 
         jLabel7.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
@@ -244,7 +265,7 @@ public class FormMesas extends javax.swing.JFrame {
         jLabel8.setText("Hora apertura:");
         jLabel8.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        JSpinner.DateEditor de1 = new JSpinner.DateEditor(jHoraCierre, "HH:mm:ss");
+        JSpinner.DateEditor de1 = new JSpinner.DateEditor(jHoraCierre, "HH:mm");
         jHoraCierre.setEditor(de1);
 
         jLabel10.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
@@ -256,6 +277,16 @@ public class FormMesas extends javax.swing.JFrame {
         jLabelaa.setForeground(new java.awt.Color(0, 0, 0));
         jLabelaa.setText("Horario del Restaurante");
         jLabelaa.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        bGuardaRestaurante.setBackground(new java.awt.Color(255, 51, 153));
+        bGuardaRestaurante.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
+        bGuardaRestaurante.setForeground(new java.awt.Color(0, 0, 0));
+        bGuardaRestaurante.setText("Guardar");
+        bGuardaRestaurante.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bGuardaRestauranteActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -290,6 +321,10 @@ public class FormMesas extends javax.swing.JFrame {
                 .addGap(14, 14, 14)
                 .addComponent(jLabelaa)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(bGuardaRestaurante, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(119, 119, 119))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -310,7 +345,9 @@ public class FormMesas extends javax.swing.JFrame {
                         .addComponent(jLabel8)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jHoraApertura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(87, 87, 87))
+                .addGap(18, 18, 18)
+                .addComponent(bGuardaRestaurante)
+                .addGap(37, 37, 37))
         );
 
         jPanel6.setBackground(new java.awt.Color(204, 204, 204));
@@ -461,36 +498,90 @@ public class FormMesas extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void bCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCrearActionPerformed
-        // TODO add your handling code here:
+        try {
+            // Llamar al método de negocio para buscar el restaurante único
+            restauranteDTO = restBO.buscarRestauranteUnico();
+
+            if (restauranteDTO == null) {
+                throw new NegocioException("No hay restaurante disponible.");
+            }
+
+            // Obtener la ubicación seleccionada
+            String ubicacion = (String) cbUbicacion.getSelectedItem();
+
+            // Crear un mapa para almacenar la cantidad de mesas por tipo
+            Map<String, Integer> cantidadPorTipo = new HashMap<>();
+
+            // Agregar las cantidades de mesas según los campos de texto
+            if (!txtPequeña.getText().isEmpty()) {
+                cantidadPorTipo.put("Mesa pequeña", Integer.parseInt(txtPequeña.getText()));
+            }
+            if (!txtMediana.getText().isEmpty()) {
+                cantidadPorTipo.put("Mesa mediana", Integer.parseInt(txtMediana.getText()));
+            }
+            if (!txtGrande.getText().isEmpty()) {
+                cantidadPorTipo.put("Mesa grande", Integer.parseInt(txtGrande.getText()));
+            }
+
+            // Llamar al método agregarMesas
+            agregadao.agregarMesas(restauranteDTO, cantidadPorTipo, ubicacion);
+
+            // Mostrar mensaje de éxito
+            JOptionPane.showMessageDialog(this, "Mesas agregadas exitosamente.");
+        } catch (NegocioException e) {
+            // Manejar excepciones y mostrar mensaje de error
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (NumberFormatException e) {
+            // Manejar errores de formato de número
+            JOptionPane.showMessageDialog(this, "Por favor, ingrese valores numéricos válidos para la cantidad de mesas.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_bCrearActionPerformed
 
     private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
         Forms.cargarForm(new FormMenu(), this);
+
+
     }//GEN-LAST:event_jLabel3MouseClicked
 
-    private void bCreaTiposActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCreaTiposActionPerformed
+    private void bGuardaRestauranteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bGuardaRestauranteActionPerformed
+        try {
+
+            // Obtener la fecha seleccionada
+            Date fechaApertura = jFecha.getDate();
+
+            // Obtener las horas desde los spinners
+            LocalTime horaApertura = obtenerHoraDesdeSpinner(jHoraApertura);
+            LocalTime horaCierre = obtenerHoraDesdeSpinner(jHoraCierre);
+
+            // Combinar la fecha con las horas
+            restauranteDTO.setFechaApertura(fechaApertura);
+            restauranteDTO.setHoraApertura(combinarFechaYHora(fechaApertura, horaApertura));
+            restauranteDTO.setHoraCierre(combinarFechaYHora(fechaApertura, horaCierre));
+
+            // Llamar a la capa de negocio para guardar o actualizar
+            acthorarioBO.guardarOActualizarRestaurante(restauranteDTO);
+
+            JOptionPane.showMessageDialog(this, "Datos del restaurante guardados/actualizados exitosamente.");
+        } catch (NegocioException e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_bGuardaRestauranteActionPerformed
+
+    private void bTiposMesaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTiposMesaActionPerformed
         try {
             // Inicializar tipos de mesa predeterminados
             mesaBO.inicializarTiposMesaPredeterminados();
 
-            // Obtener los tipos de mesa en formato DTO
-            List<TipoMesaDTO> tiposMesaDTO = mesaBO.obtenerTiposMesa();
-
-            // Mostrar los tipos de mesa en la interfaz (por ejemplo, en una tabla o comboBox)
-            for (TipoMesaDTO tipo : tiposMesaDTO) {
-                System.out.println("Tipo de mesa: " + tipo.getNombreTipo() + " - Precio: " + tipo.getPrecioReserva());
-                // Aquí puedes agregar los tipos a tu tabla, comboBox, etc.
-            }
-
         } catch (NegocioException e) {
             JOptionPane.showMessageDialog(this, "Error al inicializar los tipos de mesa: " + e.getMessage());
         }
-    }//GEN-LAST:event_bCreaTiposActionPerformed
+    }//GEN-LAST:event_bTiposMesaActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton bCreaTipos;
     private javax.swing.JButton bCrear;
+    private javax.swing.JButton bGuardaRestaurante;
+    private javax.swing.JButton bTiposMesa;
     private javax.swing.JComboBox<String> cbUbicacion;
     private com.toedter.calendar.JDateChooser jFecha;
     private javax.swing.JSpinner jHoraApertura;
@@ -525,5 +616,29 @@ private void SetImageLabel(JLabel labelname, String root) {
         Icon icon = new ImageIcon(image.getImage().getScaledInstance(labelname.getWidth(), labelname.getHeight(), Image.SCALE_DEFAULT));
         labelname.setIcon(icon);
         this.repaint();
+    }
+
+    public LocalTime obtenerHoraDesdeSpinner(JSpinner spinner) {
+        // Obtener la hora desde el spinner
+        Date date = (Date) spinner.getValue();
+
+        // Convertir el objeto Date a LocalTime (para trabajar solo con el tiempo)
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        return LocalTime.of(hour, minute);
+    }
+
+    public Date combinarFechaYHora(Date fecha, LocalTime hora) {
+        LocalDate localDate = fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        // Crear LocalDateTime combinando la fecha con la hora
+        LocalDateTime fechaConHora = LocalDateTime.of(localDate, hora);
+
+        // Convertir LocalDateTime de vuelta a java.util.Date
+        return Date.from(fechaConHora.atZone(ZoneId.systemDefault()).toInstant());
     }
 }

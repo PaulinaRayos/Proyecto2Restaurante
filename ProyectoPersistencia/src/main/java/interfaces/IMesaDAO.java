@@ -40,5 +40,7 @@ public interface IMesaDAO {
     List<Mesa> obtenerTodasLasMesas() throws PersistenciaException;
     
     BigDecimal obtenerCostoPorIdMesa(Long idMesa) throws PersistenciaException;
+    
+    long obtenerCantidadDeMesas() throws PersistenciaException;
 
 }

@@ -41,5 +41,7 @@ public interface ITipoMesaDAO {
     public List<TipoMesa> obtenerTodosLosTipos() throws PersistenciaException;
     
     TipoMesa obtenerTipoMesaPorNombre(String nombreTipo) throws PersistenciaException;
+    
+    TipoMesa obtenerPorNombre(String nombreTipo) throws PersistenciaException;
 
 }

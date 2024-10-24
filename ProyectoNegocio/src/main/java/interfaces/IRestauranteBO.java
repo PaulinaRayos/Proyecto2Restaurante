@@ -14,4 +14,6 @@ import excepciones.NegocioException;
 public interface IRestauranteBO {
 
     RestauranteDTO obtenerRestaurantePorId(Long idRestaurante) throws NegocioException;
+    
+    RestauranteDTO buscarRestauranteUnico() throws NegocioException;
 }

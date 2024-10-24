@@ -8,9 +8,10 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * Clase que representa un Data Transfer Object (DTO) para la entidad HistorialReserva.
- * Se utiliza para transferir datos del historial de reservas entre la capa de presentación y la capa de negocio.
- * 
+ * Clase que representa un Data Transfer Object (DTO) para la entidad
+ * HistorialReserva. Se utiliza para transferir datos del historial de reservas
+ * entre la capa de presentación y la capa de negocio.
+ *
  * @author Cristopher Alberto Elizalde Andrade - 240005
  * @author Paulina Rodríguez Rodríguez Rayos - 117262
  */
@@ -23,6 +24,8 @@ public class HistorialReservasDTO {
     private BigDecimal multa;
     private Long idReserva;
     private Long idTipoMesa;
+    private Long idCliente;
+    private String nombreCliente;
 
     // Constructor
     public HistorialReservasDTO() {
@@ -36,6 +39,17 @@ public class HistorialReservasDTO {
         this.multa = multa;
         this.idReserva = idReserva;
         this.idTipoMesa = idTipoMesa;
+    }
+
+    public HistorialReservasDTO(BigDecimal costo, String ubicacion, Date fechaHoraReserva, BigDecimal multa, Long idReserva, Long idTipoMesa, Long idCliente, String nombreCliente) {
+        this.costo = costo;
+        this.ubicacion = ubicacion;
+        this.fechaHoraReserva = fechaHoraReserva;
+        this.multa = multa;
+        this.idReserva = idReserva;
+        this.idTipoMesa = idTipoMesa;
+        this.idCliente = idCliente;
+        this.nombreCliente = nombreCliente;
     }
 
     // Getters y Setters
@@ -94,4 +108,22 @@ public class HistorialReservasDTO {
     public void setIdTipoMesa(Long idTipoMesa) {
         this.idTipoMesa = idTipoMesa;
     }
+
+    public Long getIdCliente() {
+        return idCliente;
+    }
+
+    public void setIdCliente(Long idCliente) {
+        this.idCliente = idCliente;
+    }
+
+    public String getNombreCliente() {
+        return nombreCliente;
+    }
+
+    public void setNombreCliente(String nombreCliente) {
+        this.nombreCliente = nombreCliente;
+    }
+    
+    
 }

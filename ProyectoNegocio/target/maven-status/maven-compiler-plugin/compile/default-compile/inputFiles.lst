@@ -2,6 +2,7 @@ C:\Users\Chris\Documents\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\ja
 C:\Users\Chris\Documents\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\dto\MesaDTO.java
 C:\Users\Chris\Documents\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\negocio\AgregaMesasBO.java
 C:\Users\Chris\Documents\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\negocio\MesaBO.java
+C:\Users\Chris\Documents\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\negocio\ActualizaHorarioRestauranteBO.java
 C:\Users\Chris\Documents\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\negocio\RestauranteBO.java
 C:\Users\Chris\Documents\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\pruebas\pruebas.java
 C:\Users\Chris\Documents\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\interfaces\ICancelarReservaBO.java
@@ -10,6 +11,7 @@ C:\Users\Chris\Documents\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\ja
 C:\Users\Chris\Documents\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\excepciones\NegocioException.java
 C:\Users\Chris\Documents\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\pruebas\pruebaReservaBO.java
 C:\Users\Chris\Documents\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\negocio\CancelarReservaBO.java
+C:\Users\Chris\Documents\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\interfaces\IActualizaHorarioRestauranteBO.java
 C:\Users\Chris\Documents\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\dto\ClienteDTO.java
 C:\Users\Chris\Documents\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\interfaces\IAgregarReservaBO.java
 C:\Users\Chris\Documents\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\dto\ReservaDTO.java

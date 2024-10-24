@@ -12,6 +12,10 @@ import excepciones.PersistenciaException;
  * @author Chris
  */
 public interface IRestauranteDAO {
+    
+    void guardarOActualizarRestaurante(Restaurante restaurante) throws PersistenciaException;
+    
+    public Restaurante buscarRestauranteUnico() throws PersistenciaException;
 
     Restaurante obtenerPorId(Long idRestaurante) throws PersistenciaException;
 }
