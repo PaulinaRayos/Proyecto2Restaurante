@@ -32,10 +32,15 @@ public class RestauranteBO implements IRestauranteBO {
     @Override
     public RestauranteDTO obtenerRestaurantePorId(Long idRestaurante) throws NegocioException {
         try {
+            // Verifica que la consulta o el mapeo estén obteniendo los campos correctos
             Restaurante restaurante = restdao.obtenerPorId(idRestaurante);
-            return ConvertidorGeneral.convertidoraDTO(restaurante, RestauranteDTO.class); // Convertir a DTO
+            if (restaurante != null) {
+                return new RestauranteDTO(restaurante.getId(),
+                        restaurante.getHora_apartura(), restaurante.getHora_cierre());
+            }
+            return null;
         } catch (PersistenciaException e) {
-            throw new NegocioException("No se pudo obtener el Restaurante.", e);
+            throw new NegocioException("Error al obtener restaurante por ID", e);
         }
     }
 

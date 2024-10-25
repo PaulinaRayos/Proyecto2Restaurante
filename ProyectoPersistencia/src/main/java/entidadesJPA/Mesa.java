@@ -79,6 +79,12 @@ public class Mesa implements Serializable {
         this.restaurante = restaurante;
     }
 
+    public Mesa(String codigoMesa, String ubicacion, int capacidad) {
+        this.codigoMesa = codigoMesa;
+        this.ubicacion = ubicacion;
+        this.capacidad = capacidad;
+    }
+
     //Getters & Setters
     public Long getId() {
         return id;

@@ -63,12 +63,13 @@ public class FormMenu extends javax.swing.JFrame {
 
         cargarClientes();
         cargarMesasEnTabla();
+        cbUbicacion.addActionListener(event -> {
+            cargarMesasEnTabla(); // Método que implementaremos para filtrar y cargar las mesas
+        });
 
-        try {
-            System.out.println(mesaBO.obtenerTodasLasMesas());
-        } catch (NegocioException ex) {
-            Logger.getLogger(FormMenu.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        cbCantidad.addActionListener(event -> {
+            cargarMesasEnTabla(); // Método que implementaremos para filtrar y cargar las mesas
+        });
     }
 
     /**
@@ -140,6 +141,11 @@ public class FormMenu extends javax.swing.JFrame {
         cbCantidad.setFont(new java.awt.Font("Times New Roman", 3, 14)); // NOI18N
         cbCantidad.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5", "6", "7", "8" }));
         cbCantidad.setBorder(null);
+        cbCantidad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbCantidadActionPerformed(evt);
+            }
+        });
 
         JSpinner.DateEditor de = new JSpinner.DateEditor(jHora, "HH:mm:ss");
         jHora.setEditor(de);
@@ -270,17 +276,17 @@ public class FormMenu extends javax.swing.JFrame {
 
         tblMesas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Ubicacion", "Mesa", "Capacidad", "Horario"
+                "Ubicacion", "Mesa", "Capacidad", "Horario apertura", "Horario cierre"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -519,6 +525,7 @@ public class FormMenu extends javax.swing.JFrame {
             // Crear un objeto ReservaDTO
             Long idReserva = null; // Si es autoincremental y se genera en la base de datos
             BigDecimal costo = mesaBO.obtenerCostoPorIdMesa(this.idMesaSeleccionada); // Método para calcular el costo
+
             String estado = "Reservado"; // Estado inicial, puede cambiar según tu lógica
             Date fechaCancelacion = null; // O puedes establecerlo en caso de cancelación
             BigDecimal multa = BigDecimal.ZERO; // O establecer según tu lógica
@@ -557,43 +564,13 @@ public class FormMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_txtTelefonoActionPerformed
 
     private void cbUbicacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbUbicacionActionPerformed
-        // TODO add your handling code here:
+        cargarMesasEnTabla();
     }//GEN-LAST:event_cbUbicacionActionPerformed
 
-//    /**
-//     * @param args the command line arguments
-//     */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(FormMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(FormMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(FormMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(FormMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new FormMenu().setVisible(true);
-//            }
-//        });
-//    }
+    private void cbCantidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbCantidadActionPerformed
+        cargarMesasEnTabla();
+    }//GEN-LAST:event_cbCantidadActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bClientes;
@@ -676,6 +653,9 @@ public class FormMenu extends javax.swing.JFrame {
 
     private void cargarMesasEnTabla() {
         try {
+            String ubicacionSeleccionada = cbUbicacion.getSelectedItem().toString();
+            String capacidadSeleccionada = cbCantidad.getSelectedItem().toString();
+
             List<MesaDTO> mesas = mesaBO.obtenerTodasLasMesas();
 
             // Crear un modelo de tabla
@@ -684,28 +664,32 @@ public class FormMenu extends javax.swing.JFrame {
             modelo.addColumn("Mesa");
             modelo.addColumn("Ubicación");
             modelo.addColumn("Capacidad");
-            modelo.addColumn("Horario");
+            modelo.addColumn("Horario apertura");
+            modelo.addColumn("Horario cierre");
 
-            // Llenar el modelo con los datos de las mesas
+            int capacidadSeleccionadaInt = Integer.parseInt(capacidadSeleccionada);
+
+            // Llenar el modelo con los datos de las mesas filtradas
             for (MesaDTO mesa : mesas) {
-                Object[] fila = new Object[5];
-                fila[0] = mesa.getIdMesa();
-                fila[1] = mesa.getCodigoMesa();
-                fila[2] = mesa.getUbicacion();
-                fila[3] = mesa.getCapacidad();
+                boolean coincideUbicacion = mesa.getUbicacion().equals(ubicacionSeleccionada);
+                boolean coincideCapacidad = mesa.getCapacidad() <= capacidadSeleccionadaInt;
 
-                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+                // Si coincide la ubicación y la capacidad, se agrega a la tabla
+                if (coincideUbicacion && coincideCapacidad) {
+                    Object[] fila = new Object[6];
+                    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 
-                RestauranteDTO restaurante = restBO.obtenerRestaurantePorId(mesa.getIdRestaurante());
+                    RestauranteDTO restaurante = restBO.obtenerRestaurantePorId(mesa.getIdRestaurante());
 
-                String horarios = "Apertura: " + (restaurante != null && restaurante.getHoraApertura() != null
-                        ? sdf.format(restaurante.getHoraApertura()) : "N/A")
-                        + ", Cierre: " + (restaurante != null && restaurante.getHoraCierre() != null
-                        ? sdf.format(restaurante.getHoraCierre()) : "N/A");
+                    fila[0] = mesa.getIdMesa();
+                    fila[1] = mesa.getCodigoMesa();
+                    fila[2] = mesa.getUbicacion();
+                    fila[3] = mesa.getCapacidad();
+                    fila[4] = sdf.format(restaurante.getHoraApertura());
+                    fila[5] = sdf.format(restaurante.getHoraCierre());
 
-                fila[4] = horarios;
-
-                modelo.addRow(fila);
+                    modelo.addRow(fila);
+                }
             }
 
             // Crear la JTable con el modelo

@@ -4,6 +4,7 @@
  */
 package presentacion;
 
+import dto.MesaDTO;
 import dto.RestauranteDTO;
 import dto.TipoMesaDTO;
 import excepciones.NegocioException;
