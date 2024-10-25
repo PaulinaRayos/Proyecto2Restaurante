@@ -44,11 +44,11 @@ public class Mesa implements Serializable {
 
     // Relación ManyToOne con TipoMesa
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_tipo_mesa", nullable = false)
+    @JoinColumn(name = "id_tipo_mesa")
     private TipoMesa tipoMesa;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_restaurante", nullable = false)
+    @JoinColumn(name = "id_restaurante")
     private Restaurante restaurante;
 
     //Contructor vacío
@@ -77,6 +77,12 @@ public class Mesa implements Serializable {
         this.capacidad = capacidad;
         this.tipoMesa = tipoMesa;
         this.restaurante = restaurante;
+    }
+
+    public Mesa(String codigoMesa, String ubicacion, int capacidad) {
+        this.codigoMesa = codigoMesa;
+        this.ubicacion = ubicacion;
+        this.capacidad = capacidad;
     }
 
     //Getters & Setters

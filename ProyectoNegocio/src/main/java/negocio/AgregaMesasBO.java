@@ -31,7 +31,7 @@ import java.util.UUID;
  *
  * @author Chris
  */
-public class AgregaMesasBO implements IAgregaMesasBO{
+public class AgregaMesasBO implements IAgregaMesasBO {
 
     private final IConexion conexion;
     private IMesaDAO mesaDAO;
@@ -51,10 +51,8 @@ public class AgregaMesasBO implements IAgregaMesasBO{
         try {
             // Buscar el restaurante actual
             Restaurante restaurante = restdao.obtenerPorId(restauranteDTO.getId());
-            
-            RestauranteDTO rest = restbo.obtenerRestaurantePorId(restaurante.getId());
 
-            // Número único para las mesas (puedes inicializarlo basado en la cantidad de mesas existentes)
+            // Número único para las mesas
             Long numeroUnico = mesaDAO.obtenerCantidadDeMesas() + 1; // Este método debe retornar la cantidad actual de mesas
 
             // Iterar por cada tipo de mesa
@@ -65,19 +63,36 @@ public class AgregaMesasBO implements IAgregaMesasBO{
                 // Obtener el tipo de mesa por nombre
                 TipoMesa tipoMesa = tipodao.obtenerPorNombre(nombreTipo);
 
+                // Determinar la capacidad basada en el tipo de mesa
+                int capacidadMesa;
+                switch (nombreTipo) {
+                    case "Mesa pequeña":
+                        capacidadMesa = 2;
+                        break;
+                    case "Mesa mediana":
+                        capacidadMesa = 4;
+                        break;
+                    case "Mesa grande":
+                        capacidadMesa = 8;
+                        break;
+                    default:
+                        throw new NegocioException("Tipo de mesa no reconocido: " + nombreTipo);
+                }
+
                 // Generar mesas según la cantidad
                 for (int i = 0; i < cantidad; i++) {
-                    MesaDTO mesa = new MesaDTO();
+                    Mesa mesa = new Mesa();
 
-                    // Generar el código de la mesa usando la capacidad del tipo y un número único
-                    String codigoMesa = generarCodigoMesa(ubicacion, mesa.getCapacidad(), numeroUnico);
+                    // Generar el código de la mesa usando la capacidad y un número único
+                    String codigoMesa = generarCodigoMesa(ubicacion, capacidadMesa, numeroUnico);
+                    mesa.setCapacidad(capacidadMesa);
                     mesa.setCodigoMesa(codigoMesa);
                     mesa.setUbicacion(ubicacion);
-                    mesa.setIdTipoMesa(tipoMesa.getId());
-                    mesa.setIdRestaurante(rest.getId());
+                    mesa.setTipoMesa(tipoMesa);
+                    mesa.setRestaurante(restaurante);
 
                     // Guardar la mesa
-                    mesaDAO.agregarMesa(ConvertidorGeneral.convertidoraDTO(mesa, Mesa.class));
+                    mesaDAO.agregarMesa(mesa);
 
                     // Incrementar el número único para la siguiente mesa
                     numeroUnico++;

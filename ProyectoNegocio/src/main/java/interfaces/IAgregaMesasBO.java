@@ -4,6 +4,7 @@
  */
 package interfaces;
 
+import dto.MesaDTO;
 import dto.RestauranteDTO;
 import excepciones.NegocioException;
 import java.util.Map;
