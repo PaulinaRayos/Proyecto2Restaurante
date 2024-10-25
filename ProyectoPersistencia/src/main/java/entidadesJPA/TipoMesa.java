@@ -27,7 +27,7 @@ import javax.persistence.Table;
  * @author Paulina Rodríguez Rodríguez Rayos - 117262
  */
 @Entity
-@Table(name = "tipos_mesa")
+@Table(name = "tipo_mesa")
 public class TipoMesa implements Serializable {
 
     private static final long serialVersionUID = 1L;

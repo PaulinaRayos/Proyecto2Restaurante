@@ -23,7 +23,7 @@ import javax.persistence.TemporalType;
  * @author Chris
  */
 @Entity
-@Table(name = "restaurantes")
+@Table(name = "restaurante")
 public class Restaurante implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -46,6 +46,9 @@ public class Restaurante implements Serializable {
 
     @OneToMany(mappedBy = "restaurante")
     private List<Mesa> mesas;
+    
+    @OneToMany(mappedBy = "restaurante")
+    private List<Horario> horarios;
 
     public Restaurante() {
         this.mesas = new ArrayList();
@@ -104,6 +107,15 @@ public class Restaurante implements Serializable {
         this.fechaDia = fechaDia;
     }
 
+    public List<Horario> getHorarios() {
+        return horarios;
+    }
+
+    public void setHorarios(List<Horario> horarios) {
+        this.horarios = horarios;
+    }
+    
+    
     @Override
     public int hashCode() {
         int hash = 0;

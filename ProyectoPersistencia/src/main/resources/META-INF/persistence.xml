@@ -8,6 +8,8 @@
     <class>entidadesJPA.Reserva</class>
     <class>entidadesJPA.HistorialReservas</class>
     <class>entidadesJPA.Restaurante</class>
+    <class>entidadesJPA.Horario</class>
+    <class>entidadesJPA.HorarioMesa</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/restaurante"/>
       <property name="javax.persistence.jdbc.user" value="root"/>

@@ -5,6 +5,7 @@
 package entidadesJPA;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -24,7 +26,7 @@ import javax.persistence.Table;
  * @author Paulina Rodríguez Rodríguez Rayos - 117262
  */
 @Entity
-@Table(name = "mesas")
+@Table(name = "mesa")
 public class Mesa implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -51,6 +53,10 @@ public class Mesa implements Serializable {
     @JoinColumn(name = "id_restaurante", nullable = false)
     private Restaurante restaurante;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_horario_mesa", nullable = false)
+    private HorarioMesa horarioMesa;
+
     //Contructor vacío
     public Mesa() {
     }
@@ -61,22 +67,24 @@ public class Mesa implements Serializable {
     }
 
     //Contructor sin Id
-    public Mesa(String codigoMesa, String ubicacion, int capacidad, TipoMesa tipoMesa, Restaurante restaurante) {
+    public Mesa(String codigoMesa, String ubicacion, int capacidad, TipoMesa tipoMesa, Restaurante restaurante, HorarioMesa horarioMesa) {
         this.codigoMesa = codigoMesa;
         this.ubicacion = ubicacion;
         this.capacidad = capacidad;
         this.tipoMesa = tipoMesa;
         this.restaurante = restaurante;
+        this.horarioMesa = horarioMesa;
     }
     //Constructor completo
 
-    public Mesa(Long id, String codigoMesa, String ubicacion, int capacidad, TipoMesa tipoMesa, Restaurante restaurante) {
+    public Mesa(Long id, String codigoMesa, String ubicacion, int capacidad, TipoMesa tipoMesa, Restaurante restaurante, HorarioMesa horarioMesa) {
         this.id = id;
         this.codigoMesa = codigoMesa;
         this.ubicacion = ubicacion;
         this.capacidad = capacidad;
         this.tipoMesa = tipoMesa;
         this.restaurante = restaurante;
+        this.horarioMesa = horarioMesa;
     }
 
     public Mesa(String codigoMesa, String ubicacion, int capacidad) {
@@ -134,6 +142,15 @@ public class Mesa implements Serializable {
         this.restaurante = restaurante;
     }
 
+    public HorarioMesa getHorarioMesa() {
+        return horarioMesa;
+    }
+
+    public void setHorarioMesa(HorarioMesa horarioMesa) {
+        this.horarioMesa = horarioMesa;
+    }
+
+    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -156,7 +173,9 @@ public class Mesa implements Serializable {
 
     @Override
     public String toString() {
-        return "Mesa{" + "id=" + id + ", codigoMesa=" + codigoMesa + ", ubicacion=" + ubicacion + ", capacidad=" + capacidad + ", tipoMesa=" + tipoMesa + ", restaurante=" + restaurante + '}';
+        return "Mesa{" + "id=" + id + ", codigoMesa=" + codigoMesa + ", ubicacion=" + ubicacion + ", capacidad=" + capacidad + ", tipoMesa=" + tipoMesa + ", restaurante=" + restaurante + ", horarioMesa=" + horarioMesa + '}';
     }
+
+
 
 }
