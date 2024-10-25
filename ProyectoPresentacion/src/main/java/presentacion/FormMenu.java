@@ -525,9 +525,7 @@ public class FormMenu extends javax.swing.JFrame {
             // Crear un objeto ReservaDTO
             Long idReserva = null; // Si es autoincremental y se genera en la base de datos
             BigDecimal costo = mesaBO.obtenerCostoPorIdMesa(this.idMesaSeleccionada); // Método para calcular el costo
-            
-            
-            System.out.println(idMesaSeleccionada);
+
             String estado = "Reservado"; // Estado inicial, puede cambiar según tu lógica
             Date fechaCancelacion = null; // O puedes establecerlo en caso de cancelación
             BigDecimal multa = BigDecimal.ZERO; // O establecer según tu lógica
@@ -694,8 +692,23 @@ public class FormMenu extends javax.swing.JFrame {
                 }
             }
 
-            // Actualizar la JTable con el nuevo modelo
-            tblMesas.setModel(modelo);
+            // Crear la JTable con el modelo
+            tablaMesas = new JTable(modelo);
+            tablaMesas.setFillsViewportHeight(true);
+
+            // Agregar un listener para la selección de filas
+            tablaMesas.getSelectionModel().addListSelectionListener(event -> {
+                if (!event.getValueIsAdjusting()) {
+                    int selectedRow = tablaMesas.getSelectedRow();
+                    if (selectedRow != -1) {
+                        Long idMesa = (Long) tablaMesas.getValueAt(selectedRow, 0);
+                        guardarIdMesaSeleccionada(idMesa);
+                    }
+                }
+            });
+
+            // Agregar la JTable al JScrollPane
+            jScrollPane1.setViewportView(tablaMesas);
         } catch (NegocioException ex) {
             Logger.getLogger(FormMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
