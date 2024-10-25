@@ -27,6 +27,8 @@ public class ActualizaHorarioRestauranteBO implements IActualizaHorarioRestauran
         this.conexion = new Conexion();
         this.restdao = new RestauranteDAO(conexion);
     }
+    
+    
 
     public void guardarOActualizarRestaurante(RestauranteDTO restauranteDTO) throws NegocioException {
         try {

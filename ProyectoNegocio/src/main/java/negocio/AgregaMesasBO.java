@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  *
@@ -49,31 +50,46 @@ public class AgregaMesasBO implements IAgregaMesasBO {
 
     public void agregarMesas(RestauranteDTO restauranteDTO, Map<String, Integer> cantidadPorTipo, String ubicacion) throws NegocioException {
         try {
-            // Buscar el restaurante actual
+            // Validar que el restauranteDTO no sea nulo
+            if (restauranteDTO == null || restauranteDTO.getId() == null) {
+                throw new IllegalArgumentException("El ID del restaurante no puede ser nulo.");
+            }
+
+            // Cargar el restaurante desde la base de datos
             Restaurante restaurante = restdao.obtenerPorId(restauranteDTO.getId());
+            if (restaurante == null) {
+                throw new NegocioException("Restaurante no encontrado con ID: " + restauranteDTO.getId());
+            }
 
             // Número único para las mesas
             Long numeroUnico = mesaDAO.obtenerCantidadDeMesas() + 1; // Este método debe retornar la cantidad actual de mesas
 
-            // Iterar por cada tipo de mesa
+            // Iterar por cada tipo de mesa para agregar la cantidad solicitada
             for (Map.Entry<String, Integer> entry : cantidadPorTipo.entrySet()) {
                 String nombreTipo = entry.getKey();
                 int cantidad = entry.getValue();
 
                 // Obtener el tipo de mesa por nombre
                 TipoMesa tipoMesa = tipodao.obtenerPorNombre(nombreTipo);
+                if (tipoMesa == null) {
+                    throw new NegocioException("Tipo de mesa no encontrado: " + nombreTipo);
+                }
 
                 // Determinar la capacidad basada en el tipo de mesa
-                int capacidadMesa;
+                int capacidadMin = 0;
+                int capacidadMax = 0;
                 switch (nombreTipo) {
                     case "Mesa pequeña":
-                        capacidadMesa = 2;
+                        capacidadMin = 1;
+                        capacidadMax = 2;
                         break;
                     case "Mesa mediana":
-                        capacidadMesa = 4;
+                        capacidadMin = 3;
+                        capacidadMax = 4;
                         break;
                     case "Mesa grande":
-                        capacidadMesa = 8;
+                        capacidadMin = 5;
+                        capacidadMax = 8;
                         break;
                     default:
                         throw new NegocioException("Tipo de mesa no reconocido: " + nombreTipo);
@@ -81,17 +97,23 @@ public class AgregaMesasBO implements IAgregaMesasBO {
 
                 // Generar mesas según la cantidad
                 for (int i = 0; i < cantidad; i++) {
-                    Mesa mesa = new Mesa();
+                    // Crear MesaDTO para convertirlo después en entidad Mesa
+                    MesaDTO mesaDTO = new MesaDTO();
+                    
+                    int capacidadMesa = ThreadLocalRandom.current().nextInt(capacidadMin, capacidadMax + 1);
+                    
+                    mesaDTO.setCapacidad(capacidadMesa);
+                    mesaDTO.setCodigoMesa(generarCodigoMesa(ubicacion, capacidadMesa, numeroUnico));
+                    mesaDTO.setUbicacion(ubicacion);
+                    mesaDTO.setIdTipoMesa(tipoMesa.getId()); // Suponiendo que en el DTO el tipo es String
+                    mesaDTO.setIdRestaurante(restauranteDTO.getId());
 
-                    // Generar el código de la mesa usando la capacidad y un número único
-                    String codigoMesa = generarCodigoMesa(ubicacion, capacidadMesa, numeroUnico);
-                    mesa.setCapacidad(capacidadMesa);
-                    mesa.setCodigoMesa(codigoMesa);
-                    mesa.setUbicacion(ubicacion);
+                    // Convertir el DTO en entidad
+                    Mesa mesa = ConvertidorGeneral.convertidorEntidad(mesaDTO, Mesa.class);
+                    mesa.setRestaurante(restaurante); // Asignar el restaurante a la mesa
                     mesa.setTipoMesa(tipoMesa);
-                    mesa.setRestaurante(restaurante);
 
-                    // Guardar la mesa
+                    // Persistir la mesa usando el DAO
                     mesaDAO.agregarMesa(mesa);
 
                     // Incrementar el número único para la siguiente mesa
