@@ -147,7 +147,7 @@ public class FormMenu extends javax.swing.JFrame {
             }
         });
 
-        JSpinner.DateEditor de = new JSpinner.DateEditor(jHora, "HH:mm:ss");
+        JSpinner.DateEditor de = new JSpinner.DateEditor(jHora, "HH:mm");
         jHora.setEditor(de);
 
         jLabel7.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N

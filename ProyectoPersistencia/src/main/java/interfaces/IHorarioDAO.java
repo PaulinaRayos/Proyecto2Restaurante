@@ -6,6 +6,7 @@ package interfaces;
 
 import entidadesJPA.Horario;
 import java.util.List;
+import java.util.Optional;
 
 /**
  *
@@ -24,5 +25,7 @@ public interface IHorarioDAO {
 
     // Método para actualizar un Horario
     void actualizarHorario(Horario horario);
-    
+
+    Optional<Horario> buscarPorDiaSemana(String diaSemana);
+
 }

@@ -4,15 +4,15 @@
  */
 package interfaces;
 
-import dto.RestauranteDTO;
+import dto.HorarioDTO;
 import excepciones.NegocioException;
 
 /**
  *
  * @author Chris
  */
-public interface IActualizaHorarioRestauranteBO {
+public interface IActualizaHorarioBO {
     
-    void guardarOActualizarRestaurante(RestauranteDTO restauranteDTO) throws NegocioException;
+    void guardarOActualizarHorario(HorarioDTO horarioDTO) throws NegocioException;
     
 }

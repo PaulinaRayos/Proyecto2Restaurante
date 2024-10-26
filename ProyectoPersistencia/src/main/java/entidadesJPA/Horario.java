@@ -43,23 +43,18 @@ public class Horario implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date horaCierre;
 
-    
-    
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_restaurante", nullable = false)
     private Restaurante restaurante;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_horario_mesa",nullable = false)
+    @JoinColumn(name = "id_horario_mesa", nullable = false)
     private HorarioMesa horarioMesa;
 
-    
-    
-    
     public Horario() {
     }
-    
-        public Horario(Long id) {
+
+    public Horario(Long id) {
         this.id = id;
     }
 
@@ -80,7 +75,6 @@ public class Horario implements Serializable {
         this.horarioMesa = horarioMesa;
     }
 
-    
     public Long getId() {
         return id;
     }
@@ -129,11 +123,6 @@ public class Horario implements Serializable {
         this.restaurante = restaurante;
     }
 
-
-
-
-    
-   
     @Override
     public int hashCode() {
         int hash = 0;
@@ -158,8 +147,5 @@ public class Horario implements Serializable {
     public String toString() {
         return "Horario{" + "id=" + id + ", diaSemana=" + diaSemana + ", horaApertura=" + horaApertura + ", horaCierre=" + horaCierre + ", restaurante=" + restaurante + ", horarioMesa=" + horarioMesa + '}';
     }
-
-
-
 
 }
