@@ -5,7 +5,9 @@
 package entidadesJPA;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -35,6 +37,8 @@ public class HorarioMesa implements Serializable {
     private List<Mesa> mesas;
 
     public HorarioMesa() {
+        this.horarios = new ArrayList();
+        this.mesas = new ArrayList();
     }
 
     public HorarioMesa(Long id) {

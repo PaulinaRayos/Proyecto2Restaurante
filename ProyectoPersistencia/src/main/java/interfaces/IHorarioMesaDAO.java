@@ -24,5 +24,7 @@ public interface IHorarioMesaDAO {
 
     // Método para actualizar un HorarioMesa
     void actualizarHorarioMesa(HorarioMesa horarioMesa);
+
+    HorarioMesa obtenerOcrearHorarioMesa();
     
 }

@@ -4,15 +4,16 @@
  */
 package presentacion;
 
+import dto.HorarioDTO;
 import dto.MesaDTO;
 import dto.RestauranteDTO;
 import dto.TipoMesaDTO;
 import excepciones.NegocioException;
-import interfaces.IActualizaHorarioRestauranteBO;
 import interfaces.IAgregaMesasBO;
 import interfaces.IMesaBO;
 import interfaces.IRestauranteBO;
 import java.awt.Image;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -21,6 +22,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -28,11 +30,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
-import negocio.ActualizaHorarioRestauranteBO;
+import negocio.ActualizaHorarioBO;
 import negocio.AgregaMesasBO;
 import negocio.MesaBO;
 import negocio.RestauranteBO;
 import utilidades.Forms;
+import interfaces.IActualizaHorarioBO;
 
 /**
  *
@@ -43,8 +46,9 @@ public class FormMesas extends javax.swing.JFrame {
     private IMesaBO mesaBO;
     private IRestauranteBO restBO;
     private IAgregaMesasBO agregadao;
-    private IActualizaHorarioRestauranteBO acthorarioBO;
+    private IActualizaHorarioBO acthorarioBO;
     private RestauranteDTO restauranteDTO;
+    private HorarioDTO horario;
 
     /**
      * Creates new form FormMesas
@@ -56,7 +60,8 @@ public class FormMesas extends javax.swing.JFrame {
         this.restBO = new RestauranteBO();
         this.agregadao = new AgregaMesasBO();
         this.restauranteDTO = new RestauranteDTO();
-        this.acthorarioBO = new ActualizaHorarioRestauranteBO();
+        this.horario = new HorarioDTO();
+        this.acthorarioBO = new ActualizaHorarioBO();
 
         this.SetImageLabel(jLabel3, "src/main/java/Imagenes/logo.png");
     }
@@ -276,7 +281,7 @@ public class FormMesas extends javax.swing.JFrame {
 
         jLabelaa.setFont(new java.awt.Font("Times New Roman", 3, 24)); // NOI18N
         jLabelaa.setForeground(new java.awt.Color(0, 0, 0));
-        jLabelaa.setText("Horario del Restaurante");
+        jLabelaa.setText("Horario de Mesas");
         jLabelaa.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         bGuardaRestaurante.setBackground(new java.awt.Color(255, 51, 153));
@@ -546,23 +551,25 @@ public class FormMesas extends javax.swing.JFrame {
 
     private void bGuardaRestauranteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bGuardaRestauranteActionPerformed
         try {
-
             // Obtener la fecha seleccionada
-            Date fechaApertura = jFecha.getDate();
+            Date fechaSeleccionada = jFecha.getDate();
 
-            // Obtener las horas desde los spinners
+            // Convertir la fecha en el nombre del día de la semana (Lunes, Martes, etc.)
+            String diaSemana = obtenerNombreDia(fechaSeleccionada);
+
+            // Obtener las horas de apertura y cierre desde los spinners
             LocalTime horaApertura = obtenerHoraDesdeSpinner(jHoraApertura);
             LocalTime horaCierre = obtenerHoraDesdeSpinner(jHoraCierre);
 
-            // Combinar la fecha con las horas
-            restauranteDTO.setFechaApertura(fechaApertura);
-            restauranteDTO.setHoraApertura(combinarFechaYHora(fechaApertura, horaApertura));
-            restauranteDTO.setHoraCierre(combinarFechaYHora(fechaApertura, horaCierre));
+            // Crear el objeto Horario para el día seleccionado
+            horario.setDiaSemana(diaSemana);
+            horario.setHoraApertura(this.combinarFechaYHora(fechaSeleccionada, horaApertura));
+            horario.setHoraCierre(this.combinarFechaYHora(fechaSeleccionada, horaCierre));
 
-            // Llamar a la capa de negocio para guardar o actualizar
-            acthorarioBO.guardarOActualizarRestaurante(restauranteDTO);
+            // Llamar a la capa de negocio para guardar o actualizar el horario
+            acthorarioBO.guardarOActualizarHorario(horario);
 
-            JOptionPane.showMessageDialog(this, "Datos del restaurante guardados/actualizados exitosamente.");
+            JOptionPane.showMessageDialog(this, "Horario actualizado exitosamente para " + diaSemana + ".");
         } catch (NegocioException e) {
             JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -631,6 +638,11 @@ private void SetImageLabel(JLabel labelname, String root) {
         int minute = calendar.get(Calendar.MINUTE);
 
         return LocalTime.of(hour, minute);
+    }
+
+    private String obtenerNombreDia(Date fecha) {
+        SimpleDateFormat formatoDia = new SimpleDateFormat("EEEE", new Locale("es", "ES"));
+        return formatoDia.format(fecha);
     }
 
     public Date combinarFechaYHora(Date fecha, LocalTime hora) {
