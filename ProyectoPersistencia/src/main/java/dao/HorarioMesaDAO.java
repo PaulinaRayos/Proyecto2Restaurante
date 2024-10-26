@@ -52,4 +52,20 @@ public class HorarioMesaDAO implements IHorarioMesaDAO{
         return em.createQuery("SELECT hm FROM HorarioMesa hm", HorarioMesa.class).getResultList();
     }
     
+    
+    // Método para actualizar un HorarioMesa
+    public void actualizarHorarioMesa(HorarioMesa horarioMesa) {
+        EntityManager em = this.conexion.crearConexion();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            em.merge(horarioMesa);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx.isActive()) {
+                tx.rollback();
+            }
+            e.printStackTrace();
+        }
+    }
 }

@@ -14,12 +14,15 @@ import java.util.List;
 public interface IHorarioDAO {
 
     // Método para obtener todos los HorarioMesa
-    List<Horario> findAll();
+    List<Horario> HorarioTodos();
 
     // Método para buscar un HorarioMesa por su ID
-    Horario findById(Long id);
+    Horario HorarioPorId(Long id);
 
     // Método para crear un nuevo Horario
-    void save(Horario horario);
+    void crearHorario(Horario horario);
+
+    // Método para actualizar un Horario
+    void actualizarHorario(Horario horario);
     
 }

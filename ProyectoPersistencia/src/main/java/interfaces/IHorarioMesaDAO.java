@@ -21,5 +21,8 @@ public interface IHorarioMesaDAO {
 
     // Método para buscar un HorarioMesa por su ID
     HorarioMesa horarioMesaPorId(Long id);
+
+    // Método para actualizar un HorarioMesa
+    void actualizarHorarioMesa(HorarioMesa horarioMesa);
     
 }

@@ -24,14 +24,14 @@ public class HorarioDAO implements IHorarioDAO{
     }
     
     // Método para crear un nuevo Horario
-    public void save(Horario horario) {
+    public void crearHorario(Horario horario) {
         EntityManager em = this.conexion.crearConexion();
         em.persist(horario);
     }
     
     
     // Método para buscar un HorarioMesa por su ID
-    public Horario findById(Long id) {
+    public Horario HorarioPorId(Long id) {
         EntityManager em = this.conexion.crearConexion();
         return em.find(Horario.class, id);
     }
@@ -39,9 +39,15 @@ public class HorarioDAO implements IHorarioDAO{
     
     
     // Método para obtener todos los HorarioMesa
-    public List<Horario> findAll() {
+    public List<Horario> HorarioTodos() {
         EntityManager em = this.conexion.crearConexion();
         return em.createQuery("FROM Horario", Horario.class).getResultList();
+    }
+    
+    // Método para actualizar un Horario
+    public void actualizarHorario(Horario horario) {
+        EntityManager em = this.conexion.crearConexion();
+        em.merge(horario);
     }
     
     
