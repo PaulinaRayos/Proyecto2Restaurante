@@ -7,8 +7,10 @@ package pruebas;
 import conexion.Conexion;
 import conexion.IConexion;
 import dao.ClienteDAO;
+import dao.RestauranteDAO;
 import entidadesJPA.Cliente;
 import excepciones.PersistenciaException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,17 +24,32 @@ public class test {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Cliente c = new Cliente();
 
         IConexion i = new Conexion();
 
-        ClienteDAO cdao = new ClienteDAO(i);
+        // Crea una instancia del DAO
+        RestauranteDAO restauranteDAO = new RestauranteDAO(i);
 
         try {
-            cdao.insercionMasiva();
-        } catch (PersistenciaException ex) {
-            Logger.getLogger(test.class.getName()).log(Level.SEVERE, null, ex);
+            // Llama al método que quieres probar
+            List<Object[]> resultados = restauranteDAO.buscarCiudadesYDireccionesRestaurantes();
+
+            // Imprime los resultados
+            if (resultados.isEmpty()) {
+                System.out.println("No se encontraron restaurantes.");
+            } else {
+                System.out.println("Restaurantes encontrados:");
+                for (Object[] resultado : resultados) {
+                    String ciudad = (String) resultado[0];
+                    String direccion = (String) resultado[1];
+                    System.out.println("Ciudad: " + ciudad + ", Dirección: " + direccion);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
         }
+
     }
 
 }

@@ -13,6 +13,6 @@ import excepciones.NegocioException;
  */
 public interface IActualizaHorarioBO {
     
-    void guardarOActualizarHorario(HorarioDTO horarioDTO) throws NegocioException;
+    void guardarHorario(HorarioDTO horarioDTO) throws NegocioException;
     
 }

@@ -14,6 +14,10 @@ import excepciones.NegocioException;
 import excepciones.PersistenciaException;
 import interfaces.IRestauranteBO;
 import interfaces.IRestauranteDAO;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -30,26 +34,48 @@ public class RestauranteBO implements IRestauranteBO {
     }
 
     @Override
-    public RestauranteDTO obtenerRestaurantePorId(Long idRestaurante) throws NegocioException {
+    public void guardarRestaurante(RestauranteDTO restauranteDTO) throws NegocioException {
         try {
-            // Verifica que la consulta o el mapeo estén obteniendo los campos correctos
-            Restaurante restaurante = restdao.obtenerPorId(idRestaurante);
-            if (restaurante != null) {
-                return new RestauranteDTO(restaurante.getId(),
-                        restaurante.getHora_apartura(), restaurante.getHora_cierre());
-            }
-            return null;
+            Restaurante restaurante = new Restaurante();
+
+            restaurante.setCiudad(restauranteDTO.getCiudad());
+            restaurante.setDirrecion(restauranteDTO.getDireccion());
+            restdao.guardarRestaurante(restaurante);
         } catch (PersistenciaException e) {
-            throw new NegocioException("Error al obtener restaurante por ID", e);
+            throw new NegocioException("Error al guardar el restaurante!");
         }
     }
 
-    public RestauranteDTO buscarRestauranteUnico() throws NegocioException {
+    public List<String> obtenerCiudadesYDirecciones() throws NegocioException {
         try {
-            Restaurante restaurante = restdao.buscarRestauranteUnico();
-            return ConvertidorGeneral.convertidoraDTO(restaurante, RestauranteDTO.class);
-        } catch (PersistenciaException e) {
-            throw new NegocioException("No se pudo obtener el Restaurante.");
+            List<Object[]> resultados = restdao.buscarCiudadesYDireccionesRestaurantes();
+            List<String> listaFormateada = new ArrayList<>();
+
+            for (Object[] resultado : resultados) {
+                String ciudad = (String) resultado[0];
+                String direccion = (String) resultado[1];
+                listaFormateada.add(ciudad + " - " + direccion);
+            }
+
+            return listaFormateada;
+        } catch (PersistenciaException ex) {
+            throw new NegocioException("Error al obtener los restaurantes.");
         }
     }
+
+    @Override
+    public RestauranteDTO obtenerRestaurantePorId(Long idRestaurante) throws NegocioException {
+//        try {
+//            // Verifica que la consulta o el mapeo estén obteniendo los campos correctos
+//            Restaurante restaurante = restdao.obtenerPorId(idRestaurante);
+//            if (restaurante != null) {
+//                return new RestauranteDTO(restaurante.getId(),
+//                        restaurante.getHora_apartura(), restaurante.getHora_cierre());
+//            }
+        return null;
+//        } catch (PersistenciaException e) {
+//            throw new NegocioException("Error al obtener restaurante por ID", e);
+//        }
+    }
+
 }

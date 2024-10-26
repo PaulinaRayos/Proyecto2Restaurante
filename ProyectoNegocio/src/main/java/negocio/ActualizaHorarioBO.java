@@ -13,6 +13,7 @@ import dao.RestauranteDAO;
 import dto.HorarioDTO;
 import entidadesJPA.Horario;
 import entidadesJPA.HorarioMesa;
+import entidadesJPA.Restaurante;
 import excepciones.NegocioException;
 import excepciones.PersistenciaException;
 import interfaces.IRestauranteDAO;
@@ -39,25 +40,25 @@ public class ActualizaHorarioBO implements IActualizaHorarioBO {
         this.horariomesadao = new HorarioMesaDAO(conexion);
     }
 
-    public void guardarOActualizarHorario(HorarioDTO horarioDTO) throws NegocioException {
+    @Override
+    public void guardarHorario(HorarioDTO horarioDTO) throws NegocioException {
         try {
-            HorarioMesa horarioMesa = horariomesadao.obtenerOcrearHorarioMesa();
 
+            Restaurante restaurante = restdao.obtenerPorId(horarioDTO.getIdRestaurante());
             // Buscar si existe un horario para el día de la semana específico
             Optional<Horario> horarioExistente = horariodao.buscarPorDiaSemana(horarioDTO.getDiaSemana());
 
             if (horarioExistente.isPresent()) {
                 // Si existe, actualizar las horas de apertura y cierre
                 Horario horarioActualizar = horarioExistente.get();
+                horarioActualizar.setDiaSemana(horarioDTO.getDiaSemana());
                 horarioActualizar.setHoraApartura(horarioDTO.getHoraApertura());
                 horarioActualizar.setHoraCierre(horarioDTO.getHoraCierre());
-                horarioActualizar.setHorarioMesa(horarioMesa);
+                horarioActualizar.setRestaurante(restaurante);
                 horariodao.actualizarHorario(horarioActualizar);
             } else {
-                // Si no existe, crear un nuevo horario
-                horarioDTO.setIdHorarioMesa(horarioMesa.getId());
                 horariodao.crearHorario(ConvertidorGeneral.convertidorEntidad(horarioDTO, Horario.class));
-                
+
             }
         } catch (Exception e) {
             throw new NegocioException("Error al guardar o actualizar el horario: " + e.getMessage(), e);

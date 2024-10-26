@@ -82,14 +82,6 @@ public class MesaDTO {
         this.idRestaurante = idRestaurante;
     }
 
-    public String getHoraApertura(RestauranteDTO restaurante) {
-        return restaurante != null ? restaurante.getHoraApertura().toString() : "N/A";
-    }
-
-    public String getHoraCierre(RestauranteDTO restaurante) {
-        return restaurante != null ? restaurante.getHoraCierre().toString() : "N/A";
-    }
-
     public Long getIdTipoMesa() {
         return idTipoMesa;
     }

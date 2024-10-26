@@ -11,6 +11,7 @@ import interfaces.IRestauranteDAO;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 /**
  *
@@ -24,17 +25,13 @@ public class RestauranteDAO implements IRestauranteDAO {
         this.conexion = conexion;
     }
 
-    public void guardarOActualizarRestaurante(Restaurante restaurante) throws PersistenciaException {
+    public void guardarRestaurante(Restaurante restaurante) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
 
         try {
             em.getTransaction().begin();
 
-            if (restaurante.getId() == null) {
-                em.persist(restaurante); // Crear un nuevo restaurante
-            } else {
-                em.merge(restaurante); // Actualizar el restaurante existente
-            }
+            em.persist(restaurante); // Crear un nuevo restaurante
 
             em.getTransaction().commit();
         } catch (Exception e) {
@@ -45,25 +42,19 @@ public class RestauranteDAO implements IRestauranteDAO {
         }
     }
 
-    public Restaurante buscarRestauranteUnico() throws PersistenciaException {
+    @Override
+    public List<Object[]> buscarCiudadesYDireccionesRestaurantes() throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
-        Restaurante restaurante = null;
-
         try {
-            // Buscar el restaurante existente (solo uno)
-            Query query = em.createQuery("SELECT r FROM Restaurante r");
-            List<Restaurante> restaurantes = query.getResultList();
-
-            if (!restaurantes.isEmpty()) {
-                restaurante = restaurantes.get(0); // Asumimos que solo hay un restaurante
-            }
+            String jpql = "SELECT r.ciudad, r.direccion FROM Restaurante r";
+            Query query = em.createQuery(jpql);
+            List<Object[]> resultados = query.getResultList();
+            System.out.println("Cantidad de restaurantes encontrados: " + resultados.size());
+            return resultados;
         } catch (Exception e) {
-            throw new PersistenciaException("Error al buscar restaurante", e);
-        } finally {
-            em.close();
+            e.printStackTrace(); // Agrega esto para ver detalles del error
+            throw new PersistenciaException("No se pudieron encontrar los restaurantes.");
         }
-
-        return restaurante;
     }
 
     public Restaurante obtenerPorId(Long idRestaurante) throws PersistenciaException {
@@ -77,4 +68,5 @@ public class RestauranteDAO implements IRestauranteDAO {
             em.close(); // Asegurarte de cerrar el EntityManager
         }
     }
+
 }
