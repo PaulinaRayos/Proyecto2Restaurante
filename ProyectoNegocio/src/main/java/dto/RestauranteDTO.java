@@ -5,7 +5,6 @@
 package dto;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -15,26 +14,24 @@ import java.util.List;
 public class RestauranteDTO {
 
     private Long id;
-    private Date fechaApertura;
-    private Date horaApertura;
-    private Date horaCierre;
+    private String ciudad;
+    private String direccion;
     private List<MesaDTO> mesas;
 
     public RestauranteDTO() {
         this.mesas = new ArrayList();
     }
 
-    public RestauranteDTO(Long id, Date horaApertura, Date horaCierre) {
+    public RestauranteDTO(Long id, String ciudad, String direccion, List<MesaDTO> mesas) {
         this.id = id;
-        this.horaApertura = horaApertura;
-        this.horaCierre = horaCierre;
-        this.mesas = new ArrayList();
+        this.ciudad = ciudad;
+        this.direccion = direccion;
+        this.mesas = mesas;
     }
 
-    public RestauranteDTO(Date fechaApertura, Date horaApertura, Date horaCierre, List<MesaDTO> mesas) {
-        this.fechaApertura = fechaApertura;
-        this.horaApertura = horaApertura;
-        this.horaCierre = horaCierre;
+    public RestauranteDTO(String ciudad, String direccion, List<MesaDTO> mesas) {
+        this.ciudad = ciudad;
+        this.direccion = direccion;
         this.mesas = mesas;
     }
 
@@ -47,20 +44,20 @@ public class RestauranteDTO {
         this.id = id;
     }
 
-    public Date getHoraApertura() {
-        return horaApertura;
+    public String getCiudad() {
+        return ciudad;
     }
 
-    public void setHoraApertura(Date horaApertura) {
-        this.horaApertura = horaApertura;
+    public void setCiudad(String ciudad) {
+        this.ciudad = ciudad;
     }
 
-    public Date getHoraCierre() {
-        return horaCierre;
+    public String getDireccion() {
+        return direccion;
     }
 
-    public void setHoraCierre(Date horaCierre) {
-        this.horaCierre = horaCierre;
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
     }
 
     public List<MesaDTO> getMesas() {
@@ -71,21 +68,16 @@ public class RestauranteDTO {
         this.mesas = mesas;
     }
 
-    public Date getFechaApertura() {
-        return fechaApertura;
-    }
-
-    public void setFechaApertura(Date fechaApertura) {
-        this.fechaApertura = fechaApertura;
-    }
-
     @Override
     public String toString() {
-        return "RestauranteDTO{"
-                + "id=" + id
-                + ", horaApertura=" + horaApertura
-                + ", horaCierre=" + horaCierre
-                + ", mesas=" + mesas
-                + '}';
+        StringBuilder sb = new StringBuilder();
+        sb.append("RestauranteDTO{");
+        sb.append("id=").append(id);
+        sb.append(", ciudad=").append(ciudad);
+        sb.append(", direccion=").append(direccion);
+        sb.append(", mesas=").append(mesas);
+        sb.append('}');
+        return sb.toString();
     }
+
 }

@@ -6,6 +6,7 @@ package interfaces;
 
 import dto.RestauranteDTO;
 import excepciones.NegocioException;
+import java.util.List;
 
 /**
  *
@@ -14,6 +15,9 @@ import excepciones.NegocioException;
 public interface IRestauranteBO {
 
     RestauranteDTO obtenerRestaurantePorId(Long idRestaurante) throws NegocioException;
-    
-    RestauranteDTO buscarRestauranteUnico() throws NegocioException;
+
+    void guardarRestaurante(RestauranteDTO restauranteDTO) throws NegocioException;
+
+    List<String> obtenerCiudadesYDirecciones() throws NegocioException;
+
 }

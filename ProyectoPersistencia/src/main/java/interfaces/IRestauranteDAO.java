@@ -6,16 +6,17 @@ package interfaces;
 
 import entidadesJPA.Restaurante;
 import excepciones.PersistenciaException;
+import java.util.List;
 
 /**
  *
  * @author Chris
  */
 public interface IRestauranteDAO {
-    
-    void guardarOActualizarRestaurante(Restaurante restaurante) throws PersistenciaException;
-    
-    public Restaurante buscarRestauranteUnico() throws PersistenciaException;
+
+    void guardarRestaurante(Restaurante restaurante) throws PersistenciaException;
 
     Restaurante obtenerPorId(Long idRestaurante) throws PersistenciaException;
+
+    List<Object[]> buscarCiudadesYDireccionesRestaurantes() throws PersistenciaException;
 }
