@@ -4,22 +4,22 @@
  */
 package interfaces;
 
-import entidadesJPA.HorarioMesa;
+import entidadesJPA.Horario;
 import java.util.List;
 
 /**
  *
  * @author pauli
  */
-public interface IHorarioMesaDAO {
-
-    // Método para crear un nuevo HorarioMesa
-    void crearHorarioMesa(HorarioMesa horarioMesa);
+public interface IHorarioDAO {
 
     // Método para obtener todos los HorarioMesa
-    List<HorarioMesa> horarioMesaTodos();
+    List<Horario> findAll();
 
     // Método para buscar un HorarioMesa por su ID
-    HorarioMesa horarioMesaPorId(Long id);
+    Horario findById(Long id);
+
+    // Método para crear un nuevo Horario
+    void save(Horario horario);
     
 }

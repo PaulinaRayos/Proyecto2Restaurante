@@ -25,7 +25,7 @@ public class HorarioMesaDAO implements IHorarioMesaDAO{
     }
     
     // Método para crear un nuevo HorarioMesa
-    public void create(HorarioMesa horarioMesa) {
+    public void crearHorarioMesa(HorarioMesa horarioMesa) {
         EntityManager em = this.conexion.crearConexion();
         EntityTransaction tx = em.getTransaction();
         try {
@@ -41,13 +41,13 @@ public class HorarioMesaDAO implements IHorarioMesaDAO{
     }
 
     // Método para buscar un HorarioMesa por su ID
-    public HorarioMesa findById(Long id) {
+    public HorarioMesa horarioMesaPorId(Long id) {
         EntityManager em = this.conexion.crearConexion();
         return em.find(HorarioMesa.class, id);
     }
 
     // Método para obtener todos los HorarioMesa
-    public List<HorarioMesa> findAll() {
+    public List<HorarioMesa> horarioMesaTodos() {
         EntityManager em = this.conexion.crearConexion();
         return em.createQuery("SELECT hm FROM HorarioMesa hm", HorarioMesa.class).getResultList();
     }
