@@ -20,8 +20,7 @@ import utilidades.Forms;
  */
 public class FormClientes extends javax.swing.JFrame {
 
-    private IClienteBO cbo;
-    private boolean insercionMasivaRealizada = false;
+    private final IClienteBO cbo;
 
     /**
      * Creates new form FormClientes
@@ -281,23 +280,14 @@ public class FormClientes extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel3MouseClicked
 
     private void bInsertarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bInsertarActionPerformed
-
-        if (insercionMasivaRealizada) {
-            // Notificar al usuario que la inserción ya fue realizada
+        try {
+            cbo.insercionMasiva();
+            JOptionPane.showMessageDialog(this, "Inserción masiva realizada con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            Forms.cargarForm(new FormMenu(), this);
+        } catch (NegocioException e) {
             JOptionPane.showMessageDialog(this, "La inserción masiva ya ha sido realizada.", "Advertencia", JOptionPane.WARNING_MESSAGE);
-        } else {
-            try {
-                // Realizar la inserción masiva
-                cbo.insercionMasiva();
-                // Actualizar el estado de la inserción
-                insercionMasivaRealizada = true;
-                // Notificar al usuario que la inserción se realizó correctamente
-                JOptionPane.showMessageDialog(this, "Inserción masiva realizada con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-            } catch (NegocioException e) {
-                // Manejar la excepción si algo sale mal
-                JOptionPane.showMessageDialog(this, "Ocurrió un error durante la inserción masiva.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
         }
+
     }//GEN-LAST:event_bInsertarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

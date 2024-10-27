@@ -50,7 +50,7 @@ public class Mesa implements Serializable {
      * Relación muchos a uno con la entidad TipoMesa.
      * Cada mesa está asociada a un tipo específico de mesa.
      */     
-    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_tipo_mesa", nullable = false)
     private TipoMesa tipoMesa;
 
@@ -58,7 +58,7 @@ public class Mesa implements Serializable {
      * Relación muchos a uno con la entidad Restaurante.
      * Cada mesa está asociada a un restaurante específico.
      */ 
-    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_restaurante", nullable = false)
     private Restaurante restaurante;
     /**

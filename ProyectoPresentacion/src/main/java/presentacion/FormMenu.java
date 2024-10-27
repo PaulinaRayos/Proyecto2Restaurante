@@ -548,10 +548,45 @@ public class FormMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_bConsultasActionPerformed
 
     private void bReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bReportesActionPerformed
-        // TODO add your handling code here:
+        Forms.cargarForm(new FormReportes(), this);
     }//GEN-LAST:event_bReportesActionPerformed
 
     private void bConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bConfirmarActionPerformed
+        try {
+            // Obtener los datos del cliente y de la mesa
+            String clienteSeleccionado = (String) jComboBoxClientes.getSelectedItem();
+
+            int numPersonas = Integer.parseInt((String) cbCantidad.getSelectedItem());
+            Date fechaSeleccionada = (Date) jFecha.getDate();
+            Date horaSeleccionada = (Date) jHora.getValue();
+
+            // Combinar fecha y hora
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(fechaSeleccionada);
+
+            Calendar horaCalendar = Calendar.getInstance();
+            horaCalendar.setTime(horaSeleccionada);
+
+            calendar.set(Calendar.HOUR_OF_DAY, horaCalendar.get(Calendar.HOUR_OF_DAY));
+            calendar.set(Calendar.MINUTE, horaCalendar.get(Calendar.MINUTE));
+
+            Date fechaHoraFinal = calendar.getTime();
+
+            BigDecimal costo = mesaBO.obtenerCostoPorIdMesa(this.idMesaSeleccionada);
+            String nombreCompleto = (String) jComboBoxClientes.getSelectedItem(); // Obtener el nombre completo seleccionado
+            Long idCliente = clienteBO.obtenerIdClientePorNombre(nombreCompleto); // Obtener el ID del cliente
+
+            ReservaDTO reservaDTO = new ReservaDTO(null, fechaHoraFinal, numPersonas, costo, "Reservado", null, BigDecimal.ZERO, idCliente, this.idMesaSeleccionada);
+
+            // Mostrar diálogo de confirmación con los datos del cliente y la mesa
+            Forms.cargarForm(new FormDetallesReserva(reservaDTO,idCliente, this.idMesaSeleccionada), this);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al preparar la reserva: " + e.getMessage());
+        }
+    }//GEN-LAST:event_bConfirmarActionPerformed
+
+    private void xd() {
         try {
             // Obtener el cliente seleccionado del JComboBox
             String clienteSeleccionado = (String) jComboBoxClientes.getSelectedItem();
@@ -609,8 +644,7 @@ public class FormMenu extends javax.swing.JFrame {
             Logger.getLogger(FormMenu.class.getName()).log(Level.SEVERE, null, ex);
 
         }
-    }//GEN-LAST:event_bConfirmarActionPerformed
-
+    }
     private void bClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bClientesActionPerformed
         Forms.cargarForm(new FormClientes(), this);
     }//GEN-LAST:event_bClientesActionPerformed
@@ -770,40 +804,42 @@ public class FormMenu extends javax.swing.JFrame {
 
             List<MesaDTO> mesas = mesaBO.obtenerTodasLasMesas();
 
-            HorarioDTO horarioRestaurante = horariobo.obtenerHorarioPorId(idRestauranteSeleccionado);
+            // Obtén los horarios asignados al restaurante
+            List<HorarioDTO> horariosRestaurante = horariobo.obtenerDiasAsignadosParaRestaurante(idRestauranteSeleccionado);
 
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+
             // Crear un modelo de tabla
             DefaultTableModel modelo = new DefaultTableModel();
             modelo.addColumn("ID");
             modelo.addColumn("Mesa");
+            modelo.addColumn("Día Semana");
             modelo.addColumn("Ubicación");
             modelo.addColumn("Capacidad");
-            modelo.addColumn("Horario apertura");
-            modelo.addColumn("Horario cierre");
+            modelo.addColumn("Horario Apertura");
+            modelo.addColumn("Horario Cierre");
 
-            int capacidadSeleccionadaInt = Integer.parseInt(capacidadSeleccionada);
-
-            // Llenar el modelo con los datos de las mesas filtradas
+            // Llenar el modelo con los datos de las mesas y horarios filtrados
             for (MesaDTO mesa : mesas) {
-
                 boolean coincideRestaurante = mesa.getIdRestaurante().equals(idRestauranteSeleccionado);
-                boolean coincideUbicacion = mesa.getUbicacion().equals(ubicacionSeleccionada);
-                boolean coincideCapacidad = mesa.getCapacidad() <= capacidadSeleccionadaInt;
 
-                // Si coincide la ubicación y la capacidad, se agrega a la tabla
-                if (coincideUbicacion && coincideCapacidad && coincideRestaurante) {
-                    Object[] fila = new Object[6];
+                // Si coincide la ubicación, capacidad y restaurante, se agrega a la tabla
+                if (coincideRestaurante) {
 
-                    fila[0] = mesa.getIdMesa();
-                    fila[1] = mesa.getCodigoMesa();
-                    fila[2] = mesa.getUbicacion();
-                    fila[3] = mesa.getCapacidad();
+                    // Iterar sobre los horarios asignados al restaurante y crear una fila para cada día
+                    for (HorarioDTO horario : horariosRestaurante) {
+                        Object[] fila = new Object[7];
 
-                    fila[4] = sdf.format(horarioRestaurante.getHoraApertura());
-                    fila[5] = sdf.format(horarioRestaurante.getHoraCierre());
+                        fila[0] = mesa.getIdMesa();
+                        fila[1] = mesa.getCodigoMesa();
+                        fila[2] = horario.getDiaSemana();
+                        fila[3] = mesa.getUbicacion();
+                        fila[4] = mesa.getCapacidad();
+                        fila[5] = sdf.format(horario.getHoraApertura());
+                        fila[6] = sdf.format(horario.getHoraCierre());
 
-                    modelo.addRow(fila);
+                        modelo.addRow(fila);
+                    }
                 }
             }
 

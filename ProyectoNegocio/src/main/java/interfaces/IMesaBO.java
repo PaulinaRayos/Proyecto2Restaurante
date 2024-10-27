@@ -17,10 +17,12 @@ import java.util.List;
 public interface IMesaBO {
 
     List<MesaDTO> obtenerTodasLasMesas() throws NegocioException;
-    
+
     BigDecimal obtenerCostoPorIdMesa(Long idMesa) throws NegocioException;
-    
+
     void inicializarTiposMesaPredeterminados() throws NegocioException;
-    
+
     List<TipoMesaDTO> obtenerTiposMesa() throws NegocioException;
+
+    MesaDTO obtenerMesaPorId(Long idMesa) throws NegocioException;
 }

@@ -13,7 +13,7 @@ import java.util.List;
  * Cliente. Proporciona métodos para realizar operaciones de creación, lectura,
  * actualización y eliminación (CRUD) de clientes en la base de datos.
  * Contribuciones de Paulina Rodríguez Rodríguez Rayos.
- * 
+ *
  * @author Cristopher Alberto Elizalde Andrade - 240005
  */
 public interface IClienteDAO {
@@ -81,5 +81,12 @@ public interface IClienteDAO {
      */
     List<Cliente> obtenerTodosLosClientes() throws PersistenciaException;
 
+    /**
+     * Obtiene el cliente por medio de su nombre completo
+     *
+     * @param nombreCompleto el nombre del cliente a encontrar
+     * @return El resultado de la busqueda
+     */
+    Cliente obtenerClientePorNombre(String nombreCompleto);
 
 }

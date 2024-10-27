@@ -20,25 +20,12 @@ import java.util.List;
 public interface IMesaDAO {
 
     /**
-     * Actualiza una mesa en la base de datos.
-     *
-     * @param mesa La mesa a actualizar.
-     * @throws PersistenciaException Si ocurre un error durante la operación.
-     */
-    void actualizarMesa(Mesa mesa) throws PersistenciaException;
-
-    /**
      * Agrega una nueva mesa a la base de datos.
      *
      * @param mesa La mesa a agregar.
      * @throws PersistenciaException Si ocurre un error durante la operación.
      */
     void agregarMesa(Mesa mesa) throws PersistenciaException;
-
-    /**
-     * Cierra el EntityManager si está abierto.
-     */
-    void cerrar();
 
     /**
      * Elimina una mesa de la base de datos por su ID.

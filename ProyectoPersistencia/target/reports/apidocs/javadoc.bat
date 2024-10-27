@@ -1,1 +1,0 @@
-cmd.exe /X /C "C:\Users\pauli\OneDrive\Documentos\NetBeansJDKs\zulu21.36.17-ca-jdk21.0.4-win_x64\zulu21.36.17-ca-jdk21.0.4-win_x64\bin\javadoc.exe -J-Duser.language= -J-Duser.country= @options @packages"

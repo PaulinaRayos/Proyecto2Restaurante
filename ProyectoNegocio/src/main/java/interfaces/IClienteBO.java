@@ -4,6 +4,7 @@
  */
 package interfaces;
 
+import dto.ClienteDTO;
 import excepciones.NegocioException;
 import java.util.List;
 
@@ -18,4 +19,8 @@ public interface IClienteBO {
     List<Object[]> obtenerNombresYTelefonosDeClientes() throws NegocioException;
     
     Long obtenerIdClientePorNombre(String nombreCompleto) throws NegocioException;
+    
+    ClienteDTO obtenerClientePorNombre(String nombreCompleto);
+    
+    ClienteDTO obtenerClientePorId(Long id) throws NegocioException;
 }

@@ -14,7 +14,7 @@ import java.util.Optional;
  * Horario. Proporciona métodos para realizar operaciones de creación, lectura,
  * actualización y eliminación (CRUD) de horarios en la base de datos.
  * Contribuciones de Paulina Rodríguez Rodríguez Rayos.
- * 
+ *
  * @author Cristopher Alberto Elizalde Andrade - 240005
  */
 public interface IHorarioDAO {
@@ -62,5 +62,6 @@ public interface IHorarioDAO {
 
     Horario obtenerHorarioPorIdRestaurante(Long idRestaurante) throws PersistenciaException;
 
+    List<Horario> obtenerHorariosPorRestaurante(Long restauranteId);
 
 }

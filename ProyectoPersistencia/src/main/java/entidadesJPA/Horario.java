@@ -54,7 +54,7 @@ public class Horario implements Serializable {
      * Relación muchos a uno con la entidad Restaurante.
      * Un horario está asociado a un único restaurante.
      */
-    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_restaurante", nullable = false)
     private Restaurante restaurante;
 

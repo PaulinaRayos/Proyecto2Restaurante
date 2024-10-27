@@ -18,9 +18,8 @@ import javax.persistence.TypedQuery;
  * Implementación de la interfaz IHorarioDAO que proporciona métodos para el
  * acceso a datos de la entidad Horario. Esta clase permite realizar operaciones
  * de creación, búsqueda, actualización y obtención de horarios en la base de
- * datos.
- * Contribuciones de Paulina Rodríguez Rodríguez Rayos.
- * 
+ * datos. Contribuciones de Paulina Rodríguez Rodríguez Rayos.
+ *
  * @author Cristopher Alberto Elizalde Andrade - 240005
  */
 public class HorarioDAO implements IHorarioDAO {
@@ -118,6 +117,13 @@ public class HorarioDAO implements IHorarioDAO {
         }
     }
 
+    /**
+     * Obtiene un horario por medio del id del restaurante.
+     *
+     * @param idRestaurante
+     * @return Un objeto horario con sus atributos.
+     * @throws PersistenciaException
+     */
     public Horario obtenerHorarioPorIdRestaurante(Long idRestaurante) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         Horario horario = null;
@@ -138,6 +144,14 @@ public class HorarioDAO implements IHorarioDAO {
         }
 
         return horario;
+    }
+
+    public List<Horario> obtenerHorariosPorRestaurante(Long restauranteId) {
+        EntityManager em = this.conexion.crearConexion();
+        String query = "SELECT h FROM Horario h WHERE h.restaurante.id = :restauranteId";
+        return em.createQuery(query, Horario.class)
+                .setParameter("restauranteId", restauranteId)
+                .getResultList();
     }
 
     /**

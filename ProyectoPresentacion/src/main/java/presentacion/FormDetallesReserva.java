@@ -4,10 +4,23 @@
  */
 package presentacion;
 
+import dto.ClienteDTO;
+import dto.MesaDTO;
+import dto.ReservaDTO;
+import excepciones.NegocioException;
+import interfaces.IAgregarReservaBO;
+import interfaces.IClienteBO;
+import interfaces.IMesaBO;
 import java.awt.Image;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import negocio.AgregarReservaBO;
+import negocio.ClienteBO;
+import negocio.MesaBO;
 import utilidades.Forms;
 
 /**
@@ -16,14 +29,31 @@ import utilidades.Forms;
  */
 public class FormDetallesReserva extends javax.swing.JFrame {
 
+    private final ReservaDTO reserva;
+    private final IAgregarReservaBO agregarReservaBO;
+    private final IClienteBO clientebo;
+    private final IMesaBO mesabo;
+    private final Long idCliente;
+    private final Long idMesa;
+
     /**
      * Creates new form FormDetallesReserva
+     *
+     * @param reserva
+     * @param idCliente
+     * @param idMesa
      */
-    public FormDetallesReserva() {
+    public FormDetallesReserva(ReservaDTO reserva, Long idCliente, Long idMesa) {
         initComponents();
         this.setLocationRelativeTo(this);
-
+        this.reserva = reserva;
+        this.idMesa = idMesa;
+        this.idCliente = idCliente;
+        this.agregarReservaBO = new AgregarReservaBO();
+        this.clientebo = new ClienteBO();
+        this.mesabo = new MesaBO();
         this.SetImageLabel(jLabel3, "src/main/java/Imagenes/logo.png");
+        this.cargarDatosReserva();
     }
 
     /**
@@ -53,8 +83,6 @@ public class FormDetallesReserva extends javax.swing.JFrame {
         lblCantidad = new javax.swing.JLabel();
         lblUbicacion = new javax.swing.JLabel();
         lblNumMesa = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
-        lblID = new javax.swing.JLabel();
         bConfirmar = new javax.swing.JButton();
         bCancelar = new javax.swing.JButton();
 
@@ -156,15 +184,6 @@ public class FormDetallesReserva extends javax.swing.JFrame {
         lblNumMesa.setForeground(new java.awt.Color(0, 0, 0));
         lblNumMesa.setText("name");
 
-        jLabel15.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
-        jLabel15.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel15.setText("ID de reserva:");
-        jLabel15.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
-        lblID.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
-        lblID.setForeground(new java.awt.Color(0, 0, 0));
-        lblID.setText("name");
-
         bConfirmar.setBackground(new java.awt.Color(255, 51, 153));
         bConfirmar.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
         bConfirmar.setForeground(new java.awt.Color(0, 0, 0));
@@ -189,54 +208,41 @@ public class FormDetallesReserva extends javax.swing.JFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap(129, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jLabel15)
-                                .addGap(25, 25, 25))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(105, 105, 105)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel1)
-                                    .addComponent(jLabel7)
-                                    .addComponent(jLabel5)
-                                    .addComponent(jLabel8)
-                                    .addComponent(jLabel10)
-                                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(bCancelar)
-                                        .addComponent(jLabel9)))
-                                .addGap(63, 63, 63)))
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblNombre)
-                            .addComponent(lblTelefono)
-                            .addComponent(lblFechaHora)
-                            .addComponent(lblCantidad)
-                            .addComponent(lblUbicacion)
-                            .addComponent(lblNumMesa)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(24, 24, 24)
-                                .addComponent(lblID))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
-                                .addComponent(bConfirmar, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabelaa1)))
-                .addGap(163, 163, 163))
+                        .addGap(14, 14, 14)
+                        .addComponent(jLabelaa1))
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jLabel1)
+                                .addComponent(jLabel7)
+                                .addComponent(jLabel5)
+                                .addComponent(jLabel8)
+                                .addComponent(jLabel10)
+                                .addComponent(jLabel9))
+                            .addGap(63, 63, 63)
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(lblTelefono)
+                                .addComponent(lblFechaHora)
+                                .addComponent(lblCantidad)
+                                .addComponent(lblUbicacion)
+                                .addComponent(lblNumMesa)
+                                .addComponent(lblNombre)))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
+                            .addComponent(bCancelar)
+                            .addGap(130, 130, 130)
+                            .addComponent(bConfirmar, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(172, 172, 172))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addGap(29, 29, 29)
+                .addGap(19, 19, 19)
                 .addComponent(jLabelaa1)
-                .addGap(59, 59, 59)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel15)
-                    .addComponent(lblID))
-                .addGap(67, 67, 67)
+                .addGap(47, 47, 47)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(lblNombre))
@@ -260,11 +266,11 @@ public class FormDetallesReserva extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
                     .addComponent(lblNumMesa))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 87, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(bConfirmar)
                     .addComponent(bCancelar))
-                .addGap(38, 38, 38))
+                .addGap(40, 40, 40))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -272,16 +278,16 @@ public class FormDetallesReserva extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(42, Short.MAX_VALUE)
+                .addContainerGap(81, Short.MAX_VALUE)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34))
+                .addGap(58, 58, 58))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(52, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -298,15 +304,24 @@ public class FormDetallesReserva extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void bConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bConfirmarActionPerformed
-        // TODO add your handling code here:
+        try {
+            reserva.setIdCliente(idCliente);
+            reserva.setIdMesa(idMesa);
+            agregarReservaBO.agregarReserva(reserva);
+            JOptionPane.showMessageDialog(this, "Reserva agregada exitosamente.");
+            Forms.cargarForm(new FormMenu(), this);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al agregar la reserva: " + e.getMessage());
+
+        }
     }//GEN-LAST:event_bConfirmarActionPerformed
 
     private void bCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCancelarActionPerformed
@@ -317,13 +332,31 @@ public class FormDetallesReserva extends javax.swing.JFrame {
         Forms.cargarForm(new FormMenu(), this);
     }//GEN-LAST:event_jLabel3MouseClicked
 
+    private void cargarDatosReserva() {
+        try {
+            ClienteDTO cliente = clientebo.obtenerClientePorId(reserva.getIdCliente());
+            MesaDTO mesa = mesabo.obtenerMesaPorId(reserva.getIdCliente());
+
+            String nombre = cliente.getNombre();
+            String apellidoP = cliente.getApellidoPaterno();
+            String apellidoM = cliente.getApellidoMaterno();
+
+            lblNombre.setText(nombre + " " + apellidoP + " " + apellidoM);
+            lblTelefono.setText(cliente.getTelefono());
+            lblFechaHora.setText(reserva.getFechaHora().toString());
+            lblUbicacion.setText(mesa.getUbicacion());
+            lblNumMesa.setText(mesa.getCodigoMesa());
+            lblCantidad.setText(mesa.getCapacidad() + "");
+        } catch (NegocioException ex) {
+            Logger.getLogger(FormDetallesReserva.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bCancelar;
     private javax.swing.JButton bConfirmar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -336,7 +369,6 @@ public class FormDetallesReserva extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JLabel lblCantidad;
     private javax.swing.JLabel lblFechaHora;
-    private javax.swing.JLabel lblID;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lblNumMesa;
     private javax.swing.JLabel lblTelefono;

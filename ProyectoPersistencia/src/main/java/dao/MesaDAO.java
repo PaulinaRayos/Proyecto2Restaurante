@@ -185,24 +185,5 @@ public class MesaDAO implements IMesaDAO {
         }
     }
 
-    /**
-     * Cierra el EntityManager si está abierto.
-     */
-    public void cerrar() {
-        EntityManager em = this.conexion.crearConexion();
-        if (em != null && em.isOpen()) {
-            em.close();
-        }
-    }
-
-    /**
-     * Actualiza una mesa en la base de datos.
-     *
-     * @param mesa La mesa a actualizar.
-     * @throws PersistenciaException Si ocurre un error durante la operación.
-     */
-    @Override
-    public void actualizarMesa(Mesa mesa) throws PersistenciaException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+   
 }

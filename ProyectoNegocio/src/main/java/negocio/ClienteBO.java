@@ -6,7 +6,10 @@ package negocio;
 
 import conexion.Conexion;
 import conexion.IConexion;
+import conversiones.ConvertidorGeneral;
 import dao.ClienteDAO;
+import dto.ClienteDTO;
+import entidadesJPA.Cliente;
 import excepciones.NegocioException;
 import excepciones.PersistenciaException;
 import interfaces.IClienteBO;
@@ -50,6 +53,24 @@ public class ClienteBO implements IClienteBO {
             return cdao.obtenerIdClientePorNombre(nombreCompleto);
         } catch (PersistenciaException ex) {
             throw new NegocioException("No se pudo obtener el id del cliente por el nombre: " + nombreCompleto);
+        }
+    }
+
+    public ClienteDTO obtenerClientePorId(Long id) throws NegocioException {
+        try {
+            Cliente cliente = cdao.obtenerClientePorId(id);
+            return ConvertidorGeneral.convertidoraDTO(cliente, ClienteDTO.class);
+        } catch (PersistenciaException e) {
+            throw new NegocioException("No se pudo obtener el id del cliente: " + id);
+        }
+    }
+
+    public ClienteDTO obtenerClientePorNombre(String nombreCompleto) {
+        Cliente cliente = cdao.obtenerClientePorNombre(nombreCompleto);
+        if (cliente != null) {
+            return ConvertidorGeneral.convertidoraDTO(cliente, ClienteDTO.class);
+        } else {
+            return null;  // Cliente no encontrado
         }
     }
 
