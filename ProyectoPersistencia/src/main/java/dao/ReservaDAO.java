@@ -12,10 +12,10 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 /**
- * Interfaz que define los métodos para el acceso a datos de la entidad Reserva.
- * Proporciona operaciones para crear, leer, actualizar y eliminar reservas en
- * la base de datos.
- *
+ * Clase que implementa la interfaz IReservaDAO y proporciona métodos para el acceso
+ * a datos de la entidad Reserva. Permite realizar operaciones CRUD (crear, leer,
+ * actualizar y eliminar) sobre las reservas en la base de datos.
+ * 
  * @author Cristopher Alberto Elizalde Andrade - 240005
  * @author Paulina Rodríguez Rodríguez Rayos - 117262
  */
@@ -23,12 +23,21 @@ public class ReservaDAO implements IReservaDAO {
 
     private final IConexion conexion;
 
-    // Constructor
+    /**
+     * Constructor de la clase ReservaDAO.
+     *
+     * @param conexion Objeto que proporciona la conexión a la base de datos.
+     */
     public ReservaDAO(IConexion conexion) {
         this.conexion = conexion;
     }
 
-    // Método para agregar una reserva
+    /**
+     * Agrega una nueva reserva a la base de datos.
+     * 
+     * @param reserva La reserva a agregar.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
     public void agregarReserva(Reserva reserva) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -43,7 +52,13 @@ public class ReservaDAO implements IReservaDAO {
         }
     }
 
-    // Método para obtener una reserva por ID
+    /**
+     * Obtiene una reserva por su ID.
+     * 
+     * @param id El ID de la reserva a buscar.
+     * @return La reserva correspondiente al ID proporcionado.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
     @Override
     public Reserva obtenerReservaPorId(Long id) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
@@ -55,7 +70,12 @@ public class ReservaDAO implements IReservaDAO {
 
     }
 
-    // Método para obtener todas las reservas
+    /**
+     * Obtiene todas las reservas de la base de datos.
+     * 
+     * @return Una lista de todas las reservas.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
     public List<Reserva> obtenerTodasLasReservas() throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -66,7 +86,13 @@ public class ReservaDAO implements IReservaDAO {
 
     }
 
-    // Método para obtener reservas por estado
+    /**
+     * Obtiene reservas de la base de datos que coinciden con el estado proporcionado.
+     * 
+     * @param estado El estado de las reservas a buscar.
+     * @return Una lista de reservas que coinciden con el estado.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
     public List<Reserva> obtenerReservasPorEstado(String estado) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -79,7 +105,12 @@ public class ReservaDAO implements IReservaDAO {
 
     }
 
-    // Método para actualizar una reserva
+    /**
+     * Actualiza una reserva existente en la base de datos.
+     * 
+     * @param reserva La reserva a actualizar.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
     public void actualizarReserva(Reserva reserva) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -94,25 +125,10 @@ public class ReservaDAO implements IReservaDAO {
         }
     }
 
-    // Método para eliminar una reserva por ID
-    public void eliminarReserva(Long id) throws PersistenciaException {
-        EntityManager em = this.conexion.crearConexion();
-        try {
-            em.getTransaction().begin();
-            Reserva reserva = em.find(Reserva.class, id); // Buscar la reserva por ID
-            if (reserva != null) {
-                em.remove(reserva); // Eliminar la reserva
-            }
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback(); // Revierte la transacción si ocurre un error
-            }
-            throw new PersistenciaException("No se pudo eliminar la reserva con id: " + id);
-        }
-    }
 
-    // Método para cerrar el EntityManager y EntityManagerFactory
+    /**
+     * Cierra el EntityManager si está abierto.
+     */
     public void cerrar() {
         EntityManager em = this.conexion.crearConexion();
         if (em != null && em.isOpen()) {

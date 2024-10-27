@@ -15,17 +15,30 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 /**
- *
- * @author pauli
+ * Clase que implementa la interfaz IRestauranteDAO y proporciona métodos para el acceso
+ * a datos de la entidad Restaurante. Permite realizar operaciones CRUD (crear, leer,
+ * actualizar y eliminar) sobre los restaurantes en la base de datos.
+ * 
+ * @author Cristopher Alberto Elizalde Andrade - 240005
+ * @author Paulina Rodríguez Rodríguez Rayos - 117262
  */
 public class RestauranteDAO implements IRestauranteDAO {
 
     private final IConexion conexion;
-
+    /**
+     * Constructor de la clase RestauranteDAO.
+     *
+     * @param conexion Objeto que proporciona la conexión a la base de datos.
+     */
     public RestauranteDAO(IConexion conexion) {
         this.conexion = conexion;
     }
-
+    /**
+     * Guarda un nuevo restaurante en la base de datos o actualiza uno existente.
+     * 
+     * @param restaurante El restaurante a guardar.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
     public void guardarRestaurante(Restaurante restaurante) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
 
@@ -42,7 +55,13 @@ public class RestauranteDAO implements IRestauranteDAO {
             em.close();
         }
     }
-
+    /**
+     * Busca las ciudades y direcciones de todos los restaurantes en la base de datos.
+     * 
+     * @return Una lista de arreglos de objetos, donde cada arreglo contiene la ciudad
+     *         y la dirección de un restaurante.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
     @Override
     public List<Object[]> buscarCiudadesYDireccionesRestaurantes() throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
@@ -57,18 +76,30 @@ public class RestauranteDAO implements IRestauranteDAO {
             throw new PersistenciaException("No se pudieron encontrar los restaurantes.");
         }
     }
-
+    /**
+     * Obtiene un restaurante de la base de datos por su ID.
+     * 
+     * @param idRestaurante El ID del restaurante a buscar.
+     * @return El restaurante correspondiente al ID proporcionado.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
     public Restaurante obtenerPorId(Long idRestaurante) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
 
         try {
-            return em.find(Restaurante.class, idRestaurante); // Usar el método find para obtener el objeto
+            return em.find(Restaurante.class, idRestaurante); // Método find para obtener el objeto
         } catch (Exception e) {
             throw new PersistenciaException("Error al obtener el Restaurante.", e);
         } finally {
-            em.close(); // Asegurarte de cerrar el EntityManager
+            em.close(); // Cerrar el EntityManager
         }
     }
+     /**
+     * Obtiene todos los restaurantes de la base de datos.
+     * 
+     * @return Una lista de todos los restaurantes.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
     public List<Restaurante> obtenerTodosLosRestaurantes() throws PersistenciaException {
         EntityManager em = conexion.crearConexion();
         List<Restaurante> restaurantes;

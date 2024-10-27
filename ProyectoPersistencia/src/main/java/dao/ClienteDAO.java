@@ -26,12 +26,22 @@ public class ClienteDAO implements IClienteDAO {
 
     private final IConexion conexion;
 
-    // Constructor
+    /**
+     * Constructor de la clase ClienteDAO.
+     *
+     * @param conexion Objeto que proporciona la conexión a la base de datos.
+     */
     public ClienteDAO(IConexion conexion) {
         this.conexion = conexion;
     }
 
-    // Método para agregar un cliente
+    /**
+     * Agrega un nuevo cliente a la base de datos.
+     *
+     * @param cliente El cliente a agregar.
+     * @throws PersistenciaException Si ocurre un error al intentar agregar el
+     * cliente.
+     */
     public void agregarCliente(Cliente cliente) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -47,9 +57,18 @@ public class ClienteDAO implements IClienteDAO {
                 em.getTransaction().rollback();
             }
             throw new PersistenciaException("No se pudo agregar el cliente a la base de datos: " + e);
+        } finally {
+            em.close();
         }
     }
 
+    /**
+     * Realiza una inserción masiva de clientes en la base de datos con datos
+     * predefinidos.
+     *
+     * @throws PersistenciaException Si ocurre un error al intentar realizar la
+     * inserción masiva.
+     */
     @Override
     public void insercionMasiva() throws PersistenciaException {
         List<String> nombres = Arrays.asList("Chris", "Ana", "Luis", "Maria", "Pedro", "Lucia", "Jorge", "Sofia",
@@ -92,26 +111,52 @@ public class ClienteDAO implements IClienteDAO {
 
     }
 
-    // Método para obtener un cliente por ID
+    /**
+     * Obtiene un cliente por su ID.
+     *
+     * @param id El ID del cliente a buscar.
+     * @return El cliente correspondiente al ID proporcionado, o null si no se
+     * encuentra.
+     * @throws PersistenciaException Si ocurre un error al intentar buscar el
+     * cliente.
+     */
     public Cliente obtenerClientePorId(Long id) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
             return em.find(Cliente.class, id); // Encontrar cliente por ID
         } catch (Exception e) {
             throw new PersistenciaException("No se pudo encontrar el cliente en la base de datos por id: " + id);
+        } finally {
+            em.close();
         }
     }
 
-    // Método para obtener todos los clientes
+    /**
+     * Obtiene todos los clientes de la base de datos.
+     *
+     * @return Una lista de todos los clientes.
+     * @throws PersistenciaException Si ocurre un error al intentar obtener los
+     * clientes.
+     */
     public List<Cliente> obtenerTodosLosClientes() throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
             return em.createQuery("SELECT c FROM Cliente c", Cliente.class).getResultList(); // Consulta para obtener todos los clientes
         } catch (Exception e) {
             throw new PersistenciaException("No se pudo encontrar el cliente en la base de datos por id: ");
+        } finally {
+            em.close();
         }
     }
 
+    /**
+     * Obtiene el ID de un cliente dado su nombre completo.
+     *
+     * @param nombreCompleto El nombre completo del cliente.
+     * @return El ID del cliente, o null si no se encuentra.
+     * @throws PersistenciaException Si ocurre un error al intentar obtener el
+     * ID.
+     */
     public Long obtenerIdClientePorNombre(String nombreCompleto) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         Long idCliente = null;
@@ -133,7 +178,14 @@ public class ClienteDAO implements IClienteDAO {
         return idCliente;
     }
 
-    // Método para obtener los nombres completos de todos los clientes
+    /**
+     * Obtiene los nombres completos y los teléfonos de todos los clientes.
+     *
+     * @return Una lista de arreglos de objetos, donde cada arreglo contiene el
+     * nombre completo y el teléfono desencriptado de un cliente.
+     * @throws PersistenciaException Si ocurre un error al intentar obtener los
+     * nombres y teléfonos.
+     */
     public List<Object[]> obtenerNombresYTelefonosDeClientes() throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -156,7 +208,9 @@ public class ClienteDAO implements IClienteDAO {
         }
     }
 
-    // Método para cerrar el EntityManager y EntityManagerFactory
+    /**
+     * Cierra el EntityManager si está abierto.
+     */
     public void cerrar() {
         EntityManager em = this.conexion.crearConexion();
         if (em != null && em.isOpen()) {

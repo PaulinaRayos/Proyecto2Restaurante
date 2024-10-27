@@ -7,8 +7,10 @@ package entidadesJPA;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,9 +18,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
- * Clase que representa la entidad Reserva en la base de datos. Mapea la tabla
- * 'reservas' y define los atributos correspondientes, así como las relaciones
- * con otras entidades.
+ * Clase que representa la entidad Cliente en la base de datos. Mapea la tabla
+ * 'cliente' y define los atributos correspondientes, así como las relaciones
+ * con otras entidades, en particular la relación con reservas.
+ *
+ * Esta clase implementa Serializable para permitir la serialización de objetos
+ * Cliente.
  *
  * @author Cristopher Alberto Elizalde Andrade - 240005
  * @author Paulina Rodríguez Rodríguez Rayos - 117262
@@ -44,22 +49,35 @@ public class Cliente implements Serializable {
 
     @Column(name = "telefono", unique = true)
     private String telefono;
-    
-    @OneToMany(mappedBy = "cliente")
+
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<Reserva> reservas;
 
-    //Constructor vacío
+    /**
+     * Constructor vacío que inicializa la lista de reservas.
+     */
     public Cliente() {
         this.reservas = new ArrayList();
     }
 
-    //Constructor con Id
+    /**
+     * Constructor que inicializa el cliente con un ID.
+     *
+     * @param id El ID del cliente.
+     */
     public Cliente(Long id) {
         this.id = id;
         this.reservas = new ArrayList();
     }
 
-    //Constructor sin Id
+    /**
+     * Constructor que inicializa el cliente con los atributos dados.
+     *
+     * @param nombre El nombre del cliente.
+     * @param apellidoPaterno El apellido paterno del cliente.
+     * @param apellidoMaterno El apellido materno del cliente.
+     * @param telefono El número de teléfono del cliente.
+     */
     public Cliente(String nombre, String apellidoPaterno, String apellidoMaterno, String telefono) {
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
@@ -68,7 +86,15 @@ public class Cliente implements Serializable {
         this.reservas = new ArrayList();
     }
 
-    //Constructor completo
+    /**
+     * Constructor que inicializa todos los atributos del cliente.
+     *
+     * @param id El ID del cliente.
+     * @param nombre El nombre del cliente.
+     * @param apellidoPaterno El apellido paterno del cliente.
+     * @param apellidoMaterno El apellido materno del cliente.
+     * @param telefono El número de teléfono del cliente.
+     */
     public Cliente(Long id, String nombre, String apellidoPaterno, String apellidoMaterno, String telefono) {
         this.id = id;
         this.nombre = nombre;

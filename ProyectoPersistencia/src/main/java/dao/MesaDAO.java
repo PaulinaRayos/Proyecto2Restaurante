@@ -14,9 +14,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 /**
- * Interfaz que define los métodos para el acceso a datos de la entidad Mesa.
- * Proporciona operaciones para crear, leer, actualizar y eliminar mesas en la
- * base de datos.
+ * Clase que implementa la interfaz IMesaDAO y proporciona métodos para el
+ * acceso a datos de la entidad Mesa. Permite realizar operaciones CRUD (crear,
+ * leer, actualizar y eliminar) sobre las mesas en la base de datos.
  *
  * @author Cristopher Alberto Elizalde Andrade - 240005
  * @author Paulina Rodríguez Rodríguez Rayos - 117262
@@ -25,12 +25,21 @@ public class MesaDAO implements IMesaDAO {
 
     private final IConexion conexion;
 
-    // Constructor
+    /**
+     * Constructor de la clase MesaDAO.
+     *
+     * @param conexion Objeto que proporciona la conexión a la base de datos.
+     */
     public MesaDAO(IConexion conexion) {
         this.conexion = conexion;
     }
 
-    // Método para agregar una mesa
+    /**
+     * Agrega una nueva mesa a la base de datos.
+     *
+     * @param mesa La mesa a agregar.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
     public void agregarMesa(Mesa mesa) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -45,6 +54,12 @@ public class MesaDAO implements IMesaDAO {
         }
     }
 
+    /**
+     * Inserta una lista de mesas en la base de datos de manera masiva.
+     *
+     * @param mesas La lista de mesas a insertar.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
     public void insertarMesas(List<Mesa> mesas) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
 
@@ -60,11 +75,17 @@ public class MesaDAO implements IMesaDAO {
             em.getTransaction().rollback();
             throw new PersistenciaException("Error al insertar mesas", e);
         } finally {
-            em.close(); // Asegurarte de cerrar el EntityManager
+            em.close(); // Cerrar el EntityManager
         }
     }
 
-    // Método para obtener una mesa por ID
+    /**
+     * Obtiene una mesa por su ID.
+     *
+     * @param id El ID de la mesa a buscar.
+     * @return La mesa correspondiente al ID proporcionado.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
     public Mesa obtenerMesaPorId(Long id) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -75,7 +96,12 @@ public class MesaDAO implements IMesaDAO {
 
     }
 
-    // Método para obtener todas las mesas
+    /**
+     * Obtiene todas las mesas de la base de datos.
+     *
+     * @return Una lista de todas las mesas.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
     public List<Mesa> obtenerTodasLasMesas() throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         List<Mesa> mesas = null;
@@ -93,6 +119,13 @@ public class MesaDAO implements IMesaDAO {
         return mesas;
     }
 
+    /**
+     * Obtiene el costo de reserva de una mesa por su ID.
+     *
+     * @param idMesa El ID de la mesa.
+     * @return El costo de reserva de la mesa, o null si no se encontró.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
     public BigDecimal obtenerCostoPorIdMesa(Long idMesa) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         BigDecimal precioReserva = null;
@@ -113,6 +146,12 @@ public class MesaDAO implements IMesaDAO {
         return precioReserva; // Retornar el precio o null si no se encontró
     }
 
+    /**
+     * Obtiene la cantidad total de mesas en la base de datos.
+     *
+     * @return La cantidad total de mesas.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
     public long obtenerCantidadDeMesas() throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -123,7 +162,12 @@ public class MesaDAO implements IMesaDAO {
         }
     }
 
-    // Método para eliminar una mesa por ID
+    /**
+     * Elimina una mesa de la base de datos por su ID.
+     *
+     * @param id El ID de la mesa a eliminar.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
     public void eliminarMesa(Long id) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -141,7 +185,9 @@ public class MesaDAO implements IMesaDAO {
         }
     }
 
-    // Método para cerrar el EntityManager y EntityManagerFactory
+    /**
+     * Cierra el EntityManager si está abierto.
+     */
     public void cerrar() {
         EntityManager em = this.conexion.crearConexion();
         if (em != null && em.isOpen()) {
@@ -149,6 +195,12 @@ public class MesaDAO implements IMesaDAO {
         }
     }
 
+    /**
+     * Actualiza una mesa en la base de datos.
+     *
+     * @param mesa La mesa a actualizar.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
     @Override
     public void actualizarMesa(Mesa mesa) throws PersistenciaException {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
