@@ -6,6 +6,8 @@ package entidadesJPA;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,6 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -47,9 +50,8 @@ public class Horario implements Serializable {
     @JoinColumn(name = "id_restaurante", nullable = false)
     private Restaurante restaurante;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_horario_mesa", nullable = false)
-    private HorarioMesa horarioMesa;
+    @OneToMany(mappedBy = "horario", cascade = CascadeType.PERSIST)
+    private List<HorarioMesa> horarioMesaList;
 
     public Horario() {
     }
@@ -58,22 +60,24 @@ public class Horario implements Serializable {
         this.id = id;
     }
 
-    public Horario(String diaSemana, Date horaApertura, Date horaCierre, Restaurante restaurante, HorarioMesa horarioMesa) {
+    public Horario(String diaSemana, Date horaApertura, Date horaCierre, Restaurante restaurante, List<HorarioMesa> horarioMesaList) {
         this.diaSemana = diaSemana;
         this.horaApertura = horaApertura;
         this.horaCierre = horaCierre;
         this.restaurante = restaurante;
-        this.horarioMesa = horarioMesa;
+        this.horarioMesaList = horarioMesaList;
     }
 
-    public Horario(Long id, String diaSemana, Date horaApertura, Date horaCierre, Restaurante restaurante, HorarioMesa horarioMesa) {
+    public Horario(Long id, String diaSemana, Date horaApertura, Date horaCierre, Restaurante restaurante, List<HorarioMesa> horarioMesaList) {
         this.id = id;
         this.diaSemana = diaSemana;
         this.horaApertura = horaApertura;
         this.horaCierre = horaCierre;
         this.restaurante = restaurante;
-        this.horarioMesa = horarioMesa;
+        this.horarioMesaList = horarioMesaList;
     }
+
+
 
     public Long getId() {
         return id;
@@ -107,13 +111,6 @@ public class Horario implements Serializable {
         this.horaCierre = horaCierre;
     }
 
-    public HorarioMesa getHorarioMesa() {
-        return horarioMesa;
-    }
-
-    public void setHorarioMesa(HorarioMesa horarioMesa) {
-        this.horarioMesa = horarioMesa;
-    }
 
     public Restaurante getRestaurante() {
         return restaurante;
@@ -121,6 +118,14 @@ public class Horario implements Serializable {
 
     public void setRestaurante(Restaurante restaurante) {
         this.restaurante = restaurante;
+    }
+
+    public List<HorarioMesa> getHorarioMesaList() {
+        return horarioMesaList;
+    }
+
+    public void setHorarioMesaList(List<HorarioMesa> horarioMesaList) {
+        this.horarioMesaList = horarioMesaList;
     }
 
     @Override
@@ -145,7 +150,7 @@ public class Horario implements Serializable {
 
     @Override
     public String toString() {
-        return "Horario{" + "id=" + id + ", diaSemana=" + diaSemana + ", horaApertura=" + horaApertura + ", horaCierre=" + horaCierre + ", restaurante=" + restaurante + ", horarioMesa=" + horarioMesa + '}';
+        return "Horario{" + "id=" + id + ", diaSemana=" + diaSemana + ", horaApertura=" + horaApertura + ", horaCierre=" + horaCierre + ", restaurante=" + restaurante + ", horarioMesaList=" + horarioMesaList + '}';
     }
 
 }

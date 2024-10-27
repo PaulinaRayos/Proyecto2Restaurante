@@ -5,6 +5,7 @@
 package presentacion;
 
 import dto.HorarioDTO;
+import dto.MesaDTO;
 import dto.RestauranteDTO;
 import excepciones.NegocioException;
 import interfaces.IAgregaMesasBO;
@@ -32,6 +33,13 @@ import negocio.MesaBO;
 import negocio.RestauranteBO;
 import utilidades.Forms;
 import interfaces.IActualizaHorarioBO;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -45,6 +53,9 @@ public class FormMesas extends javax.swing.JFrame {
     private IActualizaHorarioBO acthorarioBO;
     private RestauranteDTO restauranteDTO;
     private HorarioDTO horario;
+    private List<RestauranteDTO> listaRestaurantes;
+    private Long idRestauranteSeleccionado;
+    private Long idMesaSeleccionada;
 
     /**
      * Creates new form FormMesas
@@ -60,6 +71,9 @@ public class FormMesas extends javax.swing.JFrame {
         this.acthorarioBO = new ActualizaHorarioBO();
 
         this.SetImageLabel(jLabel3, "src/main/java/Imagenes/logo.png");
+
+        cargarRestaurantes();
+        cargarMesasEnTabla();
     }
 
     /**
@@ -86,6 +100,8 @@ public class FormMesas extends javax.swing.JFrame {
         txtMediana = new javax.swing.JTextField();
         txtGrande = new javax.swing.JTextField();
         bTiposMesa = new javax.swing.JButton();
+        jLabel10 = new javax.swing.JLabel();
+        cbRestaurante = new javax.swing.JComboBox<>();
         jPanel6 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblMesas = new javax.swing.JTable();
@@ -103,19 +119,15 @@ public class FormMesas extends javax.swing.JFrame {
         jPanel4.setBackground(new java.awt.Color(204, 204, 204));
 
         jLabel9.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
-        jLabel9.setForeground(new java.awt.Color(0, 0, 0));
         jLabel9.setText("Ubicación:");
         jLabel9.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        cbUbicacion.setBackground(new java.awt.Color(255, 255, 255));
         cbUbicacion.setFont(new java.awt.Font("Times New Roman", 3, 14)); // NOI18N
-        cbUbicacion.setForeground(new java.awt.Color(0, 0, 0));
         cbUbicacion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "General", "Terraza", "Ventana" }));
         cbUbicacion.setBorder(null);
 
         bCrear.setBackground(new java.awt.Color(255, 51, 153));
         bCrear.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
-        bCrear.setForeground(new java.awt.Color(0, 0, 0));
         bCrear.setText("Generar Mesas");
         bCrear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -124,48 +136,47 @@ public class FormMesas extends javax.swing.JFrame {
         });
 
         jLabelaa2.setFont(new java.awt.Font("Times New Roman", 3, 24)); // NOI18N
-        jLabelaa2.setForeground(new java.awt.Color(0, 0, 0));
         jLabelaa2.setText("Agrega Mesas");
         jLabelaa2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jLabel11.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
-        jLabel11.setForeground(new java.awt.Color(0, 0, 0));
         jLabel11.setText("Cantidad por tipo:");
         jLabel11.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jLabel12.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
-        jLabel12.setForeground(new java.awt.Color(0, 0, 0));
         jLabel12.setText("Pequeña:");
         jLabel12.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jLabel13.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
-        jLabel13.setForeground(new java.awt.Color(0, 0, 0));
         jLabel13.setText("Mediana:");
         jLabel13.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jLabel14.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
-        jLabel14.setForeground(new java.awt.Color(0, 0, 0));
         jLabel14.setText("Grande:");
         jLabel14.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        txtPequeña.setBackground(new java.awt.Color(255, 255, 255));
         txtPequeña.setFont(new java.awt.Font("Arial", 3, 18)); // NOI18N
 
-        txtMediana.setBackground(new java.awt.Color(255, 255, 255));
         txtMediana.setFont(new java.awt.Font("Arial", 3, 18)); // NOI18N
 
-        txtGrande.setBackground(new java.awt.Color(255, 255, 255));
         txtGrande.setFont(new java.awt.Font("Arial", 3, 18)); // NOI18N
 
         bTiposMesa.setBackground(new java.awt.Color(255, 51, 153));
         bTiposMesa.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
-        bTiposMesa.setForeground(new java.awt.Color(0, 0, 0));
         bTiposMesa.setText("Inserta tipos");
         bTiposMesa.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bTiposMesaActionPerformed(evt);
             }
         });
+
+        jLabel10.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
+        jLabel10.setText("Restaurante:");
+        jLabel10.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        cbRestaurante.setFont(new java.awt.Font("Times New Roman", 3, 14)); // NOI18N
+        cbRestaurante.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecciona restaurante" }));
+        cbRestaurante.setBorder(null);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -176,6 +187,8 @@ public class FormMesas extends javax.swing.JFrame {
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGap(31, 31, 31)
                         .addComponent(jLabelaa2)
+                        .addGap(66, 66, 66)
+                        .addComponent(jLabel10)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(bTiposMesa))
                     .addGroup(jPanel4Layout.createSequentialGroup()
@@ -186,46 +199,58 @@ public class FormMesas extends javax.swing.JFrame {
                         .addGap(0, 388, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(bCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(17, 17, 17)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                                .addComponent(jLabel13)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txtMediana, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(29, 29, 29)
-                                .addComponent(jLabel14)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txtGrande, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                                .addComponent(jLabel11)
-                                .addGap(207, 207, 207))))))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                        .addComponent(jLabel9)
-                        .addGap(241, 241, 241))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                         .addComponent(cbUbicacion, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(158, 158, 158))))
+                        .addGap(158, 158, 158))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel9)
+                        .addGap(241, 241, 241))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(bCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel4Layout.createSequentialGroup()
+                            .addGap(17, 17, 17)
+                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                                    .addComponent(jLabel13)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(txtMediana, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(29, 29, 29)
+                                    .addComponent(jLabel14)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(txtGrande, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(18, 18, 18))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                                    .addComponent(jLabel11)
+                                    .addGap(207, 207, 207)))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addComponent(cbRestaurante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(190, 190, 190))))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelaa2)
-                    .addComponent(bTiposMesa))
-                .addGap(33, 33, 33)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabelaa2)
+                            .addComponent(bTiposMesa))
+                        .addGap(19, 19, 19))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                .addComponent(cbRestaurante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(cbUbicacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(49, 49, 49)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel11)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -244,7 +269,6 @@ public class FormMesas extends javax.swing.JFrame {
 
         jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
         jScrollPane1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jScrollPane1.setForeground(new java.awt.Color(0, 0, 0));
 
         tblMesas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -268,7 +292,6 @@ public class FormMesas extends javax.swing.JFrame {
         jScrollPane1.setViewportView(tblMesas);
 
         jLabelaa1.setFont(new java.awt.Font("Times New Roman", 3, 24)); // NOI18N
-        jLabelaa1.setForeground(new java.awt.Color(0, 0, 0));
         jLabelaa1.setText("Mesas Disponibles");
         jLabelaa1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
@@ -343,7 +366,6 @@ public class FormMesas extends javax.swing.JFrame {
         });
 
         jLabel4.setFont(new java.awt.Font("Times New Roman", 3, 20)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
         jLabel4.setText(" Amadeustaurant");
         jLabel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
@@ -389,11 +411,15 @@ public class FormMesas extends javax.swing.JFrame {
         try {
             // Llamar al método de negocio para buscar el restaurante único
 //            restauranteDTO = restBO.buscarRestauranteUnico();
+            // Obtener el restaurante seleccionado
+            RestauranteDTO restauranteSeleccionado = restBO.obtenerRestaurantePorId(idRestauranteSeleccionado);
 
-            if (restauranteDTO == null) {
-                throw new NegocioException("No hay restaurante disponible.");
-            }
-
+            // Verificar si se ha seleccionado un restaurante
+        if (idRestauranteSeleccionado == null) {
+            // Mostrar un diálogo indicando que debe seleccionar un restaurante
+            JOptionPane.showMessageDialog(this, "Por favor, seleccione un restaurante válido.", "Error", JOptionPane.ERROR_MESSAGE);
+            return; // Salir del método si no hay selección válida
+        }
             // Obtener la ubicación seleccionada
             String ubicacion = (String) cbUbicacion.getSelectedItem();
 
@@ -412,7 +438,7 @@ public class FormMesas extends javax.swing.JFrame {
             }
 
             // Llamar al método agregarMesas
-            agregadao.agregarMesas(restauranteDTO, cantidadPorTipo, ubicacion);
+            agregadao.agregarMesas(restauranteSeleccionado, cantidadPorTipo, ubicacion);
 
             // Mostrar mensaje de éxito
             JOptionPane.showMessageDialog(this, "Mesas agregadas exitosamente.");
@@ -445,7 +471,9 @@ public class FormMesas extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bCrear;
     private javax.swing.JButton bTiposMesa;
+    private javax.swing.JComboBox<String> cbRestaurante;
     private javax.swing.JComboBox<String> cbUbicacion;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
@@ -501,4 +529,108 @@ private void SetImageLabel(JLabel labelname, String root) {
         // Convertir LocalDateTime de vuelta a java.util.Date
         return Date.from(fechaConHora.atZone(ZoneId.systemDefault()).toInstant());
     }
+
+    private void cargarRestaurantes() {
+        try {
+            cbRestaurante.removeAllItems(); // Limpiar elementos actuales
+            listaRestaurantes = restBO.obtenerRestaurantes(); // Obtener la lista de restaurantes
+
+            cbRestaurante.addItem("Seleccionar restaurante"); // Agregar opción de selección
+
+            // Llenar el JComboBox con las cadenas que deseas mostrar
+            for (RestauranteDTO restaurante : listaRestaurantes) {
+                String displayText = restaurante.getCiudad() + " - " + restaurante.getDireccion(); // Crear el texto para mostrar
+                cbRestaurante.addItem(displayText); // Agregar solo el texto
+            }
+
+            // Agregar un ActionListener para detectar la selección de un restaurante
+            cbRestaurante.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    int selectedIndex = cbRestaurante.getSelectedIndex(); // Obtener el índice seleccionado
+
+                    // Asegúrate de que no se haya seleccionado la opción de "Seleccionar restaurante"
+                    if (selectedIndex > 0) { // Si hay un restaurante seleccionado
+                        RestauranteDTO restauranteSeleccionado = listaRestaurantes.get(selectedIndex - 1); // Obtener el objeto correspondiente
+                        idRestauranteSeleccionado = restauranteSeleccionado.getId(); // Obtener el ID del restaurante seleccionado
+                        System.out.println("ID del restaurante seleccionado: " + idRestauranteSeleccionado);
+                        cargarMesasEnTabla(); 
+                    } else {
+                        // Restablecer el ID si se selecciona "Seleccionar restaurante"
+                        idRestauranteSeleccionado = null; // O puedes usar un valor predeterminado
+                    }
+                }
+            });
+
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(this, "Error al mostrar los restaurantes", "ERROR!", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private void cargarMesasEnTabla() {
+        try {
+            String ubicacionSeleccionada = cbUbicacion.getSelectedItem().toString();
+
+
+            List<MesaDTO> mesas = mesaBO.obtenerTodasLasMesas();
+
+            // Crear un modelo de tabla
+            DefaultTableModel modelo = new DefaultTableModel();
+            modelo.addColumn("ID");
+            modelo.addColumn("Mesa");
+            modelo.addColumn("Ubicación");
+            modelo.addColumn("Capacidad");
+            modelo.addColumn("Horario apertura");
+            modelo.addColumn("Horario cierre");
+
+
+
+            // Llenar el modelo con los datos de las mesas filtradas
+            for (MesaDTO mesa : mesas) {
+
+                boolean coincideRestaurante = mesa.getIdRestaurante().equals(idRestauranteSeleccionado);
+
+                // Si coincide la ubicación y la capacidad, se agrega a la tabla
+                if (coincideRestaurante) {
+                    Object[] fila = new Object[6];
+                    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+
+                    RestauranteDTO restaurante = restBO.obtenerRestaurantePorId(mesa.getIdRestaurante());
+
+                    fila[0] = mesa.getIdMesa();
+                    fila[1] = mesa.getCodigoMesa();
+                    fila[2] = mesa.getUbicacion();
+                    fila[3] = mesa.getCapacidad();
+//                    fila[4] = sdf.format(restaurante.getHoraApertura());
+//                    fila[5] = sdf.format(restaurante.getHoraCierre());
+
+                    modelo.addRow(fila);
+                }
+            }
+
+            // Crear la JTable con el modelo
+            tblMesas = new JTable(modelo);
+            tblMesas.setFillsViewportHeight(true);
+
+            // Agregar un listener para la selección de filas
+            tblMesas.getSelectionModel().addListSelectionListener(event -> {
+                if (!event.getValueIsAdjusting()) {
+                    int selectedRow = tblMesas.getSelectedRow();
+                    if (selectedRow != -1) {
+                        Long idMesa = (Long) tblMesas.getValueAt(selectedRow, 0);
+                        guardarIdMesaSeleccionada(idMesa);
+                    }
+                }
+            });
+
+            // Agregar la JTable al JScrollPane
+            jScrollPane1.setViewportView(tblMesas);
+        } catch (NegocioException ex) {
+            Logger.getLogger(FormMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    private void guardarIdMesaSeleccionada(Long idMesa) {
+        this.idMesaSeleccionada = idMesa;
+    }
+
 }

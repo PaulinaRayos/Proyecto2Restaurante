@@ -20,4 +20,6 @@ public interface IRestauranteBO {
 
     List<String> obtenerCiudadesYDirecciones() throws NegocioException;
 
+    List<RestauranteDTO> obtenerRestaurantes() throws NegocioException;
+
 }

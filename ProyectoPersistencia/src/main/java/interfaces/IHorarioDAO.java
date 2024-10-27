@@ -5,6 +5,7 @@
 package interfaces;
 
 import entidadesJPA.Horario;
+import excepciones.PersistenciaException;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,7 +22,7 @@ public interface IHorarioDAO {
     Horario HorarioPorId(Long id);
 
     // Método para crear un nuevo Horario
-    void crearHorario(Horario horario);
+    void crearHorario(Horario horario)throws PersistenciaException;
 
     // Método para actualizar un Horario
     void actualizarHorario(Horario horario);

@@ -17,26 +17,26 @@ public class HorarioDTO {
     private Date horaApertura;
     private Date horaCierre;
     private Long idRestaurante;
-    private Long idHorarioMesa;
+
 
     public HorarioDTO() {
     }
 
-    public HorarioDTO(String diaSemana, Date horaApertura, Date horaCierre, Long idRestaurante, Long idHorarioMesa) {
+    public HorarioDTO(String diaSemana, Date horaApertura, Date horaCierre, Long idRestaurante) {
         this.diaSemana = diaSemana;
         this.horaApertura = horaApertura;
         this.horaCierre = horaCierre;
         this.idRestaurante = idRestaurante;
-        this.idHorarioMesa = idHorarioMesa;
+        
     }
 
-    public HorarioDTO(Long idHorario, String diaSemana, Date horaApertura, Date horaCierre, Long idRestaurante, Long idHorarioMesa) {
+    public HorarioDTO(Long idHorario, String diaSemana, Date horaApertura, Date horaCierre, Long idRestaurante) {
         this.idHorario = idHorario;
         this.diaSemana = diaSemana;
         this.horaApertura = horaApertura;
         this.horaCierre = horaCierre;
         this.idRestaurante = idRestaurante;
-        this.idHorarioMesa = idHorarioMesa;
+        
     }
 
     public Long getIdHorario() {
@@ -79,12 +79,11 @@ public class HorarioDTO {
         this.idRestaurante = idRestaurante;
     }
 
-    public Long getIdHorarioMesa() {
-        return idHorarioMesa;
-    }
 
-    public void setIdHorarioMesa(Long idHorarioMesa) {
-        this.idHorarioMesa = idHorarioMesa;
+
+    @Override
+    public String toString() {
+        return "HorarioDTO{" + "idHorario=" + idHorario + ", diaSemana=" + diaSemana + ", horaApertura=" + horaApertura + ", horaCierre=" + horaCierre + ", idRestaurante=" + idRestaurante +  '}';
     }
 
     

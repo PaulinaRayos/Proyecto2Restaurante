@@ -10,6 +10,8 @@ import excepciones.NegocioException;
 import interfaces.IActualizaHorarioBO;
 import interfaces.IRestauranteBO;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -36,6 +38,8 @@ public class FormHorarios extends javax.swing.JFrame {
     private IRestauranteBO restbo;
     private HorarioDTO horario;
     private IActualizaHorarioBO acthorarioBO;
+    private Long idRestauranteSeleccionado;
+    private List<RestauranteDTO> listaRestaurantes;
 
     /**
      * Creates new form FormHorarios
@@ -48,6 +52,7 @@ public class FormHorarios extends javax.swing.JFrame {
         this.acthorarioBO = new ActualizaHorarioBO();
         this.SetImageLabel(jLabel3, "src/main/java/Imagenes/logo.png");
         this.cargarRestaurantes();
+        this.cargarDiasDeLaSemana();
     }
 
     /**
@@ -94,12 +99,10 @@ public class FormHorarios extends javax.swing.JFrame {
         jHoraApertura.setEditor(de);
 
         jLabel7.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(0, 0, 0));
         jLabel7.setText("Dia de la semana:");
         jLabel7.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jLabel8.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(0, 0, 0));
         jLabel8.setText("Hora apertura:");
         jLabel8.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
@@ -107,18 +110,15 @@ public class FormHorarios extends javax.swing.JFrame {
         jHoraCierre.setEditor(de1);
 
         jLabel10.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
-        jLabel10.setForeground(new java.awt.Color(0, 0, 0));
         jLabel10.setText("Hora cierre:");
         jLabel10.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jLabelaa.setFont(new java.awt.Font("Times New Roman", 3, 24)); // NOI18N
-        jLabelaa.setForeground(new java.awt.Color(0, 0, 0));
         jLabelaa.setText("Horario de Mesas");
         jLabelaa.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         bConfirmar.setBackground(new java.awt.Color(255, 51, 153));
         bConfirmar.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
-        bConfirmar.setForeground(new java.awt.Color(0, 0, 0));
         bConfirmar.setText("Confirmar");
         bConfirmar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -126,22 +126,22 @@ public class FormHorarios extends javax.swing.JFrame {
             }
         });
 
-        cbRestaurante.setBackground(new java.awt.Color(255, 255, 255));
         cbRestaurante.setFont(new java.awt.Font("Times New Roman", 3, 14)); // NOI18N
-        cbRestaurante.setForeground(new java.awt.Color(0, 0, 0));
         cbRestaurante.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecciona restaurante" }));
         cbRestaurante.setBorder(null);
 
         jLabel9.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
-        jLabel9.setForeground(new java.awt.Color(0, 0, 0));
         jLabel9.setText("Restaurante:");
         jLabel9.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        cbDia.setBackground(new java.awt.Color(255, 255, 255));
         cbDia.setFont(new java.awt.Font("Times New Roman", 3, 14)); // NOI18N
-        cbDia.setForeground(new java.awt.Color(0, 0, 0));
         cbDia.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar el día", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo", " " }));
         cbDia.setBorder(null);
+        cbDia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbDiaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -249,7 +249,6 @@ public class FormHorarios extends javax.swing.JFrame {
         });
 
         jLabel4.setFont(new java.awt.Font("Times New Roman", 3, 20)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
         jLabel4.setText(" Amadeustaurant");
         jLabel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
@@ -293,14 +292,6 @@ public class FormHorarios extends javax.swing.JFrame {
 
     private void bConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bConfirmarActionPerformed
         try {
-            // Obtener el restaurante seleccionado
-            RestauranteDTO restauranteSeleccionado = (RestauranteDTO) cbRestaurante.getSelectedItem();
-
-            // Verificar que se haya seleccionado un restaurante válido
-            if (restauranteSeleccionado == null || restauranteSeleccionado.toString().equals("Seleccionar restaurante")) {
-                JOptionPane.showMessageDialog(this, "Por favor, selecciona un restaurante válido.", "Advertencia", JOptionPane.WARNING_MESSAGE);
-                return; // Salir del método si no hay un restaurante válido
-            }
 
             // Obtener las horas de apertura y cierre desde los spinners
             LocalTime horaApertura = obtenerHoraDesdeSpinner(jHoraApertura);
@@ -309,9 +300,15 @@ public class FormHorarios extends javax.swing.JFrame {
             // Obtener el día de la semana seleccionado
             String diaSemana = (String) cbDia.getSelectedItem();
 
+            // Validar que el día de la semana no sea nulo
+            if (diaSemana == null || diaSemana.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Por favor, selecciona un día de la semana.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                return; // Salir del método si no hay un día válido
+            }
+
             // Establecer los valores en el objeto horario
             horario.setDiaSemana(diaSemana);
-            horario.setIdRestaurante(restauranteSeleccionado.getId());
+            horario.setIdRestaurante(idRestauranteSeleccionado);
 
             // Convertir LocalTime a Date
             LocalDate fechaActual = LocalDate.now();
@@ -322,21 +319,29 @@ public class FormHorarios extends javax.swing.JFrame {
             horario.setHoraCierre(cierreDate);
 
             // Llamar a la capa de negocio para guardar o actualizar el horario
-            acthorarioBO.guardarHorario(horario);
+            acthorarioBO.guardarHorario(horario); // Cambia este método según tu implementación en el BO
 
             // Mensaje de éxito
-            JOptionPane.showMessageDialog(this, "Horario actualizado exitosamente para " + diaSemana + " en " + restauranteSeleccionado.toString() + ".");
+            JOptionPane.showMessageDialog(this, "Horario actualizado exitosamente para " + diaSemana + " en " + cbDia.getSelectedItem().toString() + ".");
+
+            // Opcional: Limpiar el formulario o realizar otras acciones
+            //limpiarFormulario(); // Llama a un método para limpiar los campos si es necesario
         } catch (NegocioException e) {
             JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Ocurrió un error inesperado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+
     }//GEN-LAST:event_bConfirmarActionPerformed
 
     private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
         Forms.cargarForm(new FormMenu(), this);
 
     }//GEN-LAST:event_jLabel3MouseClicked
+
+    private void cbDiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbDiaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbDiaActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -394,20 +399,44 @@ private void SetImageLabel(JLabel labelname, String root) {
 
     private void cargarRestaurantes() {
         try {
-            // Limpiar elementos actuales
-            cbRestaurante.removeAllItems();
+            cbRestaurante.removeAllItems(); // Limpiar elementos actuales
+            listaRestaurantes = restbo.obtenerRestaurantes(); // Obtener la lista de restaurantes
 
-            cbRestaurante.addItem("Seleccionar restaurante");
+            cbRestaurante.addItem("Seleccionar restaurante"); // Agregar opción de selección
 
-            // Obtener la lista de restaurantes en el formato "Ciudad - Dirección"
-            List<String> restaurantes = restbo.obtenerCiudadesYDirecciones();
-
-            // Poblar el JComboBox con los valores formateados
-            for (String restaurante : restaurantes) {
-                cbRestaurante.addItem(restaurante);
+            // Llenar el JComboBox con las cadenas que deseas mostrar
+            for (RestauranteDTO restaurante : listaRestaurantes) {
+                String displayText = restaurante.getCiudad() + " - " + restaurante.getDireccion(); // Crear el texto para mostrar
+                cbRestaurante.addItem(displayText); // Agregar solo el texto
             }
+
+            // Agregar un ActionListener para detectar la selección de un restaurante
+            cbRestaurante.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    int selectedIndex = cbRestaurante.getSelectedIndex(); // Obtener el índice seleccionado
+
+                    // Asegúrate de que no se haya seleccionado la opción de "Seleccionar restaurante"
+                    if (selectedIndex > 0) { // Si hay un restaurante seleccionado
+                        RestauranteDTO restauranteSeleccionado = listaRestaurantes.get(selectedIndex - 1); // Obtener el objeto correspondiente
+                        idRestauranteSeleccionado = restauranteSeleccionado.getId(); // Obtener el ID del restaurante seleccionado
+                        System.out.println("ID del restaurante seleccionado: " + idRestauranteSeleccionado);
+                    } else {
+                        // Restablecer el ID si se selecciona "Seleccionar restaurante"
+                        idRestauranteSeleccionado = null; // O puedes usar un valor predeterminado
+                    }
+                }
+            });
+
         } catch (NegocioException ex) {
-            JOptionPane.showConfirmDialog(this, "Error al mostrar los restaurantes", "ERROR!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error al mostrar los restaurantes", "ERROR!", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void cargarDiasDeLaSemana() {
+        String[] dias = {"Seleccionar día", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"};
+        for (String dia : dias) {
+            cbDia.addItem(dia);
         }
     }
 

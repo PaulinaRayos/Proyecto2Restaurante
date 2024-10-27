@@ -6,6 +6,7 @@ package dao;
 
 import conexion.IConexion;
 import entidadesJPA.Horario;
+import excepciones.PersistenciaException;
 import interfaces.IHorarioDAO;
 import java.util.List;
 import java.util.Optional;
@@ -25,18 +26,30 @@ public class HorarioDAO implements IHorarioDAO {
     }
 
     // Método para crear un nuevo Horario
-    public void crearHorario(Horario horario) {
+    public void crearHorario(Horario horario) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
-        em.getTransaction().begin();
+        try {
+            em.getTransaction().begin();
 
-        em.persist(horario);
+            // Validar el horario antes de persistir
+            if (horario == null || horario.getHoraApertura() == null || horario.getHoraCierre() == null) {
+                throw new PersistenciaException("El horario no puede ser nulo y debe contener horas de apertura y cierre válidas.");
+            }
 
-        em.getTransaction().commit();
+            // Aquí puedes agregar lógica adicional para verificar conflictos de horarios, si es necesario
+            em.persist(horario);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            throw new PersistenciaException("Error al crear horario: " + e.getMessage(), e);
+        } finally {
+            em.close();
 
-        em.close();
+        }
     }
-
-    // Método para buscar un HorarioMesa por su ID
+        // Método para buscar un HorarioMesa por su ID
     public Horario HorarioPorId(Long id) {
         EntityManager em = this.conexion.crearConexion();
         return em.find(Horario.class, id);

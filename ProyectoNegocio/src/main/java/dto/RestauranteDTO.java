@@ -68,16 +68,11 @@ public class RestauranteDTO {
         this.mesas = mesas;
     }
 
+
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("RestauranteDTO{");
-        sb.append("id=").append(id);
-        sb.append(", ciudad=").append(ciudad);
-        sb.append(", direccion=").append(direccion);
-        sb.append(", mesas=").append(mesas);
-        sb.append('}');
-        return sb.toString();
+        return ciudad + " - " + direccion; // Representación más legible para el ComboBox
     }
+
 
 }

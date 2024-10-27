@@ -8,7 +8,9 @@ import conexion.Conexion;
 import conexion.IConexion;
 import conversiones.ConvertidorGeneral;
 import dao.RestauranteDAO;
+import dto.MesaDTO;
 import dto.RestauranteDTO;
+import entidadesJPA.Mesa;
 import entidadesJPA.Restaurante;
 import excepciones.NegocioException;
 import excepciones.PersistenciaException;
@@ -63,19 +65,57 @@ public class RestauranteBO implements IRestauranteBO {
         }
     }
 
-    @Override
+    public List<RestauranteDTO> obtenerRestaurantes() throws NegocioException {
+        try {
+            List<Restaurante> restaurantes = restdao.obtenerTodosLosRestaurantes(); // Método que obtiene todos los restaurantes
+            List<RestauranteDTO> restaurantesDTO = new ArrayList<>();
+
+            for (Restaurante restaurante : restaurantes) {
+                RestauranteDTO dto = new RestauranteDTO();
+                dto.setId(restaurante.getId());
+                dto.setCiudad(restaurante.getCiudad());
+                dto.setDireccion(restaurante.getDirrecion());
+                restaurantesDTO.add(dto);
+            }
+
+            return restaurantesDTO;
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error al obtener los restaurantes.", e);
+        }
+    }
+
     public RestauranteDTO obtenerRestaurantePorId(Long idRestaurante) throws NegocioException {
-//        try {
-//            // Verifica que la consulta o el mapeo estén obteniendo los campos correctos
-//            Restaurante restaurante = restdao.obtenerPorId(idRestaurante);
-//            if (restaurante != null) {
-//                return new RestauranteDTO(restaurante.getId(),
-//                        restaurante.getHora_apartura(), restaurante.getHora_cierre());
-//            }
-        return null;
-//        } catch (PersistenciaException e) {
-//            throw new NegocioException("Error al obtener restaurante por ID", e);
-//        }
+        try {
+            // Verifica que la consulta o el mapeo estén obteniendo los campos correctos
+            Restaurante restaurante = restdao.obtenerPorId(idRestaurante);
+            if (restaurante != null) {
+                // Convertir el objeto Restaurante a RestauranteDTO
+                return new RestauranteDTO(
+                        restaurante.getId(),
+                        restaurante.getCiudad(),
+                        restaurante.getDirrecion(),
+                        convertirMesasAListaDTO(restaurante.getMesas())
+                );
+            }
+            return null;
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Favor de seleccionar Restaurante", e);
+        }
+    }
+
+    private List<MesaDTO> convertirMesasAListaDTO(List<Mesa> mesas) {
+        List<MesaDTO> mesasDTO = new ArrayList<>();
+        for (Mesa mesa : mesas) {
+            MesaDTO mesaDTO = new MesaDTO();
+            mesaDTO.setIdMesa(mesa.getId());
+            mesaDTO.setCapacidad(mesa.getCapacidad());
+            mesaDTO.setCodigoMesa(mesa.getCodigoMesa());
+            mesaDTO.setUbicacion(mesa.getUbicacion());
+            mesaDTO.setIdTipoMesa(mesa.getTipoMesa().getId());
+            mesaDTO.setIdRestaurante(mesa.getRestaurante().getId());
+            mesasDTO.add(mesaDTO);
+        }
+        return mesasDTO;
     }
 
 }

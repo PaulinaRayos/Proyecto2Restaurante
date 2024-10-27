@@ -10,6 +10,7 @@ import excepciones.PersistenciaException;
 import interfaces.IRestauranteDAO;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
@@ -67,6 +68,21 @@ public class RestauranteDAO implements IRestauranteDAO {
         } finally {
             em.close(); // Asegurarte de cerrar el EntityManager
         }
+    }
+    public List<Restaurante> obtenerTodosLosRestaurantes() throws PersistenciaException {
+        EntityManager em = conexion.crearConexion();
+        List<Restaurante> restaurantes;
+
+        try {
+            TypedQuery<Restaurante> query = em.createQuery("SELECT r FROM Restaurante r", Restaurante.class);
+            restaurantes = query.getResultList();
+        } catch (PersistenceException e) {
+            throw new PersistenciaException("Error al obtener todos los restaurantes", e);
+        } finally {
+            em.close();
+        }
+
+        return restaurantes;
     }
 
 }

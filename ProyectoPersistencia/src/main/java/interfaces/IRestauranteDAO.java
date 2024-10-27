@@ -19,4 +19,6 @@ public interface IRestauranteDAO {
     Restaurante obtenerPorId(Long idRestaurante) throws PersistenciaException;
 
     List<Object[]> buscarCiudadesYDireccionesRestaurantes() throws PersistenciaException;
+    List<Restaurante> obtenerTodosLosRestaurantes() throws PersistenciaException;
+    
 }

@@ -51,18 +51,38 @@ public class ActualizaHorarioBO implements IActualizaHorarioBO {
             if (horarioExistente.isPresent()) {
                 // Si existe, actualizar las horas de apertura y cierre
                 Horario horarioActualizar = horarioExistente.get();
+                horarioActualizar.setRestaurante(restaurante);
                 horarioActualizar.setDiaSemana(horarioDTO.getDiaSemana());
                 horarioActualizar.setHoraApartura(horarioDTO.getHoraApertura());
                 horarioActualizar.setHoraCierre(horarioDTO.getHoraCierre());
                 horarioActualizar.setRestaurante(restaurante);
                 horariodao.actualizarHorario(horarioActualizar);
             } else {
-                horariodao.crearHorario(ConvertidorGeneral.convertidorEntidad(horarioDTO, Horario.class));
+                
+               Horario horario =convertidorEntidad(horarioDTO);
+                horariodao.crearHorario(horario);
 
             }
         } catch (Exception e) {
             throw new NegocioException("Error al guardar o actualizar el horario: " + e.getMessage(), e);
         }
+    }
+    public  Horario convertidorEntidad(HorarioDTO horarioDTO) throws PersistenciaException {
+        if (horarioDTO == null) {
+            return null;
+        }
+
+        Horario horario = new Horario();
+        horario.setId(horarioDTO.getIdHorario());
+        horario.setDiaSemana(horarioDTO.getDiaSemana());
+        horario.setHoraApartura(horarioDTO.getHoraApertura());
+        horario.setHoraCierre(horarioDTO.getHoraCierre());
+
+        // Convertir idRestaurante a objeto Restaurante
+        Restaurante restaurante = restdao.obtenerPorId(horarioDTO.getIdRestaurante());
+        horario.setRestaurante(restaurante);
+
+        return horario;
     }
 
 }

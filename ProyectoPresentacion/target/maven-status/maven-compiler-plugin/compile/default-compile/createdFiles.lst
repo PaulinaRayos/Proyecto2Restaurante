@@ -1,5 +1,7 @@
+presentacion\FormHorarios$3.class
 presentacion\FormMesas$1.class
 presentacion\FormConsultas$3.class
+presentacion\FormMesas$5.class
 presentacion\FormReservas$2.class
 presentacion\FormMenu$2.class
 presentacion\FormMenu$8.class
@@ -35,6 +37,7 @@ presentacion\FormDetallesReserva$2.class
 presentacion\FormClientes$1.class
 Demostracion\Demo.class
 presentacion\FormClientes$5.class
+presentacion\FormHorarios$4.class
 presentacion\FormMenu$6.class
 presentacion\FormMenu.class
 presentacion\FormHorarios$2.class
