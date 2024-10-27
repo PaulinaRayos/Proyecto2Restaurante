@@ -13,34 +13,82 @@ import java.util.List;
  * Interfaz que define las operaciones de acceso a datos para la entidad Mesa.
  * Proporciona métodos para realizar operaciones de creación, lectura,
  * actualización y eliminación (CRUD) de mesas en la base de datos.
- *
+ * Contribuciones de Paulina Rodríguez Rodríguez Rayos.
+ * 
  * @author Cristopher Alberto Elizalde Andrade - 240005
- * @author Paulina Rodríguez Rodríguez Rayos - 117262
  */
 public interface IMesaDAO {
 
-    // Método para actualizar una mesa
+    /**
+     * Actualiza una mesa en la base de datos.
+     *
+     * @param mesa La mesa a actualizar.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
     void actualizarMesa(Mesa mesa) throws PersistenciaException;
 
-    // Método para agregar una mesa
+    /**
+     * Agrega una nueva mesa a la base de datos.
+     *
+     * @param mesa La mesa a agregar.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
     void agregarMesa(Mesa mesa) throws PersistenciaException;
-    
-    void insertarMesas(List<Mesa> mesas) throws PersistenciaException;
 
-    // Método para cerrar el EntityManager y EntityManagerFactory
-    void cerrar() throws PersistenciaException;
+    /**
+     * Cierra el EntityManager si está abierto.
+     */
+    void cerrar();
 
-    // Método para eliminar una mesa por ID
+    /**
+     * Elimina una mesa de la base de datos por su ID.
+     *
+     * @param id El ID de la mesa a eliminar.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
     void eliminarMesa(Long id) throws PersistenciaException;
 
-    // Método para obtener una mesa por ID
+    /**
+     * Inserta una lista de mesas en la base de datos de manera masiva.
+     *
+     * @param mesas La lista de mesas a insertar.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
+    void insertarMesas(List<Mesa> mesas) throws PersistenciaException;
+
+    /**
+     * Obtiene la cantidad total de mesas en la base de datos.
+     *
+     * @return La cantidad total de mesas.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
+    long obtenerCantidadDeMesas() throws PersistenciaException;
+
+    /**
+     * Obtiene el costo de reserva de una mesa por su ID.
+     *
+     * @param idMesa El ID de la mesa.
+     * @return El costo de reserva de la mesa, o null si no se encontró.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
+    BigDecimal obtenerCostoPorIdMesa(Long idMesa) throws PersistenciaException;
+
+    /**
+     * Obtiene una mesa por su ID.
+     *
+     * @param id El ID de la mesa a buscar.
+     * @return La mesa correspondiente al ID proporcionado.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
     Mesa obtenerMesaPorId(Long id) throws PersistenciaException;
 
-    // Método para obtener todas las mesas
+    /**
+     * Obtiene todas las mesas de la base de datos.
+     *
+     * @return Una lista de todas las mesas.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
     List<Mesa> obtenerTodasLasMesas() throws PersistenciaException;
-    
-    BigDecimal obtenerCostoPorIdMesa(Long idMesa) throws PersistenciaException;
-    
-    long obtenerCantidadDeMesas() throws PersistenciaException;
+
 
 }

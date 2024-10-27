@@ -5,8 +5,17 @@
 package excepciones;
 
 /**
- *
- * @author Chris
+ * Clase que representa una excepción específica para manejar errores
+ * relacionados con la persistencia de datos en la aplicación.
+ * 
+ * Esta excepción puede ser lanzada durante operaciones que implican
+ * la interacción con la base de datos, como crear, leer, actualizar o
+ * eliminar entidades. Proporciona varios constructores que permiten
+ * especificar mensajes y causas para una mayor claridad en la gestión
+ * de errores.
+ * Contribuciones de Paulina Rodríguez Rodríguez Rayos.
+ * 
+ * @author Cristopher Alberto Elizalde Andrade - 240005
  */
 public class PersistenciaException extends Exception {
 

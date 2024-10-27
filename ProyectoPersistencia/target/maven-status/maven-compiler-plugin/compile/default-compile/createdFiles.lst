@@ -17,7 +17,6 @@ recursos\Encriptacion.class
 entidadesJPA\HorarioMesa.class
 interfaces\IClienteDAO.class
 dao\TipoMesaDAO.class
-interfaces\IHistorialReservasDAO.class
 entidadesJPA\Cliente.class
 entidadesJPA\Reserva.class
 dao\HorarioMesaDAO.class

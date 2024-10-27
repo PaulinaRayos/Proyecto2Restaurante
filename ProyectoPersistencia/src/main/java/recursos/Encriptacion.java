@@ -11,8 +11,20 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
 /**
+ * Clase que proporciona métodos para encriptar y desencriptar cadenas de texto
+ * utilizando el algoritmo AES (Advanced Encryption Standard).
  *
- * @author Chris
+ * Esta clase incluye métodos estáticos que permiten realizar encriptación y
+ * desencriptación de forma sencilla. Utiliza un vector de inicialización fijo
+ * para el cifrado, lo que puede no ser adecuado para aplicaciones que requieren
+ * alta seguridad.
+ *
+ * Se recomienda no utilizar claves de cifrado codificadas directamente en el
+ * código en aplicaciones de producción, y considerar métodos más seguros para
+ * la gestión de claves.
+ * Contribuciones de Paulina Rodríguez Rodríguez Rayos.
+ * 
+ * @author Cristopher Alberto Elizalde Andrade - 240005
  */
 public class Encriptacion {
 

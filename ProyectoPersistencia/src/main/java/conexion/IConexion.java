@@ -7,8 +7,17 @@ package conexion;
 import javax.persistence.EntityManager;
 
 /**
+ * Interfaz que define un contrato para la creación de conexiones con el gestor
+ * de persistencia.
  *
- * @author Chris
+ * Esta interfaz proporciona un método para obtener un objeto EntityManager, que
+ * es fundamental para realizar operaciones de acceso a datos utilizando JPA
+ * (Java Persistence API). Las implementaciones de esta interfaz deben
+ * proporcionar la lógica necesaria para establecer la conexión a la base de
+ * datos.
+ * Contribuciones de Paulina Rodríguez Rodríguez Rayos.
+ * 
+ * @author Cristopher Alberto Elizalde Andrade - 240005
  */
 public interface IConexion {
 

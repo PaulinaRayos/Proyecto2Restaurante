@@ -19,9 +19,9 @@ import javax.persistence.TypedQuery;
  * acceso a datos de la entidad Horario. Esta clase permite realizar operaciones
  * de creación, búsqueda, actualización y obtención de horarios en la base de
  * datos.
- *
+ * Contribuciones de Paulina Rodríguez Rodríguez Rayos.
+ * 
  * @author Cristopher Alberto Elizalde Andrade - 240005
- * @author Paulina Rodríguez Rodríguez Rayos - 117262
  */
 public class HorarioDAO implements IHorarioDAO {
 

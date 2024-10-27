@@ -9,16 +9,47 @@ import excepciones.PersistenciaException;
 import java.util.List;
 
 /**
- *
- * @author Chris
+ * Interfaz que define las operaciones de acceso a datos para la entidad
+ * Restaurante. Proporciona métodos para realizar operaciones de creación, lectura,
+ * actualización y eliminación (CRUD) de restaurantes en la base de datos.
+ * Contribuciones de Paulina Rodríguez Rodríguez Rayos.
+ * 
+ * @author Cristopher Alberto Elizalde Andrade - 240005
  */
 public interface IRestauranteDAO {
 
+    /**
+     * Busca las ciudades y direcciones de todos los restaurantes en la base de datos.
+     *
+     * @return Una lista de arreglos de objetos, donde cada arreglo contiene la ciudad
+     *         y la dirección de un restaurante.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
+    List<Object[]> buscarCiudadesYDireccionesRestaurantes() throws PersistenciaException;
+
+    /**
+     * Guarda un nuevo restaurante en la base de datos o actualiza uno existente.
+     *
+     * @param restaurante El restaurante a guardar.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
     void guardarRestaurante(Restaurante restaurante) throws PersistenciaException;
 
+    /**
+     * Obtiene un restaurante de la base de datos por su ID.
+     *
+     * @param idRestaurante El ID del restaurante a buscar.
+     * @return El restaurante correspondiente al ID proporcionado.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
     Restaurante obtenerPorId(Long idRestaurante) throws PersistenciaException;
 
-    List<Object[]> buscarCiudadesYDireccionesRestaurantes() throws PersistenciaException;
+    /**
+     * Obtiene todos los restaurantes de la base de datos.
+     *
+     * @return Una lista de todos los restaurantes.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
     List<Restaurante> obtenerTodosLosRestaurantes() throws PersistenciaException;
-    
+
 }

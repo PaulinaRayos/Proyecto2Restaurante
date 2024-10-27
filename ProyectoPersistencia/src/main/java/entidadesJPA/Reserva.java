@@ -25,8 +25,12 @@ import javax.persistence.TemporalType;
  * 'reservas' y define los atributos correspondientes, así como las relaciones
  * con otras entidades.
  *
+ * Esta clase incluye información sobre la fecha y hora de la reserva, el número
+ * de personas, el costo, el estado, y los posibles cargos por cancelación.
+ * Además, establece relaciones con las entidades Cliente y Mesa.
+ * Contribuciones de Paulina Rodríguez Rodríguez Rayos.
+ * 
  * @author Cristopher Alberto Elizalde Andrade - 240005
- * @author Paulina Rodríguez Rodríguez Rayos - 117262
  */
 @Entity
 @Table(name = "reserva")
@@ -62,26 +66,51 @@ public class Reserva implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaHoraCreada;
 
-    // Relación ManyToOne con Cliente
-    @ManyToOne(fetch = FetchType.EAGER)
+    /**
+     * Relación muchos a uno con la entidad Cliente.
+     * Cada reserva está asociada a un cliente específico que la realiza.
+     */
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_cliente", nullable = false)
-    private Cliente cliente; //columna id_cliente
+    private Cliente cliente;
 
-    // Relación ManyToOne con Mesa
-    @ManyToOne(fetch = FetchType.EAGER)
+    /**
+     * Relación muchos a uno con la entidad Mesa.
+     * Cada reserva está asociada a una mesa específica.
+     */
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_mesa", nullable = false)
-    private Mesa mesa; //columna id_mesa
+    private Mesa mesa;
 
-    //Constructor vacío
+    /**
+     * Crea una nueva instancia de Reserva sin inicializar los atributos.
+     */
     public Reserva() {
     }
 
-    //Constructor con Id
+    /**
+     * Crea una nueva instancia de Reserva con un ID especificado.
+     *
+     * @param id el identificador único de la reserva
+     */
     public Reserva(Long id) {
         this.id = id;
     }
 
-    //Constructor sin Id
+    /**
+     * Crea una nueva instancia de Reserva con todos los atributos necesarios,
+     * excepto el ID.
+     *
+     * @param fechaHora la fecha y hora en que se realiza la reserva
+     * @param numPersonas el número de personas para la reserva
+     * @param costo el costo total de la reserva
+     * @param estado el estado actual de la reserva
+     * @param fechaCancelacion la fecha de cancelación de la reserva (si aplica)
+     * @param multa el monto de la multa por cancelación (si aplica)
+     * @param fechaHoraCreada la fecha y hora en que se creó la reserva
+     * @param cliente el cliente asociado a la reserva
+     * @param mesa la mesa asociada a la reserva
+     */
     public Reserva(Date fechaHora, int numPersonas, BigDecimal costo, String estado, Date fechaCancelacion, BigDecimal multa, Date fechaHoraCreada, Cliente cliente, Mesa mesa) {
         this.fechaHora = fechaHora;
         this.numPersonas = numPersonas;
@@ -94,7 +123,21 @@ public class Reserva implements Serializable {
         this.mesa = mesa;
     }
 
-    //Contructor completo
+    /**
+     * Crea una nueva instancia de Reserva con todos los atributos, incluyendo
+     * el ID.
+     *
+     * @param id el identificador único de la reserva
+     * @param fechaHora la fecha y hora en que se realiza la reserva
+     * @param numPersonas el número de personas para la reserva
+     * @param costo el costo total de la reserva
+     * @param estado el estado actual de la reserva
+     * @param fechaCancelacion la fecha de cancelación de la reserva (si aplica)
+     * @param multa el monto de la multa por cancelación (si aplica)
+     * @param fechaHoraCreada la fecha y hora en que se creó la reserva
+     * @param cliente el cliente asociado a la reserva
+     * @param mesa la mesa asociada a la reserva
+     */
     public Reserva(Long id, Date fechaHora, int numPersonas, BigDecimal costo, String estado, Date fechaCancelacion, BigDecimal multa, Date fechaHoraCreada, Cliente cliente, Mesa mesa) {
         this.id = id;
         this.fechaHora = fechaHora;

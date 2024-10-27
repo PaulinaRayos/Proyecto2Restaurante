@@ -17,10 +17,9 @@ import recursos.Encriptacion;
 /**
  * Interfaz que define los métodos para el acceso a datos de la entidad Cliente.
  * Proporciona operaciones para crear, leer, actualizar y eliminar clientes en
- * la base de datos.
- *
+ * Contribuciones de Paulina Rodríguez Rodríguez Rayos.
+ * 
  * @author Cristopher Alberto Elizalde Andrade - 240005
- * @author Paulina Rodríguez Rodríguez Rayos - 117262
  */
 public class ClienteDAO implements IClienteDAO {
 

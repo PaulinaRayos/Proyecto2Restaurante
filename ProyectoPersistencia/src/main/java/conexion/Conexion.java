@@ -9,8 +9,15 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 /**
+ * Clase que implementa la interfaz IConexion y proporciona métodos para
+ * establecer una conexión con el gestor de persistencia.
  *
- * @author Chris
+ * Esta clase es responsable de crear un objeto EntityManager que permite
+ * interactuar con la base de datos utilizando JPA (Java Persistence API).
+ * Utiliza una unidad de persistencia definida en el archivo de configuración
+ * Contribuciones de Paulina Rodríguez Rodríguez Rayos.
+ * 
+ * @author Cristopher Alberto Elizalde Andrade - 240005
  */
 public class Conexion implements IConexion {
 
