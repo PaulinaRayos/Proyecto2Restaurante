@@ -33,6 +33,7 @@ import negocio.MesaBO;
 import negocio.RestauranteBO;
 import utilidades.Forms;
 import interfaces.IActualizaHorarioBO;
+import interfaces.IHorarioBO;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -40,6 +41,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import negocio.HorarioBO;
 
 /**
  *
@@ -56,6 +58,7 @@ public class FormMesas extends javax.swing.JFrame {
     private List<RestauranteDTO> listaRestaurantes;
     private Long idRestauranteSeleccionado;
     private Long idMesaSeleccionada;
+    private final IHorarioBO horariobo;
 
     /**
      * Creates new form FormMesas
@@ -69,7 +72,7 @@ public class FormMesas extends javax.swing.JFrame {
         this.restauranteDTO = new RestauranteDTO();
         this.horario = new HorarioDTO();
         this.acthorarioBO = new ActualizaHorarioBO();
-
+        this.horariobo = new HorarioBO();
         this.SetImageLabel(jLabel3, "src/main/java/Imagenes/logo.png");
 
         this.cargarMetodosIniciales();
@@ -271,23 +274,15 @@ public class FormMesas extends javax.swing.JFrame {
 
         tblMesas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {},
+                {},
+                {},
+                {}
             },
             new String [] {
-                "Codigo", "Ubicación", "Capacidad", "Estado", "Ultima reserva"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Object.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class
-            };
 
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
             }
-        });
+        ));
         jScrollPane1.setViewportView(tblMesas);
 
         jLabelaa1.setFont(new java.awt.Font("Times New Roman", 3, 24)); // NOI18N
@@ -406,11 +401,11 @@ public class FormMesas extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void cargarMetodosIniciales(){
+    private void cargarMetodosIniciales() {
         this.cargarRestaurantes();
         this.cargarMesasEnTabla();
     }
-    
+
     private void bCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCrearActionPerformed
         try {
             // Llamar al método de negocio para buscar el restaurante único
@@ -419,11 +414,11 @@ public class FormMesas extends javax.swing.JFrame {
             RestauranteDTO restauranteSeleccionado = restBO.obtenerRestaurantePorId(idRestauranteSeleccionado);
 
             // Verificar si se ha seleccionado un restaurante
-        if (idRestauranteSeleccionado == null) {
-            // Mostrar un diálogo indicando que debe seleccionar un restaurante
-            JOptionPane.showMessageDialog(this, "Por favor, seleccione un restaurante válido.", "Error", JOptionPane.ERROR_MESSAGE);
-            return; // Salir del método si no hay selección válida
-        }
+            if (idRestauranteSeleccionado == null) {
+                // Mostrar un diálogo indicando que debe seleccionar un restaurante
+                JOptionPane.showMessageDialog(this, "Por favor, seleccione un restaurante válido.", "Error", JOptionPane.ERROR_MESSAGE);
+                return; // Salir del método si no hay selección válida
+            }
             // Obtener la ubicación seleccionada
             String ubicacion = (String) cbUbicacion.getSelectedItem();
 
@@ -558,7 +553,7 @@ private void SetImageLabel(JLabel labelname, String root) {
                         RestauranteDTO restauranteSeleccionado = listaRestaurantes.get(selectedIndex - 1); // Obtener el objeto correspondiente
                         idRestauranteSeleccionado = restauranteSeleccionado.getId(); // Obtener el ID del restaurante seleccionado
                         System.out.println("ID del restaurante seleccionado: " + idRestauranteSeleccionado);
-                        cargarMesasEnTabla(); 
+                        cargarMesasEnTabla();
                     } else {
                         // Restablecer el ID si se selecciona "Seleccionar restaurante"
                         idRestauranteSeleccionado = null; // O puedes usar un valor predeterminado
@@ -570,24 +565,23 @@ private void SetImageLabel(JLabel labelname, String root) {
             JOptionPane.showMessageDialog(this, "Error al mostrar los restaurantes", "ERROR!", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
+
     private void cargarMesasEnTabla() {
         try {
             String ubicacionSeleccionada = cbUbicacion.getSelectedItem().toString();
 
-
             List<MesaDTO> mesas = mesaBO.obtenerTodasLasMesas();
+
+            HorarioDTO horarioRestaurante = horariobo.obtenerHorarioPorId(idRestauranteSeleccionado);
 
             // Crear un modelo de tabla
             DefaultTableModel modelo = new DefaultTableModel();
-            modelo.addColumn("ID");
             modelo.addColumn("Mesa");
+            modelo.addColumn("Dia semana");
             modelo.addColumn("Ubicación");
             modelo.addColumn("Capacidad");
             modelo.addColumn("Horario apertura");
             modelo.addColumn("Horario cierre");
-
-
 
             // Llenar el modelo con los datos de las mesas filtradas
             for (MesaDTO mesa : mesas) {
@@ -599,14 +593,13 @@ private void SetImageLabel(JLabel labelname, String root) {
                     Object[] fila = new Object[6];
                     SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 
-                    RestauranteDTO restaurante = restBO.obtenerRestaurantePorId(mesa.getIdRestaurante());
 
-                    fila[0] = mesa.getIdMesa();
-                    fila[1] = mesa.getCodigoMesa();
+                    fila[0] = mesa.getCodigoMesa();
+                    fila[1] = horarioRestaurante.getDiaSemana();
                     fila[2] = mesa.getUbicacion();
                     fila[3] = mesa.getCapacidad();
-//                    fila[4] = sdf.format(restaurante.getHoraApertura());
-//                    fila[5] = sdf.format(restaurante.getHoraCierre());
+                    fila[4] = sdf.format(horarioRestaurante.getHoraApertura());
+                    fila[5] = sdf.format(horarioRestaurante.getHoraCierre());
 
                     modelo.addRow(fila);
                 }
@@ -633,6 +626,7 @@ private void SetImageLabel(JLabel labelname, String root) {
             Logger.getLogger(FormMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
     private void guardarIdMesaSeleccionada(Long idMesa) {
         this.idMesaSeleccionada = idMesa;
     }

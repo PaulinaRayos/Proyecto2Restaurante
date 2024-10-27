@@ -775,31 +775,26 @@ public class FormMenu extends javax.swing.JFrame {
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
             // Crear un modelo de tabla
             DefaultTableModel modelo = new DefaultTableModel();
-            modelo.addColumn("ID");
             modelo.addColumn("Mesa");
+            modelo.addColumn("Dia semana");
             modelo.addColumn("Ubicación");
             modelo.addColumn("Capacidad");
             modelo.addColumn("Horario apertura");
             modelo.addColumn("Horario cierre");
 
-            int capacidadSeleccionadaInt = Integer.parseInt(capacidadSeleccionada);
-
             // Llenar el modelo con los datos de las mesas filtradas
             for (MesaDTO mesa : mesas) {
 
                 boolean coincideRestaurante = mesa.getIdRestaurante().equals(idRestauranteSeleccionado);
-                boolean coincideUbicacion = mesa.getUbicacion().equals(ubicacionSeleccionada);
-                boolean coincideCapacidad = mesa.getCapacidad() <= capacidadSeleccionadaInt;
 
                 // Si coincide la ubicación y la capacidad, se agrega a la tabla
-                if (coincideUbicacion && coincideCapacidad && coincideRestaurante) {
+                if (coincideRestaurante) {
                     Object[] fila = new Object[6];
 
-                    fila[0] = mesa.getIdMesa();
-                    fila[1] = mesa.getCodigoMesa();
+                    fila[0] = mesa.getCodigoMesa();
+                    fila[1] = horarioRestaurante.getDiaSemana();
                     fila[2] = mesa.getUbicacion();
                     fila[3] = mesa.getCapacidad();
-
                     fila[4] = sdf.format(horarioRestaurante.getHoraApertura());
                     fila[5] = sdf.format(horarioRestaurante.getHoraCierre());
 

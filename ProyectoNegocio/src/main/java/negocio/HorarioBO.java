@@ -46,6 +46,7 @@ public class HorarioBO implements IHorarioBO {
 
             // Convertir la entidad Horario en un HorarioDTO
             HorarioDTO horarioDTO = new HorarioDTO();
+            horarioDTO.setDiaSemana(horario.getDiaSemana());
             horarioDTO.setHoraApertura(horario.getHoraApertura());
             horarioDTO.setHoraCierre(horario.getHoraCierre());
 
