@@ -548,7 +548,7 @@ public class FormMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_bConsultasActionPerformed
 
     private void bReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bReportesActionPerformed
-        // TODO add your handling code here:
+         Forms.cargarForm(new FormReportes(), this);
     }//GEN-LAST:event_bReportesActionPerformed
 
     private void bConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bConfirmarActionPerformed
@@ -770,35 +770,42 @@ public class FormMenu extends javax.swing.JFrame {
 
             List<MesaDTO> mesas = mesaBO.obtenerTodasLasMesas();
 
-            HorarioDTO horarioRestaurante = horariobo.obtenerHorarioPorId(idRestauranteSeleccionado);
+            // Obtén los horarios asignados al restaurante
+            List<HorarioDTO> horariosRestaurante = horariobo.obtenerDiasAsignadosParaRestaurante(idRestauranteSeleccionado);
 
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+
             // Crear un modelo de tabla
             DefaultTableModel modelo = new DefaultTableModel();
+            modelo.addColumn("ID");
             modelo.addColumn("Mesa");
-            modelo.addColumn("Dia semana");
+            modelo.addColumn("Día Semana");
             modelo.addColumn("Ubicación");
             modelo.addColumn("Capacidad");
-            modelo.addColumn("Horario apertura");
-            modelo.addColumn("Horario cierre");
+            modelo.addColumn("Horario Apertura");
+            modelo.addColumn("Horario Cierre");
 
-            // Llenar el modelo con los datos de las mesas filtradas
+            // Llenar el modelo con los datos de las mesas y horarios filtrados
             for (MesaDTO mesa : mesas) {
-
                 boolean coincideRestaurante = mesa.getIdRestaurante().equals(idRestauranteSeleccionado);
 
-                // Si coincide la ubicación y la capacidad, se agrega a la tabla
+                // Si coincide la ubicación, capacidad y restaurante, se agrega a la tabla
                 if (coincideRestaurante) {
-                    Object[] fila = new Object[6];
 
-                    fila[0] = mesa.getCodigoMesa();
-                    fila[1] = horarioRestaurante.getDiaSemana();
-                    fila[2] = mesa.getUbicacion();
-                    fila[3] = mesa.getCapacidad();
-                    fila[4] = sdf.format(horarioRestaurante.getHoraApertura());
-                    fila[5] = sdf.format(horarioRestaurante.getHoraCierre());
+                    // Iterar sobre los horarios asignados al restaurante y crear una fila para cada día
+                    for (HorarioDTO horario : horariosRestaurante) {
+                        Object[] fila = new Object[7];
 
-                    modelo.addRow(fila);
+                        fila[0] = mesa.getIdMesa();
+                        fila[1] = mesa.getCodigoMesa();
+                        fila[2] = horario.getDiaSemana();
+                        fila[3] = mesa.getUbicacion();
+                        fila[4] = mesa.getCapacidad();
+                        fila[5] = sdf.format(horario.getHoraApertura());
+                        fila[6] = sdf.format(horario.getHoraCierre());
+
+                        modelo.addRow(fila);
+                    }
                 }
             }
 

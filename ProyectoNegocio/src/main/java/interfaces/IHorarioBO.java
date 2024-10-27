@@ -6,6 +6,7 @@ package interfaces;
 
 import dto.HorarioDTO;
 import excepciones.NegocioException;
+import java.util.List;
 
 /**
  *
@@ -14,4 +15,6 @@ import excepciones.NegocioException;
 public interface IHorarioBO {
     
     HorarioDTO obtenerHorarioPorId(Long idRestaurante) throws NegocioException;
+    
+    List<HorarioDTO> obtenerDiasAsignadosParaRestaurante(Long restauranteId);
 }

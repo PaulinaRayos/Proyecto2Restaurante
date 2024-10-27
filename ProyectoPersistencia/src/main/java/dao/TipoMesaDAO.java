@@ -99,9 +99,9 @@ public class TipoMesaDAO implements ITipoMesaDAO {
                 tipoGrande.setNombreTipo("Mesa grande");
                 tipoGrande.setPrecioReserva(new BigDecimal("700.00"));
 
-                em.persist(tipoPequena);
                 em.persist(tipoMediana);
                 em.persist(tipoGrande);
+                em.persist(tipoPequena);
             }
 
             em.getTransaction().commit();
