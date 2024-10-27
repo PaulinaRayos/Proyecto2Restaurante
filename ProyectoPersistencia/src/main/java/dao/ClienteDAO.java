@@ -11,6 +11,7 @@ import interfaces.IClienteDAO;
 import java.util.Arrays;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import recursos.Encriptacion;
 
@@ -18,7 +19,7 @@ import recursos.Encriptacion;
  * Interfaz que define los métodos para el acceso a datos de la entidad Cliente.
  * Proporciona operaciones para crear, leer, actualizar y eliminar clientes en
  * Contribuciones de Paulina Rodríguez Rodríguez Rayos.
- * 
+ *
  * @author Cristopher Alberto Elizalde Andrade - 240005
  */
 public class ClienteDAO implements IClienteDAO {
@@ -204,6 +205,24 @@ public class ClienteDAO implements IClienteDAO {
             throw new PersistenciaException("No se pudieron obtener los nombres y teléfonos de los clientes.");
         } finally {
             em.close();
+        }
+    }
+
+    /**
+     * Obtiene el cliente por medio de su nombre completo
+     *
+     * @param nombreCompleto el nombre del cliente a encontrar
+     * @return El resultado de la busqueda
+     */
+    public Cliente obtenerClientePorNombre(String nombreCompleto) {
+        EntityManager em = this.conexion.crearConexion();
+        try {
+            TypedQuery<Cliente> query = em.createQuery(
+                    "SELECT c FROM Cliente c WHERE CONCAT(c.nombre, ' ', c.apellidoPaterno, ' ', c.apellidoMaterno) = :nombreCompleto", Cliente.class);
+            query.setParameter("nombreCompleto", nombreCompleto);
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;  // Cliente no encontrado
         }
     }
 

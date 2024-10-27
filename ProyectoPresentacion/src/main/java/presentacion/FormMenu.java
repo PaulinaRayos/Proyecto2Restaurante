@@ -548,10 +548,45 @@ public class FormMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_bConsultasActionPerformed
 
     private void bReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bReportesActionPerformed
-         Forms.cargarForm(new FormReportes(), this);
+        Forms.cargarForm(new FormReportes(), this);
     }//GEN-LAST:event_bReportesActionPerformed
 
     private void bConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bConfirmarActionPerformed
+        try {
+            // Obtener los datos del cliente y de la mesa
+            String clienteSeleccionado = (String) jComboBoxClientes.getSelectedItem();
+
+            int numPersonas = Integer.parseInt((String) cbCantidad.getSelectedItem());
+            Date fechaSeleccionada = (Date) jFecha.getDate();
+            Date horaSeleccionada = (Date) jHora.getValue();
+
+            // Combinar fecha y hora
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(fechaSeleccionada);
+
+            Calendar horaCalendar = Calendar.getInstance();
+            horaCalendar.setTime(horaSeleccionada);
+
+            calendar.set(Calendar.HOUR_OF_DAY, horaCalendar.get(Calendar.HOUR_OF_DAY));
+            calendar.set(Calendar.MINUTE, horaCalendar.get(Calendar.MINUTE));
+
+            Date fechaHoraFinal = calendar.getTime();
+
+            BigDecimal costo = mesaBO.obtenerCostoPorIdMesa(this.idMesaSeleccionada);
+            String nombreCompleto = (String) jComboBoxClientes.getSelectedItem(); // Obtener el nombre completo seleccionado
+            Long idCliente = clienteBO.obtenerIdClientePorNombre(nombreCompleto); // Obtener el ID del cliente
+
+            ReservaDTO reservaDTO = new ReservaDTO(null, fechaHoraFinal, numPersonas, costo, "Reservado", null, BigDecimal.ZERO, idCliente, this.idMesaSeleccionada);
+
+            // Mostrar diálogo de confirmación con los datos del cliente y la mesa
+            Forms.cargarForm(new FormDetallesReserva(reservaDTO,idCliente, this.idMesaSeleccionada), this);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al preparar la reserva: " + e.getMessage());
+        }
+    }//GEN-LAST:event_bConfirmarActionPerformed
+
+    private void xd() {
         try {
             // Obtener el cliente seleccionado del JComboBox
             String clienteSeleccionado = (String) jComboBoxClientes.getSelectedItem();
@@ -609,8 +644,7 @@ public class FormMenu extends javax.swing.JFrame {
             Logger.getLogger(FormMenu.class.getName()).log(Level.SEVERE, null, ex);
 
         }
-    }//GEN-LAST:event_bConfirmarActionPerformed
-
+    }
     private void bClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bClientesActionPerformed
         Forms.cargarForm(new FormClientes(), this);
     }//GEN-LAST:event_bClientesActionPerformed

@@ -35,9 +35,9 @@ import utilidades.Forms;
  */
 public class FormHorarios extends javax.swing.JFrame {
 
-    private IRestauranteBO restbo;
-    private HorarioDTO horario;
-    private IActualizaHorarioBO acthorarioBO;
+    private final IRestauranteBO restbo;
+    private final HorarioDTO horario;
+    private final IActualizaHorarioBO acthorarioBO;
     private Long idRestauranteSeleccionado;
     private List<RestauranteDTO> listaRestaurantes;
 
@@ -322,7 +322,7 @@ public class FormHorarios extends javax.swing.JFrame {
             acthorarioBO.guardarHorario(horario); // Cambia este método según tu implementación en el BO
 
             // Mensaje de éxito
-            JOptionPane.showMessageDialog(this, "Horario actualizado exitosamente para " + diaSemana + " en " + cbDia.getSelectedItem().toString() + ".");
+            JOptionPane.showMessageDialog(this, "Horario actualizado exitosamente para " + " en " + cbDia.getSelectedItem().toString() + ".");
 
             // Opcional: Limpiar el formulario o realizar otras acciones
             //limpiarFormulario(); // Llama a un método para limpiar los campos si es necesario

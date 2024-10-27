@@ -21,6 +21,8 @@ import interfaces.ITipoMesaDAO;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -60,6 +62,15 @@ public class MesaBO implements IMesaBO {
             return mesasDTO; // Retorna la lista de MesaDTO.
         } catch (PersistenciaException e) {
             throw new NegocioException("No se pudieron consultar las mesas registradas.");
+        }
+    }
+
+    public MesaDTO obtenerMesaPorId(Long idMesa) throws NegocioException {
+        try {
+            Mesa mesa = mesadao.obtenerMesaPorId(idMesa);
+            return ConvertidorGeneral.convertidoraDTO(mesa, MesaDTO.class);
+        } catch (PersistenciaException ex) {
+            throw new NegocioException("No se pudo encontrar la mesa registrada." + idMesa);
         }
     }
 

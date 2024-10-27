@@ -20,19 +20,16 @@ import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
-import negocio.ActualizaHorarioBO;
 import negocio.AgregaMesasBO;
 import negocio.MesaBO;
 import negocio.RestauranteBO;
 import utilidades.Forms;
-import interfaces.IActualizaHorarioBO;
 import interfaces.IHorarioBO;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -49,12 +46,9 @@ import negocio.HorarioBO;
  */
 public class FormMesas extends javax.swing.JFrame {
 
-    private IMesaBO mesaBO;
-    private IRestauranteBO restBO;
-    private IAgregaMesasBO agregadao;
-    private IActualizaHorarioBO acthorarioBO;
-    private RestauranteDTO restauranteDTO;
-    private HorarioDTO horario;
+    private final IMesaBO mesaBO;
+    private final IRestauranteBO restBO;
+    private final IAgregaMesasBO agregadao;
     private List<RestauranteDTO> listaRestaurantes;
     private Long idRestauranteSeleccionado;
     private Long idMesaSeleccionada;
@@ -69,9 +63,6 @@ public class FormMesas extends javax.swing.JFrame {
         this.mesaBO = new MesaBO();
         this.restBO = new RestauranteBO();
         this.agregadao = new AgregaMesasBO();
-        this.restauranteDTO = new RestauranteDTO();
-        this.horario = new HorarioDTO();
-        this.acthorarioBO = new ActualizaHorarioBO();
         this.horariobo = new HorarioBO();
         this.SetImageLabel(jLabel3, "src/main/java/Imagenes/logo.png");
 
@@ -528,11 +519,6 @@ private void SetImageLabel(JLabel labelname, String root) {
         return LocalTime.of(hour, minute);
     }
 
-    private String obtenerNombreDia(Date fecha) {
-        SimpleDateFormat formatoDia = new SimpleDateFormat("EEEE", new Locale("es", "ES"));
-        return formatoDia.format(fecha);
-    }
-
     public Date combinarFechaYHora(Date fecha, LocalTime hora) {
         LocalDate localDate = fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
@@ -600,7 +586,7 @@ private void SetImageLabel(JLabel labelname, String root) {
             List<MesaDTO> mesas = mesaBO.obtenerTodasLasMesas();
 
             List<HorarioDTO> horariosRestaurante = horariobo.obtenerDiasAsignadosParaRestaurante(idRestauranteSeleccionado);
-            
+
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 
             // Crear un modelo de tabla

@@ -243,7 +243,7 @@ public class FormCreaRestaurante extends javax.swing.JFrame {
 
         try {
             restbo.guardarRestaurante(restaurantedto);
-            JOptionPane.showMessageDialog(this, "Exito en la creacion del restaurante!", "Exito!", JOptionPane.WIDTH);
+            JOptionPane.showMessageDialog(this, "Exito en la creacion del restaurante!", "Exito!", JOptionPane.INFORMATION_MESSAGE);
             Forms.cargarForm(new FormMenu(), this);
         } catch (NegocioException e) {
             JOptionPane.showMessageDialog(this, "No se ha podido agregar el restaurante", "ERROR!", JOptionPane.ERROR_MESSAGE);
