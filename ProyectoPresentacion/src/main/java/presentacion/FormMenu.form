@@ -531,7 +531,7 @@
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="jLabel4" min="-2" pref="150" max="-2" attributes="0"/>
                   <EmptySpace pref="63" max="32767" attributes="0"/>
-                  <Component id="cbUbicacion1" min="-2" pref="200" max="-2" attributes="0"/>
+                  <Component id="cbRestaurante" min="-2" pref="200" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
                   <Component id="bHorarios" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -565,7 +565,7 @@
                               <Component id="bReservas" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="bMesas" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="bHorarios" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="cbUbicacion1" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="cbRestaurante" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
@@ -720,7 +720,7 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bHorariosActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JComboBox" name="cbUbicacion1">
+        <Component class="javax.swing.JComboBox" name="cbRestaurante">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="99" green="33" red="ff" type="rgb"/>
@@ -738,7 +738,7 @@
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbUbicacion1ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbRestauranteActionPerformed"/>
           </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
