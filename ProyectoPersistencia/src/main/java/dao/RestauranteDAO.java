@@ -18,9 +18,9 @@ import javax.persistence.TypedQuery;
  * Clase que implementa la interfaz IRestauranteDAO y proporciona métodos para el acceso
  * a datos de la entidad Restaurante. Permite realizar operaciones CRUD (crear, leer,
  * actualizar y eliminar) sobre los restaurantes en la base de datos.
+ * Contribuciones de Paulina Rodríguez Rodríguez Rayos.
  * 
  * @author Cristopher Alberto Elizalde Andrade - 240005
- * @author Paulina Rodríguez Rodríguez Rayos - 117262
  */
 public class RestauranteDAO implements IRestauranteDAO {
 

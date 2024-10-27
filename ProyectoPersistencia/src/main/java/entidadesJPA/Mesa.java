@@ -6,6 +6,7 @@ package entidadesJPA;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -20,11 +21,11 @@ import javax.persistence.Table;
 
 /**
  * Clase que representa la entidad Mesa en la base de datos. Mapea la tabla
- * 'mesas' y define los atributos correspondientes, así como las relaciones con
- * otras entidades.
- *
+ * 'mesa' y define los atributos correspondientes, así como las relaciones con
+ * otras entidades como TipoMesa y Restaurante.
+ * Contribuciones de Paulina Rodríguez Rodríguez Rayos.
+ * 
  * @author Cristopher Alberto Elizalde Andrade - 240005
- * @author Paulina Rodríguez Rodríguez Rayos - 117262
  */
 @Entity
 @Table(name = "mesa")
@@ -45,32 +46,54 @@ public class Mesa implements Serializable {
     @Column(name = "capacidad")
     private int capacidad;
 
-    // Relación ManyToOne con TipoMesa
-    @ManyToOne(fetch = FetchType.EAGER)
+    /**
+     * Relación muchos a uno con la entidad TipoMesa.
+     * Cada mesa está asociada a un tipo específico de mesa.
+     */     
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_tipo_mesa", nullable = false)
     private TipoMesa tipoMesa;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    /**
+     * Relación muchos a uno con la entidad Restaurante.
+     * Cada mesa está asociada a un restaurante específico.
+     */ 
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_restaurante", nullable = false)
     private Restaurante restaurante;
-
-    
-    @OneToMany(mappedBy = "Mesa")
+    /**
+     * Relación uno a muchos con la entidad HorarioMesa.
+     * Una mesa puede estar asociada a múltiples horarios de mesa.
+     */ 
+    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<HorarioMesa> HorarioMesaList;
 
-    //Contructor vacío
+    /**
+     * Constructor vacío para crear una instancia de Mesa.
+     */
     public Mesa() {
     }
 
-    
-    //Constructor con Id
+    /**
+     * Constructor que inicializa una Mesa con el ID proporcionado.
+     *
+     * @param id ID de la mesa.
+     */
     public Mesa(Long id) {
         this.id = id;
     }
 
-    //Contructor sin Id
-
-     public Mesa(String codigoMesa, String ubicacion, int capacidad, TipoMesa tipoMesa, Restaurante restaurante, List<HorarioMesa> HorarioMesaList) {
+    /**
+     * Constructor que inicializa una Mesa con sus atributos.
+     *
+     * @param codigoMesa Código de la mesa.
+     * @param ubicacion Ubicación de la mesa.
+     * @param capacidad Capacidad de la mesa.
+     * @param tipoMesa Tipo de la mesa.
+     * @param restaurante Restaurante al que pertenece la mesa.
+     * @param horarioMesaList Lista de horarios asociados a la mesa.
+     */
+    public Mesa(String codigoMesa, String ubicacion, int capacidad, TipoMesa tipoMesa, Restaurante restaurante, List<HorarioMesa> HorarioMesaList) {
         this.codigoMesa = codigoMesa;
         this.ubicacion = ubicacion;
         this.capacidad = capacidad;
@@ -79,10 +102,18 @@ public class Mesa implements Serializable {
         this.HorarioMesaList = HorarioMesaList;
     }
 
-    //Constructor completo
-
-
-     public Mesa(Long Id, String codigoMesa, String ubicacion, int capacidad, TipoMesa tipoMesa, Restaurante restaurante, List<HorarioMesa> HorarioMesaList) {
+    /**
+     * Constructor completo para inicializar una Mesa con todos los atributos.
+     *
+     * @param id ID de la mesa.
+     * @param codigoMesa Código de la mesa.
+     * @param ubicacion Ubicación de la mesa.
+     * @param capacidad Capacidad de la mesa.
+     * @param tipoMesa Tipo de la mesa.
+     * @param restaurante Restaurante al que pertenece la mesa.
+     * @param horarioMesaList Lista de horarios asociados a la mesa.
+     */
+    public Mesa(Long Id, String codigoMesa, String ubicacion, int capacidad, TipoMesa tipoMesa, Restaurante restaurante, List<HorarioMesa> HorarioMesaList) {
         this.id = id;
         this.codigoMesa = codigoMesa;
         this.ubicacion = ubicacion;
@@ -92,9 +123,13 @@ public class Mesa implements Serializable {
         this.HorarioMesaList = HorarioMesaList;
     }
 
-
-
-
+    /**
+     * Constructor que inicializa una Mesa con los atributos básicos.
+     *
+     * @param codigoMesa Código de la mesa.
+     * @param ubicacion Ubicación de la mesa.
+     * @param capacidad Capacidad de la mesa.
+     */
     public Mesa(String codigoMesa, String ubicacion, int capacidad) {
         this.codigoMesa = codigoMesa;
         this.ubicacion = ubicacion;
@@ -150,11 +185,6 @@ public class Mesa implements Serializable {
         this.restaurante = restaurante;
     }
 
-
-
-
-
-    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -177,9 +207,14 @@ public class Mesa implements Serializable {
 
     @Override
     public String toString() {
-        return "Mesa{" + "id=" + id + ", codigoMesa=" + codigoMesa + ", ubicacion=" + ubicacion + ", capacidad=" + capacidad + ", tipoMesa=" + tipoMesa + ", restaurante=" + restaurante + ", HorarioMesaList=" + HorarioMesaList + '}';
+        return "Mesa{" + "id=" + id +
+                ", codigoMesa=" + codigoMesa +
+                ", ubicacion=" + ubicacion +
+                ", capacidad=" + capacidad +
+                ", tipoMesa=" + tipoMesa +
+                ", restaurante=" + restaurante +
+                ", HorarioMesaList=" + HorarioMesaList +
+                '}';
     }
-
-
 
 }

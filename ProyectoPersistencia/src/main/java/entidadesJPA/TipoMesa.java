@@ -19,12 +19,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
- * Clase que representa la entidad TipoMesa en la base de datos. Mapea la tabla
- * 'tipos_mesa' y define los atributos correspondientes, así como las relaciones
- * con otras entidades.
- *
+ * Clase que representa la entidad TipoMesa en la base de datos. 
+ * Mapea la tabla 'tipos_mesa' y define los atributos correspondientes,
+ * así como las relaciones con otras entidades.
+ * Contribuciones de Paulina Rodríguez Rodríguez Rayos.
+ * 
  * @author Cristopher Alberto Elizalde Andrade - 240005
- * @author Paulina Rodríguez Rodríguez Rayos - 117262
  */
 @Entity
 @Table(name = "tipo_mesa")
@@ -42,29 +42,49 @@ public class TipoMesa implements Serializable {
     @Column(name = "precio_reserva")
     private BigDecimal precioReserva;
 
-    // Relación OneToMany con Mesa
+    /**
+     * Relación uno a muchos con la entidad Mesa.
+     * Cada tipo de mesa puede estar asociado a múltiples mesas.
+     */
     @OneToMany(mappedBy = "tipoMesa", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<Mesa> mesas;
 
-    //Constructor vacío
+    /**
+     * Constructor vacío que inicializa la lista de mesas.
+     */
     public TipoMesa() {
         this.mesas = new ArrayList();
     }
 
-    //Constructor con Id
+    /**
+     * Constructor que inicializa un tipo de mesa con un ID.
+     *
+     * @param id el identificador único del tipo de mesa
+     */
     public TipoMesa(Long id) {
         this.id = id;
         this.mesas = new ArrayList();
     }
 
-    //Constructor sin Id
+    /**
+     * Constructor que inicializa un tipo de mesa con nombre y precio de reserva.
+     *
+     * @param nombreTipo el nombre del tipo de mesa
+     * @param precioReserva el precio de reserva del tipo de mesa
+     */
     public TipoMesa(String nombreTipo, BigDecimal precioReserva) {
         this.nombreTipo = nombreTipo;
         this.precioReserva = precioReserva;
         this.mesas = new ArrayList();
     }
 
-    //Constructor completo
+    /**
+     * Constructor completo que inicializa todos los atributos.
+     *
+     * @param id el identificador único del tipo de mesa
+     * @param nombreTipo el nombre del tipo de mesa
+     * @param precioReserva el precio de reserva del tipo de mesa
+     */
     public TipoMesa(Long id, String nombreTipo, BigDecimal precioReserva) {
         this.id = id;
         this.nombreTipo = nombreTipo;

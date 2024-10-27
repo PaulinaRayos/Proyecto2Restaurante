@@ -24,9 +24,9 @@ import javax.persistence.Table;
  *
  * Esta clase implementa Serializable para permitir la serialización de objetos
  * Cliente.
- *
+ * Contribuciones de Paulina Rodríguez Rodríguez Rayos.
+ * 
  * @author Cristopher Alberto Elizalde Andrade - 240005
- * @author Paulina Rodríguez Rodríguez Rayos - 117262
  */
 @Entity
 @Table(name = "cliente")
@@ -49,7 +49,10 @@ public class Cliente implements Serializable {
 
     @Column(name = "telefono", unique = true)
     private String telefono;
-
+    /**
+     * Relación uno a muchos con la entidad Reserva.
+     * Un cliente puede tener múltiples reservas.
+     */
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<Reserva> reservas;
 

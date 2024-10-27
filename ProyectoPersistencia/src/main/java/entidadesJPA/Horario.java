@@ -22,8 +22,12 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 /**
- *
- * @author pauli
+ * Clase que representa la entidad Horario en la base de datos. Mapea la tabla
+ * 'horario' y define los atributos correspondientes, así como las relaciones
+ * con otras entidades, como Restaurante y HorarioMesa.
+ * Contribuciones de Paulina Rodríguez Rodríguez Rayos.
+ * 
+ * @author Cristopher Alberto Elizalde Andrade - 240005
  */
 @Entity
 @Table(name = "horario")
@@ -46,20 +50,45 @@ public class Horario implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date horaCierre;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    /**
+     * Relación muchos a uno con la entidad Restaurante.
+     * Un horario está asociado a un único restaurante.
+     */
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_restaurante", nullable = false)
     private Restaurante restaurante;
 
-    @OneToMany(mappedBy = "horario", cascade = CascadeType.PERSIST)
+    /**
+     * Relación uno a muchos con la entidad HorarioMesa.
+     * Un horario puede tener múltiples asignaciones de mesas.
+     */ 
+    @OneToMany(mappedBy = "horario", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<HorarioMesa> horarioMesaList;
 
+    /**
+     * Constructor vacío para crear una instancia de Horario.
+     */
     public Horario() {
     }
 
+    /**
+     * Constructor que inicializa el Horario con un ID.
+     *
+     * @param id ID del horario.
+     */
     public Horario(Long id) {
         this.id = id;
     }
 
+    /**
+     * Constructor que inicializa un Horario con los atributos proporcionados.
+     *
+     * @param diaSemana Día de la semana.
+     * @param horaApertura Hora de apertura.
+     * @param horaCierre Hora de cierre.
+     * @param restaurante Restaurante asociado a este horario.
+     * @param horarioMesaList Lista de horarios de mesa asociados.
+     */
     public Horario(String diaSemana, Date horaApertura, Date horaCierre, Restaurante restaurante, List<HorarioMesa> horarioMesaList) {
         this.diaSemana = diaSemana;
         this.horaApertura = horaApertura;
@@ -68,6 +97,16 @@ public class Horario implements Serializable {
         this.horarioMesaList = horarioMesaList;
     }
 
+    /**
+     * Constructor completo para inicializar un Horario con todos los atributos.
+     *
+     * @param id ID del horario.
+     * @param diaSemana Día de la semana.
+     * @param horaApertura Hora de apertura.
+     * @param horaCierre Hora de cierre.
+     * @param restaurante Restaurante asociado a este horario.
+     * @param horarioMesaList Lista de horarios de mesa asociados.
+     */
     public Horario(Long id, String diaSemana, Date horaApertura, Date horaCierre, Restaurante restaurante, List<HorarioMesa> horarioMesaList) {
         this.id = id;
         this.diaSemana = diaSemana;
@@ -77,8 +116,7 @@ public class Horario implements Serializable {
         this.horarioMesaList = horarioMesaList;
     }
 
-
-
+    // Getters y Setters
     public Long getId() {
         return id;
     }
@@ -110,7 +148,6 @@ public class Horario implements Serializable {
     public void setHoraCierre(Date horaCierre) {
         this.horaCierre = horaCierre;
     }
-
 
     public Restaurante getRestaurante() {
         return restaurante;

@@ -18,9 +18,9 @@ import javax.persistence.TypedQuery;
  * acceso a datos de la entidad TipoMesa. Permite realizar operaciones CRUD
  * (crear, leer, actualizar y eliminar) sobre los tipos de mesa en la base de
  * datos.
- *
+ * Contribuciones de Paulina Rodríguez Rodríguez Rayos.
+ * 
  * @author Cristopher Alberto Elizalde Andrade - 240005
- * @author Paulina Rodríguez Rodríguez Rayos - 117262
  */
 public class TipoMesaDAO implements ITipoMesaDAO {
 

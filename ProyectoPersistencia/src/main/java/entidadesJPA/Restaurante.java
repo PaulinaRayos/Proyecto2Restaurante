@@ -7,8 +7,10 @@ package entidadesJPA;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,8 +18,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
- *
- * @author Chris
+ * Clase que representa la entidad Restaurante en la base de datos. Mapea la
+ * tabla 'restaurante' y define los atributos correspondientes, así como las
+ * relaciones con otras entidades.
+ * Contribuciones de Paulina Rodríguez Rodríguez Rayos.
+ * 
+ * @author Cristopher Alberto Elizalde Andrade - 240005
  */
 @Entity
 @Table(name = "restaurante")
@@ -35,17 +41,34 @@ public class Restaurante implements Serializable {
     @Column(name = "ciudad")
     private String ciudad;
 
-    @OneToMany(mappedBy = "restaurante")
+    /**
+     * Relación uno a muchos con la entidad Mesa. Cada restaurante puede tener
+     * varias mesas asociadas.
+     */
+    @OneToMany(mappedBy = "restaurante", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<Mesa> mesas;
-
-    @OneToMany(mappedBy = "restaurante")
+    /**
+     * Relación uno a muchos con la entidad Horario. Cada restaurante puede
+     * tener varios horarios de operación.
+     */
+    @OneToMany(mappedBy = "restaurante", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<Horario> horarios;
 
+    /**
+     * Constructor vacío que inicializa las listas de mesas y horarios.
+     */
     public Restaurante() {
         this.mesas = new ArrayList();
         this.horarios = new ArrayList();
     }
 
+    /**
+     * Constructor que inicializa un restaurante con un ID, dirección y ciudad.
+     *
+     * @param id el identificador único del restaurante
+     * @param dirrecion la dirección del restaurante
+     * @param ciudad la ciudad donde se ubica el restaurante
+     */
     public Restaurante(Long id, String dirrecion, String ciudad) {
         this.id = id;
         this.direccion = dirrecion;
@@ -54,6 +77,12 @@ public class Restaurante implements Serializable {
         this.horarios = new ArrayList();
     }
 
+    /**
+     * Constructor que inicializa un restaurante con dirección y ciudad.
+     *
+     * @param dirrecion la dirección del restaurante
+     * @param ciudad la ciudad donde se ubica el restaurante
+     */
     public Restaurante(String dirrecion, String ciudad) {
         this.direccion = dirrecion;
         this.ciudad = ciudad;
@@ -61,6 +90,7 @@ public class Restaurante implements Serializable {
         this.horarios = new ArrayList();
     }
 
+    //Getters & Setters
     public Long getId() {
         return id;
     }

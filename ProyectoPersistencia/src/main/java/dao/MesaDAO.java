@@ -17,9 +17,9 @@ import javax.persistence.TypedQuery;
  * Clase que implementa la interfaz IMesaDAO y proporciona métodos para el
  * acceso a datos de la entidad Mesa. Permite realizar operaciones CRUD (crear,
  * leer, actualizar y eliminar) sobre las mesas en la base de datos.
- *
+ * Contribuciones de Paulina Rodríguez Rodríguez Rayos.
+ * 
  * @author Cristopher Alberto Elizalde Andrade - 240005
- * @author Paulina Rodríguez Rodríguez Rayos - 117262
  */
 public class MesaDAO implements IMesaDAO {
 
