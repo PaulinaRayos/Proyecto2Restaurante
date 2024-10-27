@@ -1,5 +1,4 @@
 interfaces\IHorarioDAO.class
-dao\HistorialReservasDAO.class
 dao\RestauranteDAO.class
 interfaces\IHorarioMesaDAO.class
 entidadesJPA\TipoMesa.class

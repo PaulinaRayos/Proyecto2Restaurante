@@ -6,7 +6,6 @@ package negocio;
 
 import conexion.Conexion;
 import conexion.IConexion;
-import conversiones.ConvertidorGeneral;
 import dao.RestauranteDAO;
 import dto.MesaDTO;
 import dto.RestauranteDTO;
@@ -18,8 +17,6 @@ import interfaces.IRestauranteBO;
 import interfaces.IRestauranteDAO;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *

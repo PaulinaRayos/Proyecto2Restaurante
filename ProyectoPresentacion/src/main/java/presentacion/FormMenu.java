@@ -4,15 +4,19 @@
  */
 package presentacion;
 
+import dto.HorarioDTO;
 import dto.MesaDTO;
 import dto.ReservaDTO;
 import dto.RestauranteDTO;
 import excepciones.NegocioException;
 import interfaces.IAgregarReservaBO;
 import interfaces.IClienteBO;
+import interfaces.IHorarioBO;
 import interfaces.IMesaBO;
 import interfaces.IRestauranteBO;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -30,6 +34,7 @@ import javax.swing.SpinnerDateModel;
 import javax.swing.table.DefaultTableModel;
 import negocio.AgregarReservaBO;
 import negocio.ClienteBO;
+import negocio.HorarioBO;
 import negocio.MesaBO;
 import negocio.RestauranteBO;
 import utilidades.Forms;
@@ -47,6 +52,9 @@ public class FormMenu extends javax.swing.JFrame {
     private boolean isComboBoxLoaded = false;
     private final IMesaBO mesaBO;
     private final IRestauranteBO restBO;
+    private List<RestauranteDTO> listaRestaurantes;
+    private Long idRestauranteSeleccionado;
+    private final IHorarioBO horariobo;
 
     /**
      * Creates new form FormMenu
@@ -58,6 +66,7 @@ public class FormMenu extends javax.swing.JFrame {
         this.clienteBO = new ClienteBO();
         this.mesaBO = new MesaBO();
         this.restBO = new RestauranteBO();
+        this.horariobo = new HorarioBO();
 
         this.SetImageLabel(jLabel3, "src/main/java/Imagenes/logo.png");
 
@@ -70,6 +79,8 @@ public class FormMenu extends javax.swing.JFrame {
         cbCantidad.addActionListener(event -> {
             cargarMesasEnTabla(); // Método que implementaremos para filtrar y cargar las mesas
         });
+
+        this.cargarRestaurantes();
     }
 
     /**
@@ -115,7 +126,7 @@ public class FormMenu extends javax.swing.JFrame {
         bClientes = new javax.swing.JButton();
         bRestaurantes = new javax.swing.JButton();
         bHorarios = new javax.swing.JButton();
-        cbUbicacion1 = new javax.swing.JComboBox<>();
+        cbRestaurante = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -445,13 +456,13 @@ public class FormMenu extends javax.swing.JFrame {
             }
         });
 
-        cbUbicacion1.setBackground(new java.awt.Color(255, 51, 153));
-        cbUbicacion1.setFont(new java.awt.Font("Times New Roman", 3, 14)); // NOI18N
-        cbUbicacion1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Escoge el local" }));
-        cbUbicacion1.setBorder(null);
-        cbUbicacion1.addActionListener(new java.awt.event.ActionListener() {
+        cbRestaurante.setBackground(new java.awt.Color(255, 51, 153));
+        cbRestaurante.setFont(new java.awt.Font("Times New Roman", 3, 14)); // NOI18N
+        cbRestaurante.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Escoge el local" }));
+        cbRestaurante.setBorder(null);
+        cbRestaurante.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbUbicacion1ActionPerformed(evt);
+                cbRestauranteActionPerformed(evt);
             }
         });
 
@@ -465,7 +476,7 @@ public class FormMenu extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
-                .addComponent(cbUbicacion1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cbRestaurante, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30)
                 .addComponent(bHorarios)
                 .addGap(18, 18, 18)
@@ -497,7 +508,7 @@ public class FormMenu extends javax.swing.JFrame {
                             .addComponent(bReservas)
                             .addComponent(bMesas)
                             .addComponent(bHorarios)
-                            .addComponent(cbUbicacion1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(cbRestaurante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(26, 26, 26)
                         .addComponent(jLabel4)))
@@ -621,16 +632,16 @@ public class FormMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_cbCantidadActionPerformed
 
     private void bRestaurantesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bRestaurantesActionPerformed
-         Forms.cargarForm(new FormCreaRestaurante(), this);
+        Forms.cargarForm(new FormCreaRestaurante(), this);
     }//GEN-LAST:event_bRestaurantesActionPerformed
 
     private void bHorariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bHorariosActionPerformed
-         Forms.cargarForm(new FormHorarios(), this);
+        Forms.cargarForm(new FormHorarios(), this);
     }//GEN-LAST:event_bHorariosActionPerformed
 
-    private void cbUbicacion1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbUbicacion1ActionPerformed
+    private void cbRestauranteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbRestauranteActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cbUbicacion1ActionPerformed
+    }//GEN-LAST:event_cbRestauranteActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -643,8 +654,8 @@ public class FormMenu extends javax.swing.JFrame {
     private javax.swing.JButton bReservas;
     private javax.swing.JButton bRestaurantes;
     private javax.swing.JComboBox<String> cbCantidad;
+    private javax.swing.JComboBox<String> cbRestaurante;
     private javax.swing.JComboBox<String> cbUbicacion;
-    private javax.swing.JComboBox<String> cbUbicacion1;
     private javax.swing.JComboBox<String> jComboBoxClientes;
     private com.toedter.calendar.JDateChooser jFecha;
     private javax.swing.JSpinner jHora;
@@ -673,6 +684,43 @@ public class FormMenu extends javax.swing.JFrame {
         Icon icon = new ImageIcon(image.getImage().getScaledInstance(labelname.getWidth(), labelname.getHeight(), Image.SCALE_DEFAULT));
         labelname.setIcon(icon);
         this.repaint();
+    }
+
+    private void cargarRestaurantes() {
+        try {
+            cbRestaurante.removeAllItems(); // Limpiar elementos actuales
+            listaRestaurantes = restBO.obtenerRestaurantes(); // Obtener la lista de restaurantes
+
+            cbRestaurante.addItem("Seleccionar restaurante"); // Agregar opción de selección
+
+            // Llenar el JComboBox con las cadenas que deseas mostrar
+            for (RestauranteDTO restaurante : listaRestaurantes) {
+                String displayText = restaurante.getCiudad() + " - " + restaurante.getDireccion(); // Crear el texto para mostrar
+                cbRestaurante.addItem(displayText); // Agregar solo el texto
+            }
+
+            // Agregar un ActionListener para detectar la selección de un restaurante
+            cbRestaurante.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    int selectedIndex = cbRestaurante.getSelectedIndex(); // Obtener el índice seleccionado
+
+                    // Asegúrate de que no se haya seleccionado la opción de "Seleccionar restaurante"
+                    if (selectedIndex > 0) { // Si hay un restaurante seleccionado
+                        RestauranteDTO restauranteSeleccionado = listaRestaurantes.get(selectedIndex - 1); // Obtener el objeto correspondiente
+                        idRestauranteSeleccionado = restauranteSeleccionado.getId(); // Obtener el ID del restaurante seleccionado
+                        System.out.println("ID del restaurante seleccionado: " + idRestauranteSeleccionado);
+                        cargarMesasEnTabla();
+                    } else {
+                        // Restablecer el ID si se selecciona "Seleccionar restaurante"
+                        idRestauranteSeleccionado = null; // O puedes usar un valor predeterminado
+                    }
+                }
+            });
+
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(this, "Error al mostrar los restaurantes", "ERROR!", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void cargarClientes() {
@@ -722,6 +770,9 @@ public class FormMenu extends javax.swing.JFrame {
 
             List<MesaDTO> mesas = mesaBO.obtenerTodasLasMesas();
 
+            HorarioDTO horarioRestaurante = horariobo.obtenerHorarioPorId(idRestauranteSeleccionado);
+
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
             // Crear un modelo de tabla
             DefaultTableModel modelo = new DefaultTableModel();
             modelo.addColumn("ID");
@@ -735,22 +786,22 @@ public class FormMenu extends javax.swing.JFrame {
 
             // Llenar el modelo con los datos de las mesas filtradas
             for (MesaDTO mesa : mesas) {
+
+                boolean coincideRestaurante = mesa.getIdRestaurante().equals(idRestauranteSeleccionado);
                 boolean coincideUbicacion = mesa.getUbicacion().equals(ubicacionSeleccionada);
                 boolean coincideCapacidad = mesa.getCapacidad() <= capacidadSeleccionadaInt;
 
                 // Si coincide la ubicación y la capacidad, se agrega a la tabla
-                if (coincideUbicacion && coincideCapacidad) {
+                if (coincideUbicacion && coincideCapacidad && coincideRestaurante) {
                     Object[] fila = new Object[6];
-                    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-
-                    RestauranteDTO restaurante = restBO.obtenerRestaurantePorId(mesa.getIdRestaurante());
 
                     fila[0] = mesa.getIdMesa();
                     fila[1] = mesa.getCodigoMesa();
                     fila[2] = mesa.getUbicacion();
                     fila[3] = mesa.getCapacidad();
-//                    fila[4] = sdf.format(restaurante.getHoraApertura());
-//                    fila[5] = sdf.format(restaurante.getHoraCierre());
+
+                    fila[4] = sdf.format(horarioRestaurante.getHoraApertura());
+                    fila[5] = sdf.format(horarioRestaurante.getHoraCierre());
 
                     modelo.addRow(fila);
                 }

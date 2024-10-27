@@ -72,8 +72,7 @@ public class FormMesas extends javax.swing.JFrame {
 
         this.SetImageLabel(jLabel3, "src/main/java/Imagenes/logo.png");
 
-        cargarRestaurantes();
-        cargarMesasEnTabla();
+        this.cargarMetodosIniciales();
     }
 
     /**
@@ -407,6 +406,11 @@ public class FormMesas extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void cargarMetodosIniciales(){
+        this.cargarRestaurantes();
+        this.cargarMesasEnTabla();
+    }
+    
     private void bCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCrearActionPerformed
         try {
             // Llamar al método de negocio para buscar el restaurante único
