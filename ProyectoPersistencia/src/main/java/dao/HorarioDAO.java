@@ -13,19 +13,34 @@ import java.util.Optional;
 import javax.persistence.EntityManager;
 
 /**
+ * Implementación de la interfaz IHorarioDAO que proporciona métodos para el
+ * acceso a datos de la entidad Horario. Esta clase permite realizar operaciones
+ * de creación, búsqueda, actualización y obtención de horarios en la base de
+ * datos.
  *
- * @author pauli
+ * @author Cristopher Alberto Elizalde Andrade - 240005
+ * @author Paulina Rodríguez Rodríguez Rayos - 117262
  */
 public class HorarioDAO implements IHorarioDAO {
 
     private final IConexion conexion;
 
-    // Constructor
+    /**
+     * Constructor de la clase HorarioDAO.
+     *
+     * @param conexion Objeto que proporciona la conexión a la base de datos.
+     */
     public HorarioDAO(IConexion conexion) {
         this.conexion = conexion;
     }
 
-    // Método para crear un nuevo Horario
+    /**
+     * Crea un nuevo horario en la base de datos.
+     *
+     * @param horario El objeto Horario a crear.
+     * @throws PersistenciaException Si el horario es nulo o si ocurre un error
+     * al persistirlo en la base de datos.
+     */
     public void crearHorario(Horario horario) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -36,7 +51,7 @@ public class HorarioDAO implements IHorarioDAO {
                 throw new PersistenciaException("El horario no puede ser nulo y debe contener horas de apertura y cierre válidas.");
             }
 
-            // Aquí puedes agregar lógica adicional para verificar conflictos de horarios, si es necesario
+            // Persistir el horario en la base de datos
             em.persist(horario);
             em.getTransaction().commit();
         } catch (Exception e) {
@@ -49,12 +64,30 @@ public class HorarioDAO implements IHorarioDAO {
 
         }
     }
-        // Método para buscar un HorarioMesa por su ID
+
+    /**
+     * Busca un horario por su ID.
+     *
+     * @param id El ID del horario a buscar.
+     * @return El objeto Horario correspondiente al ID proporcionado, o null si
+     * no se encuentra.
+     */
     public Horario HorarioPorId(Long id) {
         EntityManager em = this.conexion.crearConexion();
-        return em.find(Horario.class, id);
+        try {
+            return em.find(Horario.class, id); // Buscar el horario por ID
+        } finally {
+            em.close();
+        }
     }
 
+    /**
+     * Busca un horario por día de la semana.
+     *
+     * @param diaSemana El día de la semana para buscar el horario.
+     * @return Un objeto Optional que contiene el horario si se encuentra, o
+     * vacío si no se encuentra.
+     */
     public Optional<Horario> buscarPorDiaSemana(String diaSemana) {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -64,25 +97,44 @@ public class HorarioDAO implements IHorarioDAO {
             return Optional.of(horario);
         } catch (Exception e) {
             return Optional.empty();
+        } finally {
+            em.close();
         }
     }
 
-    // Método para obtener todos los HorarioMesa
+    /**
+     * Obtiene todos los horarios de la base de datos.
+     *
+     * @return Una lista de todos los objetos Horario.
+     */
     public List<Horario> HorarioTodos() {
         EntityManager em = this.conexion.crearConexion();
-        return em.createQuery("FROM Horario", Horario.class).getResultList();
+        try {
+            return em.createQuery("FROM Horario", Horario.class).getResultList(); // Obtener todos los horarios
+        } finally {
+            em.close();
+        }
     }
 
-    // Método para actualizar un Horario
+    /**
+     * Actualiza un horario existente en la base de datos.
+     *
+     * @param horario El objeto Horario a actualizar.
+     */
     public void actualizarHorario(Horario horario) {
         EntityManager em = this.conexion.crearConexion();
-        em.getTransaction().begin();
-
-        em.merge(horario);
-
-        em.getTransaction().commit();
-
-        em.close();
+        try {
+            em.getTransaction().begin();
+            em.merge(horario); // Actualizar el horario en la base de datos
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            // Manejar excepciones de actualización si es necesario
+        } finally {
+            em.close();
+        }
     }
 
 }

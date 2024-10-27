@@ -14,9 +14,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 /**
- * Interfaz que define los métodos para el acceso a datos de la entidad
- * TipoMesa. Proporciona operaciones para crear, leer, actualizar y eliminar
- * tipos de mesa en la base de datos.
+ * Clase que implementa la interfaz ITipoMesaDAO y proporciona métodos para el
+ * acceso a datos de la entidad TipoMesa. Permite realizar operaciones CRUD
+ * (crear, leer, actualizar y eliminar) sobre los tipos de mesa en la base de
+ * datos.
  *
  * @author Cristopher Alberto Elizalde Andrade - 240005
  * @author Paulina Rodríguez Rodríguez Rayos - 117262
@@ -25,12 +26,21 @@ public class TipoMesaDAO implements ITipoMesaDAO {
 
     private final IConexion conexion;
 
-    // Constructor
+    /**
+     * Constructor de la clase TipoMesaDAO.
+     *
+     * @param conexion Objeto que proporciona la conexión a la base de datos.
+     */
     public TipoMesaDAO(IConexion conexion) {
         this.conexion = conexion;
     }
 
-    // Método para agregar un tipo de mesa
+    /**
+     * Agrega un nuevo tipo de mesa en la base de datos.
+     *
+     * @param tipoMesa El tipo de mesa a agregar.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
     public void agregarTipoMesa(TipoMesa tipoMesa) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -45,7 +55,13 @@ public class TipoMesaDAO implements ITipoMesaDAO {
         }
     }
 
-    // Método para obtener un tipo de mesa por ID
+    /**
+     * Obtiene un tipo de mesa de la base de datos por su ID.
+     *
+     * @param id El ID del tipo de mesa a buscar.
+     * @return El tipo de mesa correspondiente al ID proporcionado.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
     public TipoMesa obtenerTipoMesaPorId(Long id) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -56,6 +72,11 @@ public class TipoMesaDAO implements ITipoMesaDAO {
 
     }
 
+    /**
+     * Inserta tipos de mesa predeterminados en la base de datos si no existen.
+     *
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
     public void insertarTiposMesaPredeterminados() throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -92,7 +113,12 @@ public class TipoMesaDAO implements ITipoMesaDAO {
         }
     }
 
-    // Método para obtener todos los tipos de mesa
+    /**
+     * Obtiene todos los tipos de mesa de la base de datos.
+     *
+     * @return Una lista de todos los tipos de mesa.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
     public List<TipoMesa> obtenerTodosLosTiposMesa() throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -102,6 +128,12 @@ public class TipoMesaDAO implements ITipoMesaDAO {
         }
     }
 
+    /**
+     * Obtiene todos los tipos de mesa en la base de datos.
+     *
+     * @return Una lista de todos los tipos de mesa.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
     public List<TipoMesa> obtenerTodosLosTipos() throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -113,6 +145,13 @@ public class TipoMesaDAO implements ITipoMesaDAO {
         }
     }
 
+    /**
+     * Obtiene un tipo de mesa a partir de su nombre.
+     *
+     * @param nombreTipo El nombre del tipo de mesa a buscar.
+     * @return El tipo de mesa correspondiente al nombre proporcionado.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
     public TipoMesa obtenerPorNombre(String nombreTipo) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -125,6 +164,13 @@ public class TipoMesaDAO implements ITipoMesaDAO {
         }
     }
 
+    /**
+     * Obtiene un tipo de mesa a partir de su nombre.
+     *
+     * @param nombreTipo El nombre del tipo de mesa a buscar.
+     * @return El tipo de mesa correspondiente al nombre proporcionado.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
     public TipoMesa obtenerTipoMesaPorNombre(String nombreTipo) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         TipoMesa tipoMesa = null;
@@ -146,7 +192,12 @@ public class TipoMesaDAO implements ITipoMesaDAO {
         return tipoMesa; // Retorna el TipoMesa encontrado o null si no se encontró
     }
 
-    // Método para actualizar un tipo de mesa
+    /**
+     * Actualiza un tipo de mesa en la base de datos.
+     *
+     * @param tipoMesa El tipo de mesa a actualizar.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
     public void actualizarTipoMesa(TipoMesa tipoMesa) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -161,7 +212,12 @@ public class TipoMesaDAO implements ITipoMesaDAO {
         }
     }
 
-    // Método para eliminar un tipo de mesa por ID
+    /**
+     * Elimina un tipo de mesa de la base de datos por su ID.
+     *
+     * @param id El ID del tipo de mesa a eliminar.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
     public void eliminarTipoMesa(Long id) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -179,7 +235,9 @@ public class TipoMesaDAO implements ITipoMesaDAO {
         }
     }
 
-    // Método para cerrar el EntityManager y EntityManagerFactory
+    /**
+     * Cierra el EntityManager si está abierto.
+     */
     public void cerrar() {
         EntityManager em = this.conexion.crearConexion();
         if (em != null && em.isOpen()) {
