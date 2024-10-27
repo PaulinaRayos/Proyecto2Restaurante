@@ -11,6 +11,8 @@ import interfaces.IHorarioDAO;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
 
 /**
  * Implementación de la interfaz IHorarioDAO que proporciona métodos para el
@@ -114,6 +116,28 @@ public class HorarioDAO implements IHorarioDAO {
         } finally {
             em.close();
         }
+    }
+
+    public Horario obtenerHorarioPorIdRestaurante(Long idRestaurante) throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
+        Horario horario = null;
+
+        try {
+            String jpql = "SELECT h FROM Horario h WHERE h.restaurante.id = :idRestaurante";
+            TypedQuery<Horario> query = em.createQuery(jpql, Horario.class);
+            query.setParameter("idRestaurante", idRestaurante);
+            horario = query.getSingleResult();
+
+        } catch (NoResultException e) {
+            // Retornar null si no se encuentra un horario
+            System.out.println("No se encontró un horario para el restaurante con ID: " + idRestaurante);
+        } catch (Exception e) {
+            throw new PersistenciaException("Error al obtener el horario del restaurante.", e);
+        } finally {
+            em.close();
+        }
+
+        return horario;
     }
 
     /**

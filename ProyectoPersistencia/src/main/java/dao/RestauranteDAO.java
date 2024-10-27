@@ -69,7 +69,6 @@ public class RestauranteDAO implements IRestauranteDAO {
             String jpql = "SELECT r.ciudad, r.direccion FROM Restaurante r";
             Query query = em.createQuery(jpql);
             List<Object[]> resultados = query.getResultList();
-            System.out.println("Cantidad de restaurantes encontrados: " + resultados.size());
             return resultados;
         } catch (Exception e) {
             e.printStackTrace(); // Agrega esto para ver detalles del error

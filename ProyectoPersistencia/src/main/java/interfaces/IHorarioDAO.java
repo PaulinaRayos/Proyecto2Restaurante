@@ -28,5 +28,7 @@ public interface IHorarioDAO {
     void actualizarHorario(Horario horario);
 
     Optional<Horario> buscarPorDiaSemana(String diaSemana);
+    
+    Horario obtenerHorarioPorIdRestaurante(Long idRestaurante) throws PersistenciaException;
 
 }

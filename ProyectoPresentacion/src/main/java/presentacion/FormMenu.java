@@ -4,12 +4,14 @@
  */
 package presentacion;
 
+import dto.HorarioDTO;
 import dto.MesaDTO;
 import dto.ReservaDTO;
 import dto.RestauranteDTO;
 import excepciones.NegocioException;
 import interfaces.IAgregarReservaBO;
 import interfaces.IClienteBO;
+import interfaces.IHorarioBO;
 import interfaces.IMesaBO;
 import interfaces.IRestauranteBO;
 import java.awt.Image;
@@ -32,6 +34,7 @@ import javax.swing.SpinnerDateModel;
 import javax.swing.table.DefaultTableModel;
 import negocio.AgregarReservaBO;
 import negocio.ClienteBO;
+import negocio.HorarioBO;
 import negocio.MesaBO;
 import negocio.RestauranteBO;
 import utilidades.Forms;
@@ -51,6 +54,7 @@ public class FormMenu extends javax.swing.JFrame {
     private final IRestauranteBO restBO;
     private List<RestauranteDTO> listaRestaurantes;
     private Long idRestauranteSeleccionado;
+    private final IHorarioBO horariobo;
 
     /**
      * Creates new form FormMenu
@@ -62,6 +66,7 @@ public class FormMenu extends javax.swing.JFrame {
         this.clienteBO = new ClienteBO();
         this.mesaBO = new MesaBO();
         this.restBO = new RestauranteBO();
+        this.horariobo = new HorarioBO();
 
         this.SetImageLabel(jLabel3, "src/main/java/Imagenes/logo.png");
 
@@ -764,8 +769,8 @@ public class FormMenu extends javax.swing.JFrame {
             String capacidadSeleccionada = cbCantidad.getSelectedItem().toString();
 
             List<MesaDTO> mesas = mesaBO.obtenerTodasLasMesas();
-            
-//            HorarioDTO horarioRestaurante = restBO.obtenerHorarioPorId(idRestauranteSeleccionado);
+
+            HorarioDTO horarioRestaurante = horariobo.obtenerHorarioPorId(idRestauranteSeleccionado);
 
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
             // Crear un modelo de tabla
@@ -794,8 +799,9 @@ public class FormMenu extends javax.swing.JFrame {
                     fila[1] = mesa.getCodigoMesa();
                     fila[2] = mesa.getUbicacion();
                     fila[3] = mesa.getCapacidad();
-//                    fila[4] = sdf.format(restaurante.getHoraApertura());
-//                    fila[5] = sdf.format(restaurante.getHoraCierre());
+
+                    fila[4] = sdf.format(horarioRestaurante.getHoraApertura());
+                    fila[5] = sdf.format(horarioRestaurante.getHoraCierre());
 
                     modelo.addRow(fila);
                 }
