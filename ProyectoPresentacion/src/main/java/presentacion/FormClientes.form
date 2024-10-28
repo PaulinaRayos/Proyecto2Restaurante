@@ -123,9 +123,9 @@
                                               <Component id="jLabel5" alignment="0" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                           <EmptySpace pref="246" max="32767" attributes="0"/>
-                                          <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="btnLimpiarFiltros" min="-2" max="-2" attributes="0"/>
-                                              <Component id="bInsertar" min="-2" max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                              <Component id="bInsertar" max="32767" attributes="0"/>
+                                              <Component id="btnLimpiarFiltros" max="32767" attributes="0"/>
                                           </Group>
                                       </Group>
                                   </Group>
@@ -291,6 +291,12 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="btnLimpiarFiltros">
                   <Properties>
+                    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="99" green="33" red="ff" type="rgb"/>
+                    </Property>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Times New Roman" size="18" style="3"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" value="Limpiar filtros"/>
                   </Properties>
                   <Events>

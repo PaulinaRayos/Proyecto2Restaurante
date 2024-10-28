@@ -9,13 +9,32 @@ import excepciones.PersistenciaException;
 import java.util.List;
 
 /**
+ * Interfaz que define los métodos para consultar reservas en el sistema.
  *
- * @author pauli
+ * @author Cristopher Alberto Elizalde Andrade - 240005
+ * @author Paulina Rodríguez Rodríguez Rayos - 117262
  */
 public interface IConsultarReservasBO {
 
+    /**
+     * Método para obtener todas las reservas junto con la información del
+     * cliente asociado.
+     *
+     * @return Lista de objetos ReservaDTO que contienen información de reservas
+     * y clientes.
+     * @throws Exception Si ocurre un error al obtener las reservas con los
+     * clientes.
+     */
     List<ReservaDTO> obtenerReservasConClientes() throws Exception;
 
+    /**
+     * Método para obtener todas las reservas del sistema y convertirlas en
+     * objetos ReservaDTO.
+     *
+     * @return Lista de objetos ReservaDTO que representan todas las reservas.
+     * @throws Exception Si ocurre un error al obtener las reservas desde la
+     * capa de persistencia.
+     */
     List<ReservaDTO> obtenerTodasLasReservas() throws Exception;
 
     /**
@@ -35,5 +54,5 @@ public interface IConsultarReservasBO {
      * @throws PersistenciaException Si ocurre un error durante la operación.
      */
     ReservaDTO obtenerReservaPorId(Long idReserva) throws PersistenciaException;
-    
+
 }

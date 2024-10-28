@@ -8,7 +8,6 @@ import dto.ClienteDTO;
 import dto.MesaDTO;
 import dto.ReservaDTO;
 import dto.RestauranteDTO;
-import entidadesJPA.TipoMesa;
 import excepciones.NegocioException;
 import excepciones.PersistenciaException;
 import interfaces.IClienteBO;
@@ -185,6 +184,8 @@ public class FormConsultas extends javax.swing.JFrame {
         jLabel7.setText("Fecha:");
         jLabel7.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
+        btnLimpiarFiltros.setBackground(new java.awt.Color(255, 51, 153));
+        btnLimpiarFiltros.setFont(new java.awt.Font("Times New Roman", 3, 14)); // NOI18N
         btnLimpiarFiltros.setText("Limpiar Filtros");
         btnLimpiarFiltros.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -232,6 +233,8 @@ public class FormConsultas extends javax.swing.JFrame {
             }
         });
 
+        btnDetalleReserva.setBackground(new java.awt.Color(255, 51, 153));
+        btnDetalleReserva.setFont(new java.awt.Font("Times New Roman", 3, 14)); // NOI18N
         btnDetalleReserva.setText("Ver detalle Reserva");
         btnDetalleReserva.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -274,7 +277,7 @@ public class FormConsultas extends javax.swing.JFrame {
                                                 .addComponent(jLabel6)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(txtTamañoMesa, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(btnDetalleReserva))
                                     .addGroup(jPanel5Layout.createSequentialGroup()
                                         .addGap(286, 286, 286)
@@ -283,9 +286,8 @@ public class FormConsultas extends javax.swing.JFrame {
                                         .addComponent(cbRestaurante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(0, 0, Short.MAX_VALUE))))
                             .addComponent(jLabelaa1))
-                        .addGap(18, 18, 18)
-                        .addComponent(btnLimpiarFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 6, Short.MAX_VALUE)))
+                        .addGap(11, 11, 11)
+                        .addComponent(btnLimpiarFiltros)))
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
@@ -490,6 +492,7 @@ private void SetImageLabel(JLabel labelname, String root) {
         this.repaint();
     }
 
+    //Metodo para cargar resrtaurantes
     private void cargarRestaurantes() {
         try {
             cbRestaurante.removeAllItems(); // Limpiar elementos actuales
@@ -528,7 +531,7 @@ private void SetImageLabel(JLabel labelname, String root) {
         }
 
     }
-
+    //Metodo para cargar reservas en tabla
     private void cargarReservasEnTabla() {
         try {
             // Asegúrate de que idRestauranteSeleccionado no sea nulo

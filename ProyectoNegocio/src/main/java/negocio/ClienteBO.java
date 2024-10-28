@@ -19,29 +19,54 @@ import java.util.List;
 import recursos.Encriptacion;
 
 /**
+ * Clase que implementa la lógica de negocio para las operaciones relacionadas
+ * con los clientes. Esta clase se encarga de gestionar la inserción masiva de
+ * clientes en la base de datos.
  *
- * @author Chris
+ * @author Cristopher Alberto Elizalde Andrade - 240005
+ * @author Paulina Rodríguez Rodríguez Rayos - 117262
  */
 public class ClienteBO implements IClienteBO {
 
-    private final IConexion conexion;
-    private IClienteDAO cdao;
+    private final IConexion conexion; // Interfaz para la conexión a la base de datos
+    private final IClienteDAO cdao; // Interfaz para las operaciones de cliente
 
+    /**
+     * Constructor de la clase ClienteBO. Inicializa las interfaces necesarias
+     * para la conexión y el acceso a los datos de clientes.
+     */
     public ClienteBO() {
         this.conexion = new Conexion();
         this.cdao = new ClienteDAO(conexion);
     }
 
+    /**
+     * Método para realizar una inserción masiva de clientes en la base de
+     * datos. Llama al método correspondiente en el DAO para llevar a cabo la
+     * operación.
+     *
+     * @throws NegocioException Si ocurre un error durante la inserción masiva
+     * de clientes.
+     */
     @Override
     public void insercionMasiva() throws NegocioException {
         try {
-            this.cdao.insercionMasiva();
+            this.cdao.insercionMasiva(); // Llamada al método del DAO
         } catch (PersistenciaException e) {
+            // Manejo de excepción si la inserción falla
             throw new NegocioException("No se ha podido realizar la insercion masiva.");
         }
     }
 
-    // Método para obtener los nombres completos de los clientes desde la capa de negocio
+    /**
+     * Método para obtener los nombres completos y teléfonos de los clientes
+     * desde la capa de negocio.
+     *
+     * @return Lista de objetos que contienen nombres y teléfonos de los
+     * clientes.
+     * @throws NegocioException Si ocurre un error al obtener la información.
+     */
+    @Override
     public List<Object[]> obtenerNombresYTelefonosDeClientes() throws NegocioException {
         try {
             return cdao.obtenerNombresYTelefonosDeClientes();
@@ -50,6 +75,14 @@ public class ClienteBO implements IClienteBO {
         }
     }
 
+    /**
+     * Método para obtener el ID de un cliente a partir de su nombre completo.
+     *
+     * @param nombreCompleto Nombre completo del cliente.
+     * @return ID del cliente correspondiente.
+     * @throws NegocioException Si ocurre un error al obtener el ID del cliente.
+     */
+    @Override
     public Long obtenerIdClientePorNombre(String nombreCompleto) throws NegocioException {
         try {
             return cdao.obtenerIdClientePorNombre(nombreCompleto);
@@ -58,6 +91,15 @@ public class ClienteBO implements IClienteBO {
         }
     }
 
+    /**
+     * Método para obtener un cliente por su ID y mapearlo a un objeto
+     * ClienteDTO.
+     *
+     * @param id ID del cliente a buscar.
+     * @return Objeto ClienteDTO que representa al cliente encontrado.
+     * @throws NegocioException Si ocurre un error al obtener el cliente.
+     */
+    @Override
     public ClienteDTO obtenerClientePorId(Long id) throws NegocioException {
         try {
             Cliente cliente = cdao.obtenerClientePorId(id);
@@ -67,6 +109,14 @@ public class ClienteBO implements IClienteBO {
         }
     }
 
+    /**
+     * Método para obtener un cliente a partir de su nombre completo.
+     *
+     * @param nombreCompleto Nombre completo del cliente a buscar.
+     * @return Objeto ClienteDTO correspondiente al cliente encontrado, o null
+     * si no se encuentra.
+     */
+    @Override
     public ClienteDTO obtenerClientePorNombre(String nombreCompleto) {
         Cliente cliente = cdao.obtenerClientePorNombre(nombreCompleto);
         if (cliente != null) {
@@ -76,6 +126,13 @@ public class ClienteBO implements IClienteBO {
         }
     }
 
+    /**
+     * Método para obtener una lista de teléfonos de clientes desencriptados.
+     *
+     * @return Lista de teléfonos desencriptados de los clientes.
+     * @throws NegocioException Si ocurre un error al obtener los teléfonos.
+     */
+    @Override
     public List<String> obtenerTelefonosDesencriptados() throws NegocioException {
         try {
             return cdao.obtenerTelefonosDesencriptados();
@@ -85,6 +142,14 @@ public class ClienteBO implements IClienteBO {
 
     }
 
+    /**
+     * Método para obtener todos los clientes en la base de datos.
+     *
+     * @return Lista de objetos ClienteDTO que representan a todos los clientes.
+     * @throws NegocioException Si ocurre un error al obtener la lista de
+     * clientes.
+     */
+    @Override
     public List<ClienteDTO> obtenerTodosLosClientes() throws NegocioException {
         try {
             List<Cliente> clientes = cdao.obtenerTodosLosClientes();
@@ -99,6 +164,15 @@ public class ClienteBO implements IClienteBO {
         }
     }
 
+    /**
+     * Método para obtener todos los clientes junto con sus teléfonos
+     * desencriptados.
+     *
+     * @return Lista de objetos ClienteDTO que representan a todos los clientes
+     * con su información y teléfonos desencriptados.
+     * @throws NegocioException Si ocurre un error al obtener los clientes.
+     */
+    @Override
     public List<ClienteDTO> obtenerTodosLosClientesConTelefonoDesencriptado() throws NegocioException {
         try {
             List<Cliente> clientes = cdao.obtenerTodosLosClientes();
@@ -115,18 +189,26 @@ public class ClienteBO implements IClienteBO {
             throw new NegocioException("Error al obtener los clientes desencriptados", e);
         }
     }
-   public ClienteDTO mapearClienteAClienteDTO(Cliente cliente) {
-    if (cliente == null) {
-        return null; // Retorna null si el cliente es nulo
+
+    /**
+     * Método para mapear un objeto Cliente a un objeto ClienteDTO.
+     *
+     * @param cliente Objeto Cliente que se desea mapear.
+     * @return Objeto ClienteDTO correspondiente al cliente, o null si el
+     * cliente es nulo.
+     */
+    public ClienteDTO mapearClienteAClienteDTO(Cliente cliente) {
+        if (cliente == null) {
+            return null; // Retorna null si el cliente es nulo
+        }
+
+        ClienteDTO clienteDTO = new ClienteDTO();
+        clienteDTO.setIdCliente(cliente.getId()); // Mapea el ID
+        clienteDTO.setNombre(cliente.getNombre()); // Mapea el nombre
+        clienteDTO.setApellidoPaterno(cliente.getApellidoPaterno()); // Mapea el apellido paterno
+        clienteDTO.setApellidoMaterno(cliente.getApellidoMaterno()); // Mapea el apellido materno
+        clienteDTO.setTelefono(cliente.getTelefono()); // Mapea el teléfono
+
+        return clienteDTO; // Retorna el objeto mapeado
     }
-
-    ClienteDTO clienteDTO = new ClienteDTO();
-    clienteDTO.setIdCliente(cliente.getId()); // Mapea el ID
-    clienteDTO.setNombre(cliente.getNombre()); // Mapea el nombre
-    clienteDTO.setApellidoPaterno(cliente.getApellidoPaterno()); // Mapea el apellido paterno
-    clienteDTO.setApellidoMaterno(cliente.getApellidoMaterno()); // Mapea el apellido materno
-    clienteDTO.setTelefono(cliente.getTelefono()); // Mapea el teléfono
-
-    return clienteDTO; // Retorna el objeto mapeado
-} 
 }

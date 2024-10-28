@@ -40,6 +40,7 @@ public class ReservaDAO implements IReservaDAO {
      * @param reserva La reserva a agregar.
      * @throws PersistenciaException Si ocurre un error durante la operación.
      */
+    @Override
     public void agregarReserva(Reserva reserva) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -78,6 +79,7 @@ public class ReservaDAO implements IReservaDAO {
      * @return Una lista de todas las reservas.
      * @throws PersistenciaException Si ocurre un error durante la operación.
      */
+    @Override
     public List<Reserva> obtenerTodasLasReservas() throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -96,6 +98,7 @@ public class ReservaDAO implements IReservaDAO {
      * @return Una lista de reservas que coinciden con el estado.
      * @throws PersistenciaException Si ocurre un error durante la operación.
      */
+    @Override
     public List<Reserva> obtenerReservasPorEstado(String estado) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -114,6 +117,7 @@ public class ReservaDAO implements IReservaDAO {
      * @param reserva La reserva a actualizar.
      * @throws PersistenciaException Si ocurre un error durante la operación.
      */
+    @Override
     public void actualizarReserva(Reserva reserva) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -135,6 +139,7 @@ public class ReservaDAO implements IReservaDAO {
      * @return El estado de la reserva correspondiente al ID proporcionado.
      * @throws PersistenciaException Si ocurre un error durante la operación.
      */
+    @Override
     public String obtenerEstadoReservaPorId(Long id) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -154,6 +159,16 @@ public class ReservaDAO implements IReservaDAO {
         }
     }
 
+    /**
+     * Cancela una reserva específica, actualizando su estado y aplicando una
+     * multa si es necesario.
+     *
+     * @param idReserva el ID de la reserva a cancelar
+     * @param fechaCancelacion la fecha en que se realiza la cancelación
+     * @param multa la multa a aplicar por la cancelación de la reserva
+     * @throws PersistenciaException si ocurre un error al cancelar la reserva
+     */
+    @Override
     public void cancelarReserva(Long idReserva, Date fechaCancelacion, BigDecimal multa) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -179,6 +194,7 @@ public class ReservaDAO implements IReservaDAO {
     /**
      * Cierra el EntityManager si está abierto.
      */
+    @Override
     public void cerrar() {
         EntityManager em = this.conexion.crearConexion();
         if (em != null && em.isOpen()) {

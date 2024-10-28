@@ -23,13 +23,11 @@ import interfaces.IAgregaMesasBO;
 import interfaces.IHorarioBO;
 import interfaces.IHorarioMesaBO;
 import interfaces.IMesaDAO;
-import interfaces.IRestauranteBO;
 import interfaces.IRestauranteDAO;
 import interfaces.ITipoMesaDAO;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -39,23 +37,37 @@ import java.util.concurrent.ThreadLocalRandom;
 public class AgregaMesasBO implements IAgregaMesasBO {
 
     private final IConexion conexion;
-    private IMesaDAO mesaDAO;
-    private IRestauranteDAO restdao;
-    private ITipoMesaDAO tipodao;
-    private IRestauranteBO restbo;
-    private IHorarioBO horariobo;
-    private IHorarioMesaBO horarioMesabo;
+    private final IMesaDAO mesaDAO;
+    private final IRestauranteDAO restdao;
+    private final ITipoMesaDAO tipodao;
+    private final IHorarioBO horariobo;
+    private final IHorarioMesaBO horarioMesabo;
 
     public AgregaMesasBO() {
         this.conexion = new Conexion();
         this.mesaDAO = new MesaDAO(conexion);
         this.restdao = new RestauranteDAO(conexion);
         this.tipodao = new TipoMesaDAO(conexion);
-        this.restbo = new RestauranteBO();
         this.horariobo = new HorarioBO();
-        this.horarioMesabo=new HorarioMesaBO();
+        this.horarioMesabo = new HorarioMesaBO();
     }
 
+    /**
+     * Agrega mesas al restaurante especificado en el objeto RestauranteDTO.
+     * Valida que el restaurante exista y que el ID no sea nulo. Para cada tipo
+     * de mesa y la cantidad solicitada, se generan las mesas y se persisten en
+     * la base de datos.
+     *
+     * @param restauranteDTO Objeto que contiene la información del restaurante
+     * al que se agregarán las mesas.
+     * @param cantidadPorTipo Mapa que asocia nombres de tipos de mesa con la
+     * cantidad solicitada para cada tipo.
+     * @param ubicacion Cadena que indica la ubicación de las mesas (ej.
+     * "Terraza").
+     * @throws NegocioException Si ocurre un error al agregar mesas o si el
+     * restaurante no se encuentra.
+     */
+    @Override
     public void agregarMesas(RestauranteDTO restauranteDTO, Map<String, Integer> cantidadPorTipo, String ubicacion) throws NegocioException {
         List<Long> listaIdsMesas = new ArrayList<>();
         try {
@@ -129,12 +141,25 @@ public class AgregaMesasBO implements IAgregaMesasBO {
                     numeroUnico++;
                 }
             }
-            agregarMesasAHorarios(listaIdsMesas,listaHorarios);
+            agregarMesasAHorarios(listaIdsMesas, listaHorarios);
         } catch (PersistenciaException e) {
             throw new NegocioException("Error al agregar mesas", e);
         }
     }
 
+    /**
+     * Genera un código único para una mesa basado en su ubicación, capacidad y
+     * un número único.
+     *
+     * @param ubicacion La ubicación de la mesa (ej. "Terraza").
+     * @param capacidad La capacidad de la mesa (número de personas que puede
+     * acomodar).
+     * @param numeroUnico Un número único que se incrementa para cada mesa
+     * nueva.
+     * @return Un código de mesa en el formato "LOC-CAP-NNN" donde LOC son las
+     * primeras tres letras de la ubicación, CAP es la capacidad y NNN es el
+     * número único formateado.
+     */
     private String generarCodigoMesa(String ubicacion, int capacidad, Long numeroUnico) {
         // Tomar las tres primeras letras de la ubicación
         String ubicacionCodificada = ubicacion.length() >= 3 ? ubicacion.substring(0, 3).toUpperCase() : ubicacion.toUpperCase();
@@ -146,6 +171,16 @@ public class AgregaMesasBO implements IAgregaMesasBO {
         return ubicacionCodificada + "-" + capacidad + "-" + numeroFormato;
     }
 
+    /**
+     * Asocia las mesas agregadas con sus horarios correspondientes en la base
+     * de datos.
+     *
+     * @param idsMesas Lista de IDs de las mesas que se han agregado.
+     * @param idsHorarios Lista de IDs de los horarios a los que se asociarán
+     * las mesas.
+     * @throws NegocioException Si ocurre un error al agregar mesas a horarios o
+     * si alguna mesa u horario no se encuentra.
+     */
     private void agregarMesasAHorarios(List<Long> idsMesas, List<Long> idsHorarios) throws NegocioException {
         try {
             for (Long idMesa : idsMesas) {
@@ -157,7 +192,7 @@ public class AgregaMesasBO implements IAgregaMesasBO {
 
                 for (Long idHorario : idsHorarios) {
                     // Obtener el horario usando el ID
-                    Horario horario =horariobo.obtenerHorarioPorIdHorario(idHorario);
+                    Horario horario = horariobo.obtenerHorarioPorIdHorario(idHorario);
                     if (horario == null) {
                         throw new NegocioException("Horario no encontrado con ID: " + idHorario);
                     }

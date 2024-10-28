@@ -17,9 +17,8 @@ import javax.persistence.TypedQuery;
  * Clase que implementa la interfaz ITipoMesaDAO y proporciona métodos para el
  * acceso a datos de la entidad TipoMesa. Permite realizar operaciones CRUD
  * (crear, leer, actualizar y eliminar) sobre los tipos de mesa en la base de
- * datos.
- * Contribuciones de Paulina Rodríguez Rodríguez Rayos.
- * 
+ * datos. Contribuciones de Paulina Rodríguez Rodríguez Rayos.
+ *
  * @author Cristopher Alberto Elizalde Andrade - 240005
  */
 public class TipoMesaDAO implements ITipoMesaDAO {
@@ -41,6 +40,7 @@ public class TipoMesaDAO implements ITipoMesaDAO {
      * @param tipoMesa El tipo de mesa a agregar.
      * @throws PersistenciaException Si ocurre un error durante la operación.
      */
+    @Override
     public void agregarTipoMesa(TipoMesa tipoMesa) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -62,6 +62,7 @@ public class TipoMesaDAO implements ITipoMesaDAO {
      * @return El tipo de mesa correspondiente al ID proporcionado.
      * @throws PersistenciaException Si ocurre un error durante la operación.
      */
+    @Override
     public TipoMesa obtenerTipoMesaPorId(Long id) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -77,6 +78,7 @@ public class TipoMesaDAO implements ITipoMesaDAO {
      *
      * @throws PersistenciaException Si ocurre un error durante la operación.
      */
+    @Override
     public void insertarTiposMesaPredeterminados() throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -119,6 +121,7 @@ public class TipoMesaDAO implements ITipoMesaDAO {
      * @return Una lista de todos los tipos de mesa.
      * @throws PersistenciaException Si ocurre un error durante la operación.
      */
+    @Override
     public List<TipoMesa> obtenerTodosLosTiposMesa() throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -134,6 +137,7 @@ public class TipoMesaDAO implements ITipoMesaDAO {
      * @return Una lista de todos los tipos de mesa.
      * @throws PersistenciaException Si ocurre un error durante la operación.
      */
+    @Override
     public List<TipoMesa> obtenerTodosLosTipos() throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -152,6 +156,7 @@ public class TipoMesaDAO implements ITipoMesaDAO {
      * @return El tipo de mesa correspondiente al nombre proporcionado.
      * @throws PersistenciaException Si ocurre un error durante la operación.
      */
+    @Override
     public TipoMesa obtenerPorNombre(String nombreTipo) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -171,6 +176,7 @@ public class TipoMesaDAO implements ITipoMesaDAO {
      * @return El tipo de mesa correspondiente al nombre proporcionado.
      * @throws PersistenciaException Si ocurre un error durante la operación.
      */
+    @Override
     public TipoMesa obtenerTipoMesaPorNombre(String nombreTipo) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         TipoMesa tipoMesa = null;
@@ -198,6 +204,7 @@ public class TipoMesaDAO implements ITipoMesaDAO {
      * @param tipoMesa El tipo de mesa a actualizar.
      * @throws PersistenciaException Si ocurre un error durante la operación.
      */
+    @Override
     public void actualizarTipoMesa(TipoMesa tipoMesa) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -218,6 +225,7 @@ public class TipoMesaDAO implements ITipoMesaDAO {
      * @param id El ID del tipo de mesa a eliminar.
      * @throws PersistenciaException Si ocurre un error durante la operación.
      */
+    @Override
     public void eliminarTipoMesa(Long id) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -238,6 +246,7 @@ public class TipoMesaDAO implements ITipoMesaDAO {
     /**
      * Cierra el EntityManager si está abierto.
      */
+    @Override
     public void cerrar() {
         EntityManager em = this.conexion.crearConexion();
         if (em != null && em.isOpen()) {

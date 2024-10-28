@@ -16,22 +16,39 @@ import excepciones.PersistenciaException;
 import interfaces.IRestauranteBO;
 import interfaces.IRestauranteDAO;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
+ * Clase que implementa la lógica de negocio para la gestión de restaurantes.
+ * Proporciona métodos para guardar restaurantes, obtener horarios y manejar la
+ * información relacionada con ellos.
  *
- * @author Chris
+ * @author Cristopher Alberto Elizalde Andrade - 240005
+ * @author Paulina Rodríguez Rodríguez Rayos - 117262
  */
 public class RestauranteBO implements IRestauranteBO {
 
     private final IConexion conexion;
-    private IRestauranteDAO restdao;
+    private final IRestauranteDAO restdao;
 
+    /**
+     * Constructor que inicializa las dependencias necesarias para la gestión de
+     * restaurantes. Se establece la conexión a la base de datos y se inicializa
+     * el DAO correspondiente.
+     */
     public RestauranteBO() {
         this.conexion = new Conexion();
         this.restdao = new RestauranteDAO(conexion);
     }
 
+    /**
+     * Guarda un nuevo restaurante en la base de datos.
+     *
+     * @param restauranteDTO Objeto que contiene los datos del restaurante a
+     * guardar.
+     * @throws NegocioException Si ocurre un error al guardar el restaurante.
+     */
     @Override
     public void guardarRestaurante(RestauranteDTO restauranteDTO) throws NegocioException {
         try {
@@ -45,6 +62,14 @@ public class RestauranteBO implements IRestauranteBO {
         }
     }
 
+    /**
+     * Obtiene una lista de ciudades y direcciones de restaurantes formateadas.
+     *
+     * @return Lista de cadenas que representan las ciudades y direcciones de
+     * restaurantes.
+     * @throws NegocioException Si ocurre un error al obtener los restaurantes.
+     */
+    @Override
     public List<String> obtenerCiudadesYDirecciones() throws NegocioException {
         try {
             List<Object[]> resultados = restdao.buscarCiudadesYDireccionesRestaurantes();
@@ -62,6 +87,14 @@ public class RestauranteBO implements IRestauranteBO {
         }
     }
 
+    /**
+     * Obtiene una lista de todos los restaurantes en formato DTO.
+     *
+     * @return Lista de objetos RestauranteDTO que representan todos los
+     * restaurantes.
+     * @throws NegocioException Si ocurre un error al obtener los restaurantes.
+     */
+    @Override
     public List<RestauranteDTO> obtenerRestaurantes() throws NegocioException {
         try {
             List<Restaurante> restaurantes = restdao.obtenerTodosLosRestaurantes(); // Método que obtiene todos los restaurantes
@@ -81,6 +114,57 @@ public class RestauranteBO implements IRestauranteBO {
         }
     }
 
+    /**
+     * Obtiene la hora de apaertura del restaurante.
+     *
+     * @param idRestaurante el id del restaurante al que le pertenece el horario
+     * apertura
+     * @param diaSemana el dia de la semana
+     * @return la hora de apertura.
+     * @throws NegocioException
+     */
+    public Date obtenerHoraApertura(Long idRestaurante, String diaSemana) throws NegocioException {
+        try {
+            Date horaApertura = restdao.obtenerHoraApertura(idRestaurante, diaSemana);
+            if (horaApertura == null) {
+                throw new NegocioException("No se encontró la hora de apertura para el restaurante seleccionado.");
+            }
+            return horaApertura;
+        } catch (PersistenciaException ex) {
+            throw new NegocioException("Error al obtener la hora de apertura");
+        }
+    }
+
+    /**
+     * Obtiene la hora de cierre del restaurante.
+     *
+     * @param idRestaurante el id del restaurante al que le pertenece el horario
+     * cierre
+     * @param diaSemana el dia de la semana
+     * @return la hora de cirre.
+     * @throws NegocioException
+     */
+    @Override
+    public Date obtenerHoraCierre(Long idRestaurante, String diaSemana) throws NegocioException {
+        try {
+            Date horaCierre = restdao.obtenerHoraCierre(idRestaurante, diaSemana);
+            if (horaCierre == null) {
+                throw new NegocioException("No se encontró la hora de cierre para el restaurante seleccionado.");
+            }
+            return horaCierre;
+        } catch (PersistenciaException ex) {
+            throw new NegocioException("Error al obtener la hora de cierre");
+        }
+    }
+
+    /**
+     * Obtiene un restaurante por su ID.
+     *
+     * @param idRestaurante el ID del restaurante a buscar.
+     * @return RestauranteDTO que representa el restaurante encontrado.
+     * @throws NegocioException Si ocurre un error al obtener el restaurante.
+     */
+    @Override
     public RestauranteDTO obtenerRestaurantePorId(Long idRestaurante) throws NegocioException {
         try {
             // Verifica que la consulta o el mapeo estén obteniendo los campos correctos
@@ -100,6 +184,12 @@ public class RestauranteBO implements IRestauranteBO {
         }
     }
 
+    /**
+     * Convierte una lista de mesas a su representación en formato DTO.
+     *
+     * @param mesas Lista de objetos Mesa a convertir.
+     * @return Lista de objetos MesaDTO que representan las mesas.
+     */
     private List<MesaDTO> convertirMesasAListaDTO(List<Mesa> mesas) {
         List<MesaDTO> mesasDTO = new ArrayList<>();
         for (Mesa mesa : mesas) {

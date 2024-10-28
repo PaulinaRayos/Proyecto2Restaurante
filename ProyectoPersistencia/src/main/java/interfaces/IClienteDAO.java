@@ -90,8 +90,20 @@ public interface IClienteDAO {
      */
     Cliente obtenerClientePorNombre(String nombreCompleto);
 
+    /**
+     * Obtiene los telefonos desencriptados de los clientes
+     *
+     * @return La lista de los telefonos desencriptados
+     * @throws PersistenciaException
+     */
     List<String> obtenerTelefonosDesencriptados() throws PersistenciaException;
 
+    /**
+     * Obtiene todos los clientes con su telefono desencriptado
+     *
+     * @return La lista de los clientes con sus telefonos desencriptados
+     * @throws PersistenciaException
+     */
     List<ClienteDTO> obtenerTodosLosClientesConTelefonoDesencriptado() throws PersistenciaException;
 
 }

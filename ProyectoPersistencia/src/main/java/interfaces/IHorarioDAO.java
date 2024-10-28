@@ -60,14 +60,50 @@ public interface IHorarioDAO {
      */
     void crearHorario(Horario horario) throws PersistenciaException;
 
+    /**
+     * Obtiene los id de los horarios por medio de el id del restaurante
+     *
+     * @param idRestaurante el id del restaurante
+     * @return la lista de ids de los horarios
+     * @throws PersistenciaException
+     */
     Horario obtenerHorarioPorIdRestaurante(Long idRestaurante) throws PersistenciaException;
 
+    /**
+     * Obtiene una lista de horarios asociados a un restaurante específico.
+     *
+     * @param restauranteId el ID del restaurante cuyas horas se desean obtener
+     * @return una lista de objetos Horario que pertenecen al restaurante
+     * especificado
+     */
     List<Horario> obtenerHorariosPorRestaurante(Long restauranteId);
 
+    /**
+     * Busca los horarios de un restaurante en un día específico de la semana.
+     *
+     * @param diaSemana el día de la semana para buscar los horarios
+     * @param idRestaurante el ID del restaurante cuyas horas se buscan
+     * @return una lista de objetos Horario que coinciden con el día y el
+     * restaurante
+     */
     List<Horario> buscarPorDiaYRestaurante(String diaSemana, Long idRestaurante);
 
+    /**
+     * Obtiene los id de los horarios por medio de el id del restaurante
+     *
+     * @param idRestaurante el id del restaurante
+     * @return la lista de ids de los horarios
+     * @throws PersistenciaException
+     */
     List<Long> obtenerIdsHorariosPorIdRestaurante(Long idRestaurante) throws PersistenciaException;
 
+    /**
+     * Obtiene un horario por su ID.
+     *
+     * @param idHorario el ID del horario a buscar
+     * @return el objeto Horario correspondiente al ID proporcionado
+     * @throws PersistenciaException si ocurre un error al obtener el horario
+     */
     Horario obtenerHorarioPorId(Long idHorario) throws PersistenciaException;
 
 }

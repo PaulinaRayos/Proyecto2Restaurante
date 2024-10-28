@@ -292,16 +292,33 @@ public class FormHorarios extends javax.swing.JFrame {
 
     private void bConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bConfirmarActionPerformed
         try {
+            // Validar que se haya seleccionado un restaurante
+            if (idRestauranteSeleccionado == null) {
+                JOptionPane.showMessageDialog(this, "Por favor, selecciona un restaurante.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                return; // Salir del método si no hay un restaurante seleccionado
+            }
 
             // Obtener las horas de apertura y cierre desde los spinners
             LocalTime horaApertura = obtenerHoraDesdeSpinner(jHoraApertura);
             LocalTime horaCierre = obtenerHoraDesdeSpinner(jHoraCierre);
 
+            // Validar que las horas no sean nulas
+            if (horaApertura == null || horaCierre == null) {
+                JOptionPane.showMessageDialog(this, "Por favor, selecciona las horas de apertura y cierre.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                return; // Salir del método si las horas no son válidas
+            }
+
+            // Validar que la hora de apertura sea anterior a la hora de cierre
+            if (horaApertura.isAfter(horaCierre)) {
+                JOptionPane.showMessageDialog(this, "La hora de apertura debe ser anterior a la hora de cierre.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                return; // Salir del método si las horas son incorrectas
+            }
+
             // Obtener el día de la semana seleccionado
             String diaSemana = (String) cbDia.getSelectedItem();
 
-            // Validar que el día de la semana no sea nulo
-            if (diaSemana == null || diaSemana.isEmpty()) {
+            // Validar que el día de la semana no sea nulo o tenga valor "Seleccionar el día"
+            if (diaSemana == null || diaSemana.isEmpty() || diaSemana.equals("Seleccionar el día")) {
                 JOptionPane.showMessageDialog(this, "Por favor, selecciona un día de la semana.", "Advertencia", JOptionPane.WARNING_MESSAGE);
                 return; // Salir del método si no hay un día válido
             }
@@ -319,10 +336,10 @@ public class FormHorarios extends javax.swing.JFrame {
             horario.setHoraCierre(cierreDate);
 
             // Llamar a la capa de negocio para guardar o actualizar el horario
-            acthorarioBO.guardarHorario(horario); 
+            acthorarioBO.guardarHorario(horario);
 
             // Mensaje de éxito
-            JOptionPane.showMessageDialog(this, "Horario actualizado exitosamente para " + "  " + cbDia.getSelectedItem().toString() + ".");
+            JOptionPane.showMessageDialog(this, "Horario actualizado exitosamente para " + cbDia.getSelectedItem().toString() + ".");
 
             // Opcional: Limpiar el formulario o realizar otras acciones
             //limpiarFormulario(); // Llama a un método para limpiar los campos si es necesario

@@ -18,7 +18,7 @@ import javax.persistence.TypedQuery;
 import recursos.Encriptacion;
 
 /**
- * Interfaz que define los métodos para el acceso a datos de la entidad Cliente.
+ * Clase que define los métodos para el acceso a datos de la entidad Cliente.
  * Proporciona operaciones para crear, leer, actualizar y eliminar clientes en
  * Contribuciones de Paulina Rodríguez Rodríguez Rayos.
  *
@@ -44,6 +44,7 @@ public class ClienteDAO implements IClienteDAO {
      * @throws PersistenciaException Si ocurre un error al intentar agregar el
      * cliente.
      */
+    @Override
     public void agregarCliente(Cliente cliente) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -122,6 +123,7 @@ public class ClienteDAO implements IClienteDAO {
      * @throws PersistenciaException Si ocurre un error al intentar buscar el
      * cliente.
      */
+    @Override
     public Cliente obtenerClientePorId(Long id) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -147,6 +149,7 @@ public class ClienteDAO implements IClienteDAO {
      * @throws PersistenciaException Si ocurre un error al intentar obtener los
      * clientes.
      */
+    @Override
     public List<Cliente> obtenerTodosLosClientes() throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -166,6 +169,7 @@ public class ClienteDAO implements IClienteDAO {
      * @throws PersistenciaException Si ocurre un error al intentar obtener el
      * ID.
      */
+    @Override
     public Long obtenerIdClientePorNombre(String nombreCompleto) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         Long idCliente = null;
@@ -195,6 +199,7 @@ public class ClienteDAO implements IClienteDAO {
      * @throws PersistenciaException Si ocurre un error al intentar obtener los
      * nombres y teléfonos.
      */
+    @Override
     public List<Object[]> obtenerNombresYTelefonosDeClientes() throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -223,6 +228,7 @@ public class ClienteDAO implements IClienteDAO {
      * @param nombreCompleto el nombre del cliente a encontrar
      * @return El resultado de la busqueda
      */
+    @Override
     public Cliente obtenerClientePorNombre(String nombreCompleto) {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -238,6 +244,7 @@ public class ClienteDAO implements IClienteDAO {
     /**
      * Cierra el EntityManager si está abierto.
      */
+    @Override
     public void cerrar() {
         EntityManager em = this.conexion.crearConexion();
         if (em != null && em.isOpen()) {
@@ -245,6 +252,13 @@ public class ClienteDAO implements IClienteDAO {
         }
     }
 
+    /**
+     * Obtiene los telefonos desencriptados de los clientes
+     *
+     * @return La lista de los telefonos desencriptados
+     * @throws PersistenciaException
+     */
+    @Override
     public List<String> obtenerTelefonosDesencriptados() throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         List<String> telefonosDesencriptados = new ArrayList<>();
@@ -264,6 +278,13 @@ public class ClienteDAO implements IClienteDAO {
         return telefonosDesencriptados;
     }
 
+    /**
+     * Obtiene todos los clientes con su telefono desencriptado
+     *
+     * @return La lista de los clientes con sus telefonos desencriptados
+     * @throws PersistenciaException
+     */
+    @Override
     public List<ClienteDTO> obtenerTodosLosClientesConTelefonoDesencriptado() throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         List<ClienteDTO> clientesDesencriptados = new ArrayList<>();

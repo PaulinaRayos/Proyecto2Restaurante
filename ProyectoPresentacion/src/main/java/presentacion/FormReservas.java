@@ -8,7 +8,6 @@ import dto.ClienteDTO;
 import dto.MesaDTO;
 import dto.ReservaDTO;
 import dto.RestauranteDTO;
-import entidadesJPA.Reserva;
 import excepciones.NegocioException;
 import excepciones.PersistenciaException;
 import interfaces.ICancelarReservaBO;
@@ -220,6 +219,8 @@ public class FormReservas extends javax.swing.JFrame {
             }
         });
 
+        btnCancelarReserva.setBackground(new java.awt.Color(255, 51, 153));
+        btnCancelarReserva.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
         btnCancelarReserva.setText("Cancelar Reserva");
         btnCancelarReserva.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -227,6 +228,8 @@ public class FormReservas extends javax.swing.JFrame {
             }
         });
 
+        btnLimpiarFiltros.setBackground(new java.awt.Color(255, 51, 153));
+        btnLimpiarFiltros.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
         btnLimpiarFiltros.setText("Limpiar Filtros");
         btnLimpiarFiltros.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -250,65 +253,67 @@ public class FormReservas extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(9, 9, 9)
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1))
-                        .addGap(61, 61, 61)
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5))
-                        .addGap(65, 65, 65)
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel7))
-                        .addGap(47, 47, 47)
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnLimpiarFiltros)
-                            .addComponent(btnCancelarReserva))
-                        .addContainerGap(111, Short.MAX_VALUE))
+                        .addComponent(jScrollPane1)
+                        .addContainerGap())
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1)
                             .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addComponent(jLabelaa1)
-                                .addGap(644, 644, 644)
+                                .addGap(9, 9, 9)
                                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel10)
-                                    .addComponent(cbRestaurante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addContainerGap())))
+                                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel1))
+                                .addGap(61, 61, 61)
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel5))
+                                .addGap(65, 65, 65)
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel7)))
+                            .addComponent(jLabelaa1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(btnCancelarReserva, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnLimpiarFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel10)
+                            .addComponent(cbRestaurante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(31, 31, 31))))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addComponent(jLabel10)
-                .addGap(2, 2, 2)
-                .addComponent(cbRestaurante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(78, 78, 78)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel7))
+                        .addGap(21, 21, 21)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel1)
-                                .addComponent(jLabel7))
-                            .addComponent(btnLimpiarFiltros, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnCancelarReserva))
+                            .addComponent(jFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel10)
+                        .addGap(2, 2, 2)
+                        .addComponent(cbRestaurante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE))
+                        .addComponent(btnLimpiarFiltros)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnCancelarReserva)))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE))
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(78, 78, 78)
                         .addComponent(jLabel5)
                         .addGap(18, 18, 18)
-                        .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))))
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(31, 31, 31)
-                .addComponent(jLabelaa1)
+                        .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(31, 31, 31)
+                        .addComponent(jLabelaa1)))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -484,44 +489,6 @@ private void SetImageLabel(JLabel labelname, String root) {
 
     }
 
-    /*private void cargarReservasEnTabla() {
-                try {
-            // Asegúrar de que idRestauranteSeleccionado no sea nulo
-        if (idRestauranteSeleccionado == null) {
-            return; 
-        }
-       
-            reservas = reservabo.obtenerTodasLasReservas(); // Obtiene todas las reservas
-
-            // Verifica si hay reservas
-            if (reservas == null || reservas.isEmpty()) {
-                System.out.println("No hay reservas disponibles.");
-                return; // Salir si no hay reservas
-            }
-
-             // Filtrar reservas por el ID del restaurante seleccionado
-            List<ReservaDTO> reservasFiltradas = reservas.stream()
-                    .filter(reserva -> mesabo.obtenerIdRestaurantePorIdMesa(reserva.getIdMesa()).equals(idRestauranteSeleccionado))
-                    .collect(Collectors.toList());
-            // Filtrar reservas para excluir las que están canceladas
-            List<ReservaDTO> reservasFiltradas = reservas.stream()
-                    .filter(reserva -> !"Cancelada".equalsIgnoreCase(reserva.getEstado()))
-                    .collect(Collectors.toList());
-
-            // Verificar si hay reservas filtradas
-            if (reservasFiltradas.isEmpty()) {
-                System.out.println("No hay reservas activas disponibles.");
-                return; // Salir si no hay reservas activas
-            }
-
-            // Llama al método para llenar la tabla con las reservas filtradas
-            llenarTablaReservas(reservasFiltradas);
-        } catch (NegocioException e) {
-            System.out.println("Error al cargar reservas: " + e.getMessage());
-        } catch (Exception e) {
-            System.out.println("Error inesperado al cargar reservas: " + e.getMessage());
-        }
-    }*/
     private void cargarReservasEnTabla() {
         try {
             // Asegúrate de que idRestauranteSeleccionado no sea nulo
@@ -732,34 +699,6 @@ private void SetImageLabel(JLabel labelname, String root) {
         cargarReservasEnTabla();
     }
 
-    /*private void cancelarReserva() throws Exception {
-        // Verificar si hay una reserva seleccionada
-        if (idReservaSeleccionada != null) {
-            try {
-                // Obtener el estado actual de la reserva
-                String estadoActual = reservabo.obtenerEstadoReservaPorId(idReservaSeleccionada);
-
-                // Verificar si la reserva puede ser cancelada
-                if ("Reservado".equalsIgnoreCase(estadoActual)) {
-                    // Lógica para cancelar la reserva
-                    try {
-                        cancelarReservabo.cancelarReserva(idReservaSeleccionada); // Manejar la excepción aquí
-                        JOptionPane.showMessageDialog(this, "Reserva cancelada con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-
-                        cargarReservasEnTabla(); // Volver a cargar todas las reservas
-                    } catch (PersistenciaException e) {
-                        JOptionPane.showMessageDialog(this, "Error al cancelar la reserva: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(this, "No se puede cancelar una reserva con estado: " + estadoActual, "Advertencia", JOptionPane.WARNING_MESSAGE);
-                }
-            } catch (PersistenciaException e) {
-                JOptionPane.showMessageDialog(this, "Error al obtener el estado de la reserva: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "Por favor, selecciona una reserva para cancelar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
-        }
-    }*/
     private void cancelarReserva() throws Exception {
         // Verificar si hay una reserva seleccionada
         if (idReservaSeleccionada != null) {

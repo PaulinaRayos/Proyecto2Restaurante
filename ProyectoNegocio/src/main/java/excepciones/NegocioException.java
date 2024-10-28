@@ -5,8 +5,12 @@
 package excepciones;
 
 /**
+ * Clase que representa una excepción personalizada para la capa de negocio. Se
+ * utiliza para manejar errores específicos que pueden ocurrir en el contexto de
+ * la lógica de negocio.
  *
- * @author Chris
+ * @author Cristopher Alberto Elizalde Andrade - 240005
+ * @author Paulina Rodríguez Rodríguez Rayos - 117262
  */
 public class NegocioException extends Exception {
 
