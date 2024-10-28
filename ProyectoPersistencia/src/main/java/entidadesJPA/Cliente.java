@@ -53,7 +53,7 @@ public class Cliente implements Serializable {
      * Relación uno a muchos con la entidad Reserva.
      * Un cliente puede tener múltiples reservas.
      */
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private List<Reserva> reservas;
 
     /**

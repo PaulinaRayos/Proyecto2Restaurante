@@ -4,14 +4,30 @@
  */
 package presentacion;
 
+import dto.ClienteDTO;
+import dto.MesaDTO;
+import dto.ReservaDTO;
 import excepciones.NegocioException;
+import excepciones.PersistenciaException;
+import interfaces.ICancelarReservaBO;
 import interfaces.IClienteBO;
+import interfaces.IConsultarReservasBO;
+import interfaces.IMesaBO;
 import java.awt.Image;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import negocio.CancelarReservaBO;
 import negocio.ClienteBO;
+import negocio.ConsultarReservasBO;
+import negocio.MesaBO;
 import utilidades.Forms;
 
 /**
@@ -21,6 +37,14 @@ import utilidades.Forms;
 public class FormClientes extends javax.swing.JFrame {
 
     private final IClienteBO cbo;
+    private final IConsultarReservasBO reservabo;
+    private final ICancelarReservaBO cancelarReservabo;
+    private final IClienteBO clientebo;
+    private final IMesaBO mesabo;
+    private List<ReservaDTO> reservas;
+    private List<ClienteDTO> clientes;
+    private Long idClienteSeleccionado;
+    private boolean programmaticallySettingDate = false;
 
     /**
      * Creates new form FormClientes
@@ -29,8 +53,19 @@ public class FormClientes extends javax.swing.JFrame {
         initComponents();
         this.cbo = new ClienteBO();
         this.setLocationRelativeTo(this);
+        this.SetImageLabel(jLabel3, "src/main/java/Imagenes/logo.png");
+        this.reservabo = new ConsultarReservasBO();
+        this.clientebo = new ClienteBO();
+        this.mesabo = new MesaBO();
+        this.cancelarReservabo = new CancelarReservaBO();
+
+
+        this.cargarClientesEnTabla();
+
+        this.setLocationRelativeTo(this);
 
         this.SetImageLabel(jLabel3, "src/main/java/Imagenes/logo.png");
+
     }
 
     /**
@@ -53,6 +88,7 @@ public class FormClientes extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         bInsertar = new javax.swing.JButton();
+        btnLimpiarFiltros = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -67,7 +103,6 @@ public class FormClientes extends javax.swing.JFrame {
 
         jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
         jScrollPane1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jScrollPane1.setForeground(new java.awt.Color(0, 0, 0));
 
         tblClientes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -91,45 +126,54 @@ public class FormClientes extends javax.swing.JFrame {
         jScrollPane1.setViewportView(tblClientes);
 
         jLabelaa1.setFont(new java.awt.Font("Times New Roman", 3, 24)); // NOI18N
-        jLabelaa1.setForeground(new java.awt.Color(0, 0, 0));
         jLabelaa1.setText("Lista de nuestros clientes");
         jLabelaa1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        txtNombre.setBackground(new java.awt.Color(255, 255, 255));
         txtNombre.setFont(new java.awt.Font("Arial", 3, 18)); // NOI18N
-        txtNombre.setForeground(new java.awt.Color(0, 0, 0));
         txtNombre.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtNombreActionPerformed(evt);
             }
         });
+        txtNombre.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtNombreKeyReleased(evt);
+            }
+        });
 
-        txtTelefono.setBackground(new java.awt.Color(255, 255, 255));
         txtTelefono.setFont(new java.awt.Font("Arial", 3, 18)); // NOI18N
-        txtTelefono.setForeground(new java.awt.Color(0, 0, 0));
         txtTelefono.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtTelefonoActionPerformed(evt);
             }
         });
+        txtTelefono.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtTelefonoKeyReleased(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText("Nombre Completo:");
         jLabel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jLabel5.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(0, 0, 0));
         jLabel5.setText("Telefono:");
         jLabel5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         bInsertar.setBackground(new java.awt.Color(255, 51, 153));
         bInsertar.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
-        bInsertar.setForeground(new java.awt.Color(0, 0, 0));
         bInsertar.setText("Insertar clientes");
         bInsertar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bInsertarActionPerformed(evt);
+            }
+        });
+
+        btnLimpiarFiltros.setText("Limpiar filtros");
+        btnLimpiarFiltros.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpiarFiltrosActionPerformed(evt);
             }
         });
 
@@ -151,11 +195,12 @@ public class FormClientes extends javax.swing.JFrame {
                                     .addComponent(jLabel1))
                                 .addGap(64, 64, 64)
                                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel5)
-                                    .addGroup(jPanel5Layout.createSequentialGroup()
-                                        .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 246, Short.MAX_VALUE)
-                                        .addComponent(bInsertar)))))
+                                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel5))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 246, Short.MAX_VALUE)
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnLimpiarFiltros)
+                                    .addComponent(bInsertar))))
                         .addGap(56, 56, 56)))
                 .addContainerGap())
         );
@@ -172,7 +217,10 @@ public class FormClientes extends javax.swing.JFrame {
                                 .addComponent(jLabel1)
                                 .addGap(18, 18, 18)
                                 .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(bInsertar, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                                .addComponent(btnLimpiarFiltros)
+                                .addGap(18, 18, 18)
+                                .addComponent(bInsertar)))
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE))
                     .addGroup(jPanel5Layout.createSequentialGroup()
@@ -225,7 +273,6 @@ public class FormClientes extends javax.swing.JFrame {
         });
 
         jLabel4.setFont(new java.awt.Font("Times New Roman", 3, 20)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
         jLabel4.setText(" Amadeustaurant");
         jLabel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
@@ -290,8 +337,21 @@ public class FormClientes extends javax.swing.JFrame {
 
     }//GEN-LAST:event_bInsertarActionPerformed
 
+    private void txtNombreKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreKeyReleased
+        filtrarNombre();
+    }//GEN-LAST:event_txtNombreKeyReleased
+
+    private void txtTelefonoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTelefonoKeyReleased
+        filtrarTelefono();
+    }//GEN-LAST:event_txtTelefonoKeyReleased
+
+    private void btnLimpiarFiltrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarFiltrosActionPerformed
+        limpiarFiltros();
+    }//GEN-LAST:event_btnLimpiarFiltrosActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bInsertar;
+    private javax.swing.JButton btnLimpiarFiltros;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -312,4 +372,153 @@ private void SetImageLabel(JLabel labelname, String root) {
         labelname.setIcon(icon);
         this.repaint();
     }
+
+    private void cargarClientesEnTabla() {
+        try {
+            List<ClienteDTO> clientes = clientebo.obtenerTodosLosClientesConTelefonoDesencriptado(); // Obtiene todos los clientes
+            this.clientes=clientes;
+            System.out.println("Clientes obtenidos: " + clientes.size());
+
+            if (clientes == null || clientes.isEmpty()) {
+                System.out.println("No hay clientes disponibles.");
+                return;
+            }
+
+            llenarTablaClientes(clientes); // Llama al método que llena la tabla
+        } catch (NegocioException e) {
+            System.out.println("Error al cargar clientes: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error inesperado al cargar clientes: " + e.getMessage());
+        }
+    }
+
+    private void llenarTablaClientes(List<ClienteDTO> clientes) {
+        try {
+            if (clientes == null || clientes.isEmpty()) {
+                System.out.println("No hay clientes registrados.");
+                return; // Salir si no hay reservas
+            }
+
+            // Crear un modelo de tabla
+            DefaultTableModel modelo = new DefaultTableModel();
+            modelo.addColumn("ID Cliente");
+            modelo.addColumn("Nombre Completo");
+            modelo.addColumn("Teléfono");
+
+            // Llenar el modelo con los datos de los clientes
+            for (ClienteDTO cliente : clientes) {
+                try {
+                    if (cliente != null) {
+                        Object[] fila = new Object[3];
+                        fila[0] = cliente.getIdCliente();
+                        fila[1] = cliente.getNombre() + " " + cliente.getApellidoPaterno() + " " + cliente.getApellidoMaterno();
+                        fila[2] = cliente.getTelefono();
+
+                        modelo.addRow(fila);
+                    } else {
+                        System.out.println("Cliente o mesa no encontrados para ID: " + cliente.getIdCliente());
+                    }
+                } catch (Exception e) {
+                    System.out.println("Error al obtener datos del cliente : " + e.getMessage());
+                }
+            }
+
+            // Asignar el modelo a la tabla y configurarla
+            tblClientes.setModel(modelo);
+            tblClientes.setFillsViewportHeight(true);
+            jScrollPane1.setViewportView(tblClientes);
+
+            tblClientes.getColumnModel().getColumn(0).setMinWidth(0);
+            tblClientes.getColumnModel().getColumn(0).setMaxWidth(0);
+            tblClientes.getColumnModel().getColumn(0).setPreferredWidth(0);
+            // Agregar un listener para la selección de filas
+
+            tblClientes.getSelectionModel().addListSelectionListener(event -> {
+                if (!event.getValueIsAdjusting()) {
+                    int selectedRow = tblClientes.getSelectedRow();
+                    if (selectedRow != -1) {
+                        String idClienteString = tblClientes.getValueAt(selectedRow, 0).toString(); // Asegúrate de que el ID esté en la columna correcta
+                        Long idCliente = Long.parseLong(idClienteString);
+                        guardarIdClienteSeleccionada(idCliente);
+
+                        try {
+                            // Obtener la reserva completa usando el ID
+                            ClienteDTO cliente = clientebo.obtenerClientePorId(idCliente);
+                            // Llamar al método para cargar detalles
+                            cargarDetallesCliente(cliente);
+                        } catch (NegocioException ex) {
+                            Logger.getLogger(FormClientes.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+            });
+
+        } catch (Exception e) {
+            System.out.println("Error inesperado: " + e.getMessage());
+        }
+    }
+
+    private void guardarIdClienteSeleccionada(Long idCliente) {
+        this.idClienteSeleccionado = idCliente;
+    }
+
+    private void filtrarNombre() {
+        String textoBuscar = txtNombre.getText().toLowerCase(); // Convierte a minúsculas para comparación
+        List<ClienteDTO> clientesFiltrados = new ArrayList<>();
+
+        // Filtrar los nombres
+        for (ClienteDTO cliente : clientes) {
+
+            if (cliente != null) {
+                String nombreCompleto = (cliente.getNombre() + " " + cliente.getApellidoPaterno() + " " + cliente.getApellidoMaterno()).toLowerCase();
+                if (nombreCompleto.contains(textoBuscar)) {
+                    clientesFiltrados.add(cliente);
+                }
+            }
+        }
+
+        // Llenar la tabla con las reservas filtradas
+        llenarTablaClientes(clientesFiltrados);
+    }
+
+    public void filtrarTelefono() {
+        String textoBuscar = txtTelefono.getText();
+        List<ClienteDTO> clientesFiltrados = new ArrayList<>();
+        for (ClienteDTO cliente : clientes) {
+            if (cliente != null) {
+                String telefono = cliente.getTelefono();
+                if (telefono.contains(textoBuscar)) {
+                    clientesFiltrados.add(cliente);
+                }
+            }
+        }
+
+        // Llenar la tabla con las reservas filtradas
+        llenarTablaClientes(clientesFiltrados);
+    }
+
+    private void cargarDetallesCliente(ClienteDTO cliente) {
+        try {
+
+            if (cliente != null) {
+                txtNombre.setText(cliente.getNombre() + " " + cliente.getApellidoPaterno() + " " + cliente.getApellidoMaterno());
+                txtTelefono.setText(cliente.getTelefono());
+
+            } else {
+                JOptionPane.showMessageDialog(this, "No se encontró el cliente.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error inesperado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void limpiarFiltros() {
+        // Limpiar campos de texto
+        txtNombre.setText("");
+        txtTelefono.setText("");
+
+        // Llamar al método que recarga todas las reservas
+        cargarClientesEnTabla();
+    }
+
 }

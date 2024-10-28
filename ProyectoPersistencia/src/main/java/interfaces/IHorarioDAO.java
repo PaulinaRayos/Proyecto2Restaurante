@@ -64,4 +64,6 @@ public interface IHorarioDAO {
 
     List<Horario> obtenerHorariosPorRestaurante(Long restauranteId);
 
+    List<Horario> buscarPorDiaYRestaurante(String diaSemana, Long idRestaurante);
+
 }

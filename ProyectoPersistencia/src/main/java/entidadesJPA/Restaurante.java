@@ -45,13 +45,13 @@ public class Restaurante implements Serializable {
      * Relación uno a muchos con la entidad Mesa. Cada restaurante puede tener
      * varias mesas asociadas.
      */
-    @OneToMany(mappedBy = "restaurante", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "restaurante", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private List<Mesa> mesas;
     /**
      * Relación uno a muchos con la entidad Horario. Cada restaurante puede
      * tener varios horarios de operación.
      */
-    @OneToMany(mappedBy = "restaurante", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "restaurante", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private List<Horario> horarios;
 
     /**

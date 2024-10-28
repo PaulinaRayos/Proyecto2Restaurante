@@ -319,10 +319,10 @@ public class FormHorarios extends javax.swing.JFrame {
             horario.setHoraCierre(cierreDate);
 
             // Llamar a la capa de negocio para guardar o actualizar el horario
-            acthorarioBO.guardarHorario(horario); // Cambia este método según tu implementación en el BO
+            acthorarioBO.guardarHorario(horario); 
 
             // Mensaje de éxito
-            JOptionPane.showMessageDialog(this, "Horario actualizado exitosamente para " + " en " + cbDia.getSelectedItem().toString() + ".");
+            JOptionPane.showMessageDialog(this, "Horario actualizado exitosamente para " + "  " + cbDia.getSelectedItem().toString() + ".");
 
             // Opcional: Limpiar el formulario o realizar otras acciones
             //limpiarFormulario(); // Llama a un método para limpiar los campos si es necesario

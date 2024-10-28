@@ -4,6 +4,7 @@
  */
 package interfaces;
 
+import dto.ClienteDTO;
 import entidadesJPA.Cliente;
 import excepciones.PersistenciaException;
 import java.util.List;
@@ -88,5 +89,9 @@ public interface IClienteDAO {
      * @return El resultado de la busqueda
      */
     Cliente obtenerClientePorNombre(String nombreCompleto);
+
+    List<String> obtenerTelefonosDesencriptados() throws PersistenciaException;
+
+    List<ClienteDTO> obtenerTodosLosClientesConTelefonoDesencriptado() throws PersistenciaException;
 
 }

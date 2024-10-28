@@ -21,6 +21,7 @@ import interfaces.IHorarioDAO;
 import java.util.Optional;
 import interfaces.IActualizaHorarioBO;
 import interfaces.IHorarioMesaDAO;
+import java.util.List;
 
 /**
  *
@@ -46,26 +47,24 @@ public class ActualizaHorarioBO implements IActualizaHorarioBO {
 
             Restaurante restaurante = restdao.obtenerPorId(horarioDTO.getIdRestaurante());
             // Buscar si existe un horario para el día de la semana específico
-            Optional<Horario> horarioExistente = horariodao.buscarPorDiaSemana(horarioDTO.getDiaSemana());
+            //Optional<Horario> horarioExistente = horariodao.buscarPorDiaSemana(horarioDTO.getDiaSemana());
+            // Buscar horarios para el día de la semana específico y el restaurante
+        List<Horario> horariosExistentes = horariodao.buscarPorDiaYRestaurante(horarioDTO.getDiaSemana(), horarioDTO.getIdRestaurante());
 
-            if (horarioExistente.isPresent()) {
-                // Si existe, actualizar las horas de apertura y cierre
-                Horario horarioActualizar = horarioExistente.get();
-                horarioActualizar.setRestaurante(restaurante);
-                horarioActualizar.setDiaSemana(horarioDTO.getDiaSemana());
-                horarioActualizar.setHoraApartura(horarioDTO.getHoraApertura());
-                horarioActualizar.setHoraCierre(horarioDTO.getHoraCierre());
-                horarioActualizar.setRestaurante(restaurante);
-                horariodao.actualizarHorario(horarioActualizar);
-            } else {
-                
-               Horario horario =convertidorEntidad(horarioDTO);
-                horariodao.crearHorario(horario);
-
-            }
-        } catch (Exception e) {
-            throw new NegocioException("Error al guardar o actualizar el horario: " + e.getMessage(), e);
+        if (!horariosExistentes.isEmpty()) {
+            // Si existen, actualizar las horas de apertura y cierre del primer horario encontrado
+            Horario horarioActualizar = horariosExistentes.get(0); // O puedes decidir cómo manejar múltiples horarios
+            horarioActualizar.setHoraApartura(horarioDTO.getHoraApertura());
+            horarioActualizar.setHoraCierre(horarioDTO.getHoraCierre());
+            horariodao.actualizarHorario(horarioActualizar);
+        } else {
+            // Si no existen, crear un nuevo horario
+            Horario horario = convertidorEntidad(horarioDTO);
+            horariodao.crearHorario(horario);
         }
+    } catch (Exception e) {
+        throw new NegocioException("Error al guardar o actualizar el horario: " + e.getMessage(), e);
+    }
     }
     public  Horario convertidorEntidad(HorarioDTO horarioDTO) throws PersistenciaException {
         if (horarioDTO == null) {

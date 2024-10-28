@@ -15,12 +15,14 @@ import dto.ReservaDTO;
 import entidadesJPA.Cliente;
 import entidadesJPA.Mesa;
 import entidadesJPA.Reserva;
+import excepciones.PersistenciaException;
 import interfaces.IMesaDAO;
 import interfaces.IClienteDAO;
 import interfaces.IReservaDAO;
 import java.util.List;
 import interfaces.IAgregarReservaBO;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -91,5 +93,6 @@ public class AgregarReservaBO implements IAgregarReservaBO {
     public List<ReservaDTO> obtenerReservasPorCliente(Long idCliente) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+
 
 }

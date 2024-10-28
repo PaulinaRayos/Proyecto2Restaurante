@@ -41,7 +41,7 @@ public class HorarioMesa implements Serializable {
      * Relación muchos a uno con la entidad Horario.
      * Un horario de mesa está asociado a un único horario.
      */ 
-    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_horario", nullable = true)
     private Horario horario;
 
@@ -49,7 +49,7 @@ public class HorarioMesa implements Serializable {
      * Relación muchos a uno con la entidad Mesa.
      * Un horario de mesa está asociado a una única mesa.
      */ 
-    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_mesa", nullable = false)
     private Mesa mesa;
 

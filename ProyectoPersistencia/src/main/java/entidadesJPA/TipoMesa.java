@@ -46,7 +46,7 @@ public class TipoMesa implements Serializable {
      * Relación uno a muchos con la entidad Mesa.
      * Cada tipo de mesa puede estar asociado a múltiples mesas.
      */
-    @OneToMany(mappedBy = "tipoMesa", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "tipoMesa", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private List<Mesa> mesas;
 
     /**

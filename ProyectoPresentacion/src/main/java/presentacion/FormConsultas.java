@@ -4,10 +4,27 @@
  */
 package presentacion;
 
+import dto.ClienteDTO;
+import dto.MesaDTO;
+import dto.ReservaDTO;
+import excepciones.NegocioException;
+import excepciones.PersistenciaException;
+import interfaces.IClienteBO;
+import interfaces.IConsultarReservasBO;
+import interfaces.IMesaBO;
 import java.awt.Image;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import negocio.ClienteBO;
+import negocio.ConsultarReservasBO;
+import negocio.MesaBO;
 import utilidades.Forms;
 
 /**
@@ -16,14 +33,32 @@ import utilidades.Forms;
  */
 public class FormConsultas extends javax.swing.JFrame {
 
+    private final IConsultarReservasBO reservabo;
+    private final IClienteBO clientebo;
+    private final IMesaBO mesabo;
+    private List<ReservaDTO> reservas;
+    private Long idReservaSeleccionada;
+    private boolean programmaticallySettingDate = false;
+
     /**
      * Creates new form FormConsultas
      */
     public FormConsultas() {
+        this.reservabo = new ConsultarReservasBO();
+        this.clientebo = new ClienteBO();
+        this.mesabo = new MesaBO();
+
         initComponents();
+        this.cargarReservasEnTabla();
+
         this.setLocationRelativeTo(this);
 
         this.SetImageLabel(jLabel3, "src/main/java/Imagenes/logo.png");
+        jFecha.addPropertyChangeListener("date", evt -> {
+            if (!programmaticallySettingDate) {
+                filtrarFecha();
+            }
+        });
     }
 
     /**
@@ -47,6 +82,7 @@ public class FormConsultas extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jFecha = new com.toedter.calendar.JDateChooser();
+        btnLimpiarFiltros = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -61,7 +97,6 @@ public class FormConsultas extends javax.swing.JFrame {
 
         jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
         jScrollPane1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jScrollPane1.setForeground(new java.awt.Color(0, 0, 0));
 
         tblReservaciones.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -85,42 +120,51 @@ public class FormConsultas extends javax.swing.JFrame {
         jScrollPane1.setViewportView(tblReservaciones);
 
         jLabelaa1.setFont(new java.awt.Font("Times New Roman", 3, 24)); // NOI18N
-        jLabelaa1.setForeground(new java.awt.Color(0, 0, 0));
         jLabelaa1.setText("Consultas de Reservaciones");
         jLabelaa1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        txtNombre.setBackground(new java.awt.Color(255, 255, 255));
         txtNombre.setFont(new java.awt.Font("Arial", 3, 18)); // NOI18N
-        txtNombre.setForeground(new java.awt.Color(0, 0, 0));
         txtNombre.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtNombreActionPerformed(evt);
             }
         });
+        txtNombre.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtNombreKeyReleased(evt);
+            }
+        });
 
-        txtTelefono.setBackground(new java.awt.Color(255, 255, 255));
         txtTelefono.setFont(new java.awt.Font("Arial", 3, 18)); // NOI18N
-        txtTelefono.setForeground(new java.awt.Color(0, 0, 0));
         txtTelefono.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtTelefonoActionPerformed(evt);
             }
         });
+        txtTelefono.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtTelefonoKeyReleased(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText("Nombre Completo:");
         jLabel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jLabel5.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(0, 0, 0));
         jLabel5.setText("Telefono:");
         jLabel5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jLabel7.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(0, 0, 0));
         jLabel7.setText("Fecha:");
         jLabel7.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        btnLimpiarFiltros.setText("Limpiar Filtros");
+        btnLimpiarFiltros.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpiarFiltrosActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -145,8 +189,11 @@ public class FormConsultas extends javax.swing.JFrame {
                                 .addGap(62, 62, 62)
                                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel7)
-                                    .addComponent(jFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(0, 227, Short.MAX_VALUE)))
+                                    .addGroup(jPanel5Layout.createSequentialGroup()
+                                        .addComponent(jFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(28, 28, 28)
+                                        .addComponent(btnLimpiarFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addGap(0, 82, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
@@ -160,12 +207,18 @@ public class FormConsultas extends javax.swing.JFrame {
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
                             .addComponent(jLabel7))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE))
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE))
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addGap(3, 3, 3)
+                                .addComponent(btnLimpiarFiltros)
+                                .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addGap(18, 18, 18)
@@ -216,7 +269,6 @@ public class FormConsultas extends javax.swing.JFrame {
         });
 
         jLabel4.setFont(new java.awt.Font("Times New Roman", 3, 20)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
         jLabel4.setText(" Amadeustaurant");
         jLabel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
@@ -270,8 +322,21 @@ public class FormConsultas extends javax.swing.JFrame {
         Forms.cargarForm(new FormMenu(), this);
     }//GEN-LAST:event_jLabel3MouseClicked
 
+    private void btnLimpiarFiltrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarFiltrosActionPerformed
+        limpiarFiltros();
+    }//GEN-LAST:event_btnLimpiarFiltrosActionPerformed
+
+    private void txtTelefonoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTelefonoKeyReleased
+        filtrarTelefono();
+    }//GEN-LAST:event_txtTelefonoKeyReleased
+
+    private void txtNombreKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreKeyReleased
+        filtrarNombre();
+    }//GEN-LAST:event_txtNombreKeyReleased
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnLimpiarFiltros;
     private com.toedter.calendar.JDateChooser jFecha;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
@@ -294,4 +359,227 @@ private void SetImageLabel(JLabel labelname, String root) {
         labelname.setIcon(icon);
         this.repaint();
     }
+
+    private void cargarReservasEnTabla() {
+        try {
+            reservas = reservabo.obtenerTodasLasReservas(); // Obtiene todas las reservas
+
+            // Verifica si hay reservas
+            if (reservas == null || reservas.isEmpty()) {
+                System.out.println("No hay reservas disponibles.");
+                return; // Salir si no hay reservas
+            }
+
+            // Filtrar reservas para excluir las que están canceladas
+            List<ReservaDTO> reservasFiltradas = reservas.stream()
+                    .filter(reserva -> !"Cancelada".equalsIgnoreCase(reserva.getEstado()))
+                    .collect(Collectors.toList());
+
+            // Verificar si hay reservas filtradas
+            if (reservasFiltradas.isEmpty()) {
+                System.out.println("No hay reservas activas disponibles.");
+                return; // Salir si no hay reservas activas
+            }
+
+            // Llama al método para llenar la tabla con las reservas filtradas
+            llenarTablaReservas(reservasFiltradas);
+        } catch (NegocioException e) {
+            System.out.println("Error al cargar reservas: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error inesperado al cargar reservas: " + e.getMessage());
+        }
+    }
+
+    private void llenarTablaReservas(List<ReservaDTO> reservas) {
+        try {
+            if (reservas == null || reservas.isEmpty()) {
+                System.out.println("No hay reservas disponibles.");
+                return; // Salir si no hay reservas
+            }
+
+            // Crear un modelo de tabla
+            DefaultTableModel modelo = new DefaultTableModel();
+            modelo.addColumn("ID Reserva");
+            modelo.addColumn("Nombre Completo");
+            modelo.addColumn("Teléfono");
+            modelo.addColumn("Personas");
+            modelo.addColumn("Fecha y Hora");
+            modelo.addColumn("Código de Mesa");
+            modelo.addColumn("Estado");
+
+            // Llenar el modelo con los datos de las reservas
+            for (ReservaDTO reserva : reservas) {
+                try {
+                    ClienteDTO cliente = clientebo.obtenerClientePorId(reserva.getIdCliente());
+                    MesaDTO mesadto = mesabo.obtenerMesaPorId(reserva.getIdMesa());
+
+                    if (cliente != null && mesadto != null) {
+                        Object[] fila = new Object[7];
+                        fila[0] = reserva.getIdReserva();
+                        fila[1] = cliente.getNombre() + " " + cliente.getApellidoPaterno() + " " + cliente.getApellidoMaterno();
+                        fila[2] = cliente.getTelefono();
+                        fila[3] = reserva.getNumeroPersonas();
+                        fila[4] = reserva.getFechaHora();
+                        fila[5] = mesadto.getCodigoMesa();
+                        fila[6] = reserva.getEstado();
+
+                        modelo.addRow(fila);
+                    } else {
+                        System.out.println("Cliente o mesa no encontrados para ID: " + reserva.getIdCliente() + ", " + reserva.getIdMesa());
+                    }
+                } catch (Exception e) {
+                    System.out.println("Error al obtener datos del cliente o mesa: " + e.getMessage());
+                }
+            }
+
+            // Asignar el modelo a la tabla y configurarla
+            tblReservaciones.setModel(modelo);
+            tblReservaciones.setFillsViewportHeight(true);
+            jScrollPane1.setViewportView(tblReservaciones);
+
+            tblReservaciones.getColumnModel().getColumn(0).setMinWidth(0);
+            tblReservaciones.getColumnModel().getColumn(0).setMaxWidth(0);
+            tblReservaciones.getColumnModel().getColumn(0).setPreferredWidth(0);
+            // Agregar un listener para la selección de filas
+
+            tblReservaciones.getSelectionModel().addListSelectionListener(event -> {
+                if (!event.getValueIsAdjusting()) {
+                    int selectedRow = tblReservaciones.getSelectedRow();
+                    if (selectedRow != -1) {
+                        String idReservaString = tblReservaciones.getValueAt(selectedRow, 0).toString(); // Asegúrate de que el ID esté en la columna correcta
+                        Long idReserva = Long.parseLong(idReservaString);
+                        guardarIdReservaSeleccionada(idReserva);
+
+                        try {
+                            // Obtener la reserva completa usando el ID
+                            ReservaDTO reserva = reservabo.obtenerReservaPorId(idReserva);
+                            // Llamar al método para cargar detalles
+                            cargarDetallesReserva(reserva);
+                        } catch (PersistenciaException e) {
+                            JOptionPane.showMessageDialog(this, "Error al obtener detalles de la reserva: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                }
+            });
+
+        } catch (Exception e) {
+            System.out.println("Error inesperado: " + e.getMessage());
+        }
+    }
+
+    private void guardarIdReservaSeleccionada(Long idReserva) {
+        this.idReservaSeleccionada = idReserva;
+    }
+
+    private ClienteDTO obtenerClienteSafe(Long idCliente) {
+        try {
+            return clientebo.obtenerClientePorId(idCliente);
+        } catch (Exception e) {
+            System.out.println("Error al obtener cliente para ID: " + idCliente + " - " + e.getMessage());
+            return null; // Retorna null en caso de error
+        }
+    }
+
+    private void filtrarNombre() {
+        String textoBuscar = txtNombre.getText().toLowerCase(); // Convierte a minúsculas para comparación
+        List<ReservaDTO> reservasFiltradas = new ArrayList<>();
+
+        // Filtrar las reservas
+        for (ReservaDTO reserva : reservas) {
+            ClienteDTO cliente = obtenerClienteSafe(reserva.getIdCliente()); // Usa el método auxiliar
+            if (cliente != null) {
+                String nombreCompleto = (cliente.getNombre() + " " + cliente.getApellidoPaterno() + " " + cliente.getApellidoMaterno()).toLowerCase();
+                if (nombreCompleto.contains(textoBuscar)) {
+                    reservasFiltradas.add(reserva);
+                }
+            }
+        }
+
+        // Llenar la tabla con las reservas filtradas
+        llenarTablaReservas(reservasFiltradas);
+    }
+
+    public void filtrarTelefono() {
+        String textoBuscar = txtTelefono.getText();
+        List<ReservaDTO> reservasFiltradas = new ArrayList<>();
+        for (ReservaDTO reserva : reservas) {
+            ClienteDTO cliente = obtenerClienteSafe(reserva.getIdCliente()); // Usa el método auxiliar
+            if (cliente != null) {
+                String telefono = cliente.getTelefono();
+                if (telefono.contains(textoBuscar)) {
+                    reservasFiltradas.add(reserva);
+                }
+            }
+        }
+
+        // Llenar la tabla con las reservas filtradas
+        llenarTablaReservas(reservasFiltradas);
+    }
+
+    private void filtrarFecha() {
+        // Obtener la fecha seleccionada del JDateChooser
+        java.util.Date fechaSeleccionada = jFecha.getDate();
+        List<ReservaDTO> reservasFiltradas = new ArrayList<>();
+
+        // Comprobar si se ha seleccionado una fecha
+        if (fechaSeleccionada != null) {
+            // Obtener el calendario de la fecha seleccionada
+            Calendar calendarSeleccionado = Calendar.getInstance();
+            calendarSeleccionado.setTime(fechaSeleccionada);
+            int añoSeleccionado = calendarSeleccionado.get(Calendar.YEAR);
+            int mesSeleccionado = calendarSeleccionado.get(Calendar.MONTH);
+            int diaSeleccionado = calendarSeleccionado.get(Calendar.DAY_OF_MONTH);
+
+            // Filtrar las reservas
+            for (ReservaDTO reserva : reservas) {
+                // Suponiendo que tu ReservaDTO tiene un método getFechaHora() que devuelve la fecha de la reserva
+                if (reserva.getFechaHora() != null) {
+                    Calendar calendarReserva = Calendar.getInstance();
+                    calendarReserva.setTime(reserva.getFechaHora());
+
+                    // Comparar solo año, mes y día
+                    if (calendarReserva.get(Calendar.YEAR) == añoSeleccionado
+                            && calendarReserva.get(Calendar.MONTH) == mesSeleccionado
+                            && calendarReserva.get(Calendar.DAY_OF_MONTH) == diaSeleccionado) {
+                        reservasFiltradas.add(reserva);
+                    }
+                }
+            }
+        }
+
+        // Llenar la tabla con las reservas filtradas
+        llenarTablaReservas(reservasFiltradas);
+    }
+
+    private void limpiarFiltros() {
+        // Limpiar campos de texto
+        txtNombre.setText("");
+        txtTelefono.setText("");
+
+        // Limpiar el JDateChooser
+        jFecha.setDate(null);
+
+        // Llamar al método que recarga todas las reservas
+        cargarReservasEnTabla();
+    }
+
+    private void cargarDetallesReserva(ReservaDTO reserva) {
+        try {
+            // Obtener el cliente solo una vez para evitar múltiples llamadas
+            ClienteDTO cliente = clientebo.obtenerClientePorId(reserva.getIdCliente());
+
+            if (cliente != null) {
+                txtNombre.setText(cliente.getNombre() + " " + cliente.getApellidoPaterno() + " " + cliente.getApellidoMaterno());
+                txtTelefono.setText(cliente.getTelefono());
+                programmaticallySettingDate = true;
+                jFecha.setDate(reserva.getFechaHora()); // Asumiendo que tienes un método para obtener la fecha
+                programmaticallySettingDate = false;
+            } else {
+                JOptionPane.showMessageDialog(this, "No se encontró el cliente para la reserva seleccionada.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error inesperado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
 }

@@ -54,5 +54,5 @@ public class CancelarReservaBO implements ICancelarReservaBO {
             throw new Exception("No se pudo cancelar la reserva.", e);
         }
     }
-
+    
 }

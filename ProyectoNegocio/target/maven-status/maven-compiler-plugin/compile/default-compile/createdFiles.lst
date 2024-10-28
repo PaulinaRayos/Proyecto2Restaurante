@@ -1,6 +1,8 @@
 negocio\RestauranteBO.class
 interfaces\IClienteBO.class
+negocio\ConsultarReservasBO.class
 negocio\HorarioBO.class
+interfaces\IConsultarReservasBO.class
 negocio\AgregaMesasBO.class
 pruebas\pruebas.class
 negocio\ActualizaHorarioBO.class

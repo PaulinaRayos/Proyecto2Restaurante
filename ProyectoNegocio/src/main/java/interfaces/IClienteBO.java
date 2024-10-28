@@ -23,4 +23,10 @@ public interface IClienteBO {
     ClienteDTO obtenerClientePorNombre(String nombreCompleto);
     
     ClienteDTO obtenerClientePorId(Long id) throws NegocioException;
+
+    List<String> obtenerTelefonosDesencriptados() throws NegocioException;
+
+    List<ClienteDTO> obtenerTodosLosClientes() throws NegocioException;
+
+    List<ClienteDTO> obtenerTodosLosClientesConTelefonoDesencriptado() throws NegocioException;
 }

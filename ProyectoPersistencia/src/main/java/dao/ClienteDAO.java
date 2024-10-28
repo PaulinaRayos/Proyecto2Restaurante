@@ -5,9 +5,11 @@
 package dao;
 
 import conexion.IConexion;
+import dto.ClienteDTO;
 import entidadesJPA.Cliente;
 import excepciones.PersistenciaException;
 import interfaces.IClienteDAO;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -123,7 +125,14 @@ public class ClienteDAO implements IClienteDAO {
     public Cliente obtenerClientePorId(Long id) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
-            return em.find(Cliente.class, id); // Encontrar cliente por ID
+            Cliente cliente = em.find(Cliente.class, id); // Encontrar cliente por ID
+            if (cliente != null) {
+                // Desencriptar el teléfono antes de devolver el cliente
+                String telefonoEncriptado = cliente.getTelefono();
+                String telefonoDesencriptado = Encriptacion.decriptar(telefonoEncriptado);
+                cliente.setTelefono(telefonoDesencriptado); // Establecer el teléfono desencriptado en el cliente
+            }
+            return cliente;
         } catch (Exception e) {
             throw new PersistenciaException("No se pudo encontrar el cliente en la base de datos por id: " + id);
         } finally {
@@ -236,4 +245,52 @@ public class ClienteDAO implements IClienteDAO {
         }
     }
 
+    public List<String> obtenerTelefonosDesencriptados() throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
+        List<String> telefonosDesencriptados = new ArrayList<>();
+        try {
+            // Obtener todos los clientes
+            List<Cliente> clientes = em.createQuery("SELECT c FROM Cliente c", Cliente.class).getResultList();
+            for (Cliente cliente : clientes) {
+                // Desencriptar el teléfono y añadirlo a la lista
+                String telefonoDesencriptado = Encriptacion.decriptar(cliente.getTelefono());
+                telefonosDesencriptados.add(telefonoDesencriptado);
+            }
+        } catch (Exception e) {
+            throw new PersistenciaException("Error al obtener los teléfonos de los clientes: " + e.getMessage(), e);
+        } finally {
+            em.close();
+        }
+        return telefonosDesencriptados;
+    }
+
+    public List<ClienteDTO> obtenerTodosLosClientesConTelefonoDesencriptado() throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
+        List<ClienteDTO> clientesDesencriptados = new ArrayList<>();
+        try {
+            // Obtener todos los clientes
+            List<Cliente> clientes = em.createQuery("SELECT c FROM Cliente c", Cliente.class).getResultList();
+
+            for (Cliente cliente : clientes) {
+                // Desencriptar el teléfono
+                String telefonoDesencriptado = Encriptacion.decriptar(cliente.getTelefono());
+
+                // Crear un ClienteDTO y establecer los valores
+                ClienteDTO clienteDTO = new ClienteDTO();
+                clienteDTO.setIdCliente(cliente.getId());
+                clienteDTO.setNombre(cliente.getNombre());
+                clienteDTO.setApellidoPaterno(cliente.getApellidoPaterno());
+                clienteDTO.setApellidoMaterno(cliente.getApellidoMaterno());
+                clienteDTO.setTelefono(telefonoDesencriptado);
+
+                // Añadir el DTO a la lista
+                clientesDesencriptados.add(clienteDTO);
+            }
+        } catch (Exception e) {
+            throw new PersistenciaException("Error al obtener los clientes desencriptados: " + e.getMessage(), e);
+        } finally {
+            em.close();
+        }
+        return clientesDesencriptados;
+    }
 }

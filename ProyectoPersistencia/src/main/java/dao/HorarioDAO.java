@@ -8,6 +8,7 @@ import conexion.IConexion;
 import entidadesJPA.Horario;
 import excepciones.PersistenciaException;
 import interfaces.IHorarioDAO;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
@@ -102,6 +103,21 @@ public class HorarioDAO implements IHorarioDAO {
             em.close();
         }
     }
+
+public List<Horario> buscarPorDiaYRestaurante(String diaSemana, Long idRestaurante) {
+    EntityManager em = this.conexion.crearConexion();
+    try {
+        return em.createQuery("SELECT h FROM Horario h WHERE h.diaSemana = :diaSemana AND h.restaurante.id = :idRestaurante", Horario.class)
+                .setParameter("diaSemana", diaSemana)
+                .setParameter("idRestaurante", idRestaurante)
+                .getResultList();
+    } catch (Exception e) {
+        // Manejo de excepciones si es necesario
+        return Collections.emptyList();
+    } finally {
+        em.close();
+    }
+}
 
     /**
      * Obtiene todos los horarios de la base de datos.

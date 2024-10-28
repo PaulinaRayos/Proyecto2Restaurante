@@ -70,7 +70,7 @@ public class Reserva implements Serializable {
      * Relación muchos a uno con la entidad Cliente.
      * Cada reserva está asociada a un cliente específico que la realiza.
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_cliente", nullable = false)
     private Cliente cliente;
 
@@ -78,7 +78,7 @@ public class Reserva implements Serializable {
      * Relación muchos a uno con la entidad Mesa.
      * Cada reserva está asociada a una mesa específica.
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_mesa", nullable = false)
     private Mesa mesa;
 

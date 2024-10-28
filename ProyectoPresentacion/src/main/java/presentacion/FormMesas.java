@@ -177,6 +177,11 @@ public class FormMesas extends javax.swing.JFrame {
         cbRestaurante.setFont(new java.awt.Font("Times New Roman", 3, 14)); // NOI18N
         cbRestaurante.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecciona restaurante" }));
         cbRestaurante.setBorder(null);
+        cbRestaurante.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbRestauranteActionPerformed(evt);
+            }
+        });
 
         cbDia.setFont(new java.awt.Font("Times New Roman", 3, 14)); // NOI18N
         cbDia.setBorder(null);
@@ -200,8 +205,7 @@ public class FormMesas extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGap(190, 190, 190)
-                        .addComponent(jLabel10)
-                        .addGap(233, 233, 233))
+                        .addComponent(jLabel10))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel12)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -469,6 +473,10 @@ public class FormMesas extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_cbUbicacionActionPerformed
 
+    private void cbRestauranteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbRestauranteActionPerformed
+
+    }//GEN-LAST:event_cbRestauranteActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bCrear;
@@ -548,7 +556,7 @@ private void SetImageLabel(JLabel labelname, String root) {
                 public void actionPerformed(ActionEvent e) {
                     int selectedIndex = cbRestaurante.getSelectedIndex(); // Obtener el índice seleccionado
 
-                    // Asegúrate de que no se haya seleccionado la opción de "Seleccionar restaurante"
+                    // Asegúrar de que no se haya seleccionado la opción de "Seleccionar restaurante"
                     if (selectedIndex > 0) { // Si hay un restaurante seleccionado
                         RestauranteDTO restauranteSeleccionado = listaRestaurantes.get(selectedIndex - 1); // Obtener el objeto correspondiente
                         idRestauranteSeleccionado = restauranteSeleccionado.getId(); // Obtener el ID del restaurante seleccionado
@@ -565,6 +573,7 @@ private void SetImageLabel(JLabel labelname, String root) {
         } catch (NegocioException ex) {
             JOptionPane.showMessageDialog(this, "Error al mostrar los restaurantes", "ERROR!", JOptionPane.ERROR_MESSAGE);
         }
+
     }
 
     private void cargarDia() {
@@ -581,6 +590,11 @@ private void SetImageLabel(JLabel labelname, String root) {
 
     private void cargarMesasEnTabla() {
         try {
+            // Asegúrar de que idRestauranteSeleccionado no sea nulo
+        if (idRestauranteSeleccionado == null) {
+            return; 
+        }
+
             String ubicacionSeleccionada = cbUbicacion.getSelectedItem().toString();
 
             List<MesaDTO> mesas = mesaBO.obtenerTodasLasMesas();
@@ -622,8 +636,11 @@ private void SetImageLabel(JLabel labelname, String root) {
             }
 
             // Crear la JTable con el modelo
-            tblMesas = new JTable(modelo);
+            //tblMesas = new JTable(modelo);
+            //tblMesas.setFillsViewportHeight(true);
+            tblMesas.setModel(modelo);
             tblMesas.setFillsViewportHeight(true);
+            jScrollPane1.setViewportView(tblMesas);
 
             // Agregar un listener para la selección de filas
             tblMesas.getSelectionModel().addListSelectionListener(event -> {

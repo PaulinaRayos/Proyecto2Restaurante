@@ -14,7 +14,9 @@ import excepciones.NegocioException;
 import excepciones.PersistenciaException;
 import interfaces.IClienteBO;
 import interfaces.IClienteDAO;
+import java.util.ArrayList;
 import java.util.List;
+import recursos.Encriptacion;
 
 /**
  *
@@ -74,4 +76,43 @@ public class ClienteBO implements IClienteBO {
         }
     }
 
+    public List<String> obtenerTelefonosDesencriptados() throws NegocioException {
+        try {
+            return cdao.obtenerTelefonosDesencriptados();
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error al obtener los teléfonos de los clientes: " + e.getMessage(), e);
+        }
+
+    }
+    
+    public List<ClienteDTO> obtenerTodosLosClientes() throws NegocioException {
+    try {
+        List<Cliente> clientes = cdao.obtenerTodosLosClientes();
+        // Convertir la lista de Cliente a ClienteDTO
+        List<ClienteDTO> clientesDTO = new ArrayList<>();
+        for (Cliente cliente : clientes) {
+            clientesDTO.add(ConvertidorGeneral.convertidoraDTO(cliente, ClienteDTO.class));
+        }
+        return clientesDTO;
+    } catch (PersistenciaException e) {
+        throw new NegocioException("Error al obtener todos los clientes", e);
+    }
+}
+    
+    public List<ClienteDTO> obtenerTodosLosClientesConTelefonoDesencriptado() throws NegocioException {
+    try {
+        List<Cliente> clientes = cdao.obtenerTodosLosClientes();
+        List<ClienteDTO> clientesDTO = new ArrayList<>();
+        
+        for (Cliente cliente : clientes) {
+            String telefonoDesencriptado = Encriptacion.decriptar(cliente.getTelefono());
+            ClienteDTO clienteDTO = new ClienteDTO(cliente.getId(), cliente.getNombre(), cliente.getApellidoPaterno(), cliente.getApellidoMaterno(), telefonoDesencriptado);
+            clientesDTO.add(clienteDTO);
+        }
+        
+        return clientesDTO;
+    } catch (PersistenciaException e) {
+        throw new NegocioException("Error al obtener los clientes desencriptados", e);
+    }
+}
 }

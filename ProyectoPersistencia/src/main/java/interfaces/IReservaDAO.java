@@ -65,6 +65,15 @@ public interface IReservaDAO {
      */
     List<Reserva> obtenerTodasLasReservas() throws PersistenciaException;
 
+    /**
+     * Obtiene el estado de una reserva por su ID.
+     *
+     * @param id El ID de la reserva a buscar.
+     * @return El estado de la reserva correspondiente al ID proporcionado.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
+    String obtenerEstadoReservaPorId(Long id) throws PersistenciaException;
+
 
 
 }

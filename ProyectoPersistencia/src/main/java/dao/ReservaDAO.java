@@ -12,11 +12,11 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 /**
- * Clase que implementa la interfaz IReservaDAO y proporciona métodos para el acceso
- * a datos de la entidad Reserva. Permite realizar operaciones CRUD (crear, leer,
- * actualizar y eliminar) sobre las reservas en la base de datos.
+ * Clase que implementa la interfaz IReservaDAO y proporciona métodos para el
+ * acceso a datos de la entidad Reserva. Permite realizar operaciones CRUD
+ * (crear, leer, actualizar y eliminar) sobre las reservas en la base de datos.
  * Contribuciones de Paulina Rodríguez Rodríguez Rayos.
- * 
+ *
  * @author Cristopher Alberto Elizalde Andrade - 240005
  */
 public class ReservaDAO implements IReservaDAO {
@@ -34,7 +34,7 @@ public class ReservaDAO implements IReservaDAO {
 
     /**
      * Agrega una nueva reserva a la base de datos.
-     * 
+     *
      * @param reserva La reserva a agregar.
      * @throws PersistenciaException Si ocurre un error durante la operación.
      */
@@ -54,7 +54,7 @@ public class ReservaDAO implements IReservaDAO {
 
     /**
      * Obtiene una reserva por su ID.
-     * 
+     *
      * @param id El ID de la reserva a buscar.
      * @return La reserva correspondiente al ID proporcionado.
      * @throws PersistenciaException Si ocurre un error durante la operación.
@@ -72,7 +72,7 @@ public class ReservaDAO implements IReservaDAO {
 
     /**
      * Obtiene todas las reservas de la base de datos.
-     * 
+     *
      * @return Una lista de todas las reservas.
      * @throws PersistenciaException Si ocurre un error durante la operación.
      */
@@ -87,8 +87,9 @@ public class ReservaDAO implements IReservaDAO {
     }
 
     /**
-     * Obtiene reservas de la base de datos que coinciden con el estado proporcionado.
-     * 
+     * Obtiene reservas de la base de datos que coinciden con el estado
+     * proporcionado.
+     *
      * @param estado El estado de las reservas a buscar.
      * @return Una lista de reservas que coinciden con el estado.
      * @throws PersistenciaException Si ocurre un error durante la operación.
@@ -107,7 +108,7 @@ public class ReservaDAO implements IReservaDAO {
 
     /**
      * Actualiza una reserva existente en la base de datos.
-     * 
+     *
      * @param reserva La reserva a actualizar.
      * @throws PersistenciaException Si ocurre un error durante la operación.
      */
@@ -125,6 +126,31 @@ public class ReservaDAO implements IReservaDAO {
         }
     }
 
+    /**
+     * Obtiene el estado de una reserva por su ID.
+     *
+     * @param id El ID de la reserva a buscar.
+     * @return El estado de la reserva correspondiente al ID proporcionado.
+     * @throws PersistenciaException Si ocurre un error durante la operación.
+     */
+    public String obtenerEstadoReservaPorId(Long id) throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
+        try {
+            Reserva reserva = em.find(Reserva.class, id); // Buscar la reserva por su ID
+            if (reserva != null) {
+                return reserva.getEstado(); // Devolver el estado de la reserva
+            } else {
+                throw new PersistenciaException("No se encontró una reserva con id: " + id);
+            }
+        } catch (Exception e) {
+            throw new PersistenciaException("No se pudo obtener el estado de la reserva con id: " + id);
+        } finally {
+            // Cerrar el EntityManager si se creó en este método
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
+        }
+    }
 
     /**
      * Cierra el EntityManager si está abierto.
