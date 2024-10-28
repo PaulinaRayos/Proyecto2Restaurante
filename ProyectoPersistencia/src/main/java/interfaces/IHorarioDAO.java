@@ -66,4 +66,8 @@ public interface IHorarioDAO {
 
     List<Horario> buscarPorDiaYRestaurante(String diaSemana, Long idRestaurante);
 
+    List<Long> obtenerIdsHorariosPorIdRestaurante(Long idRestaurante) throws PersistenciaException;
+
+    Horario obtenerHorarioPorId(Long idHorario) throws PersistenciaException;
+
 }

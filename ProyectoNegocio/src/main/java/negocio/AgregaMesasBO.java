@@ -12,12 +12,16 @@ import dao.RestauranteDAO;
 import dao.TipoMesaDAO;
 import dto.MesaDTO;
 import dto.RestauranteDTO;
+import entidadesJPA.Horario;
+import entidadesJPA.HorarioMesa;
 import entidadesJPA.Mesa;
 import entidadesJPA.Restaurante;
 import entidadesJPA.TipoMesa;
 import excepciones.NegocioException;
 import excepciones.PersistenciaException;
 import interfaces.IAgregaMesasBO;
+import interfaces.IHorarioBO;
+import interfaces.IHorarioMesaBO;
 import interfaces.IMesaDAO;
 import interfaces.IRestauranteBO;
 import interfaces.IRestauranteDAO;
@@ -39,6 +43,8 @@ public class AgregaMesasBO implements IAgregaMesasBO {
     private IRestauranteDAO restdao;
     private ITipoMesaDAO tipodao;
     private IRestauranteBO restbo;
+    private IHorarioBO horariobo;
+    private IHorarioMesaBO horarioMesabo;
 
     public AgregaMesasBO() {
         this.conexion = new Conexion();
@@ -46,9 +52,12 @@ public class AgregaMesasBO implements IAgregaMesasBO {
         this.restdao = new RestauranteDAO(conexion);
         this.tipodao = new TipoMesaDAO(conexion);
         this.restbo = new RestauranteBO();
+        this.horariobo = new HorarioBO();
+        this.horarioMesabo=new HorarioMesaBO();
     }
 
     public void agregarMesas(RestauranteDTO restauranteDTO, Map<String, Integer> cantidadPorTipo, String ubicacion) throws NegocioException {
+        List<Long> listaIdsMesas = new ArrayList<>();
         try {
             // Validar que el restauranteDTO no sea nulo
             if (restauranteDTO == null || restauranteDTO.getId() == null) {
@@ -63,7 +72,7 @@ public class AgregaMesasBO implements IAgregaMesasBO {
 
             // Número único para las mesas
             Long numeroUnico = mesaDAO.obtenerCantidadDeMesas() + 1; // Este método debe retornar la cantidad actual de mesas
-
+            List<Long> listaHorarios = horariobo.obtenerIdsHorariosPorIdRestaurante(restaurante.getId());
             // Iterar por cada tipo de mesa para agregar la cantidad solicitada
             for (Map.Entry<String, Integer> entry : cantidadPorTipo.entrySet()) {
                 String nombreTipo = entry.getKey();
@@ -99,9 +108,9 @@ public class AgregaMesasBO implements IAgregaMesasBO {
                 for (int i = 0; i < cantidad; i++) {
                     // Crear MesaDTO para convertirlo después en entidad Mesa
                     MesaDTO mesaDTO = new MesaDTO();
-                    
+
                     int capacidadMesa = ThreadLocalRandom.current().nextInt(capacidadMin, capacidadMax + 1);
-                    
+
                     mesaDTO.setCapacidad(capacidadMesa);
                     mesaDTO.setCodigoMesa(generarCodigoMesa(ubicacion, capacidadMesa, numeroUnico));
                     mesaDTO.setUbicacion(ubicacion);
@@ -114,12 +123,13 @@ public class AgregaMesasBO implements IAgregaMesasBO {
                     mesa.setTipoMesa(tipoMesa);
 
                     // Persistir la mesa usando el DAO
-                    mesaDAO.agregarMesa(mesa);
-
+                    long idMesa = mesaDAO.agregarMesa(mesa);
+                    listaIdsMesas.add(idMesa);
                     // Incrementar el número único para la siguiente mesa
                     numeroUnico++;
                 }
             }
+            agregarMesasAHorarios(listaIdsMesas,listaHorarios);
         } catch (PersistenciaException e) {
             throw new NegocioException("Error al agregar mesas", e);
         }
@@ -134,6 +144,36 @@ public class AgregaMesasBO implements IAgregaMesasBO {
 
         // Retornar el código de mesa en el formato requerido
         return ubicacionCodificada + "-" + capacidad + "-" + numeroFormato;
+    }
+
+    private void agregarMesasAHorarios(List<Long> idsMesas, List<Long> idsHorarios) throws NegocioException {
+        try {
+            for (Long idMesa : idsMesas) {
+                // Obtener la mesa usando el ID
+                Mesa mesa = mesaDAO.obtenerMesaPorId(idMesa);
+                if (mesa == null) {
+                    throw new NegocioException("Mesa no encontrada con ID: " + idMesa);
+                }
+
+                for (Long idHorario : idsHorarios) {
+                    // Obtener el horario usando el ID
+                    Horario horario =horariobo.obtenerHorarioPorIdHorario(idHorario);
+                    if (horario == null) {
+                        throw new NegocioException("Horario no encontrado con ID: " + idHorario);
+                    }
+
+                    // Crear la instancia de HorarioMesa
+                    HorarioMesa horarioMesa = new HorarioMesa();
+                    horarioMesa.setMesa(mesa);
+                    horarioMesa.setHorario(horario);
+
+                    // Persistir la relación
+                    horarioMesabo.crearHorarioMesa(horarioMesa);
+                }
+            }
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error al agregar mesas a horarios: " + e.getMessage(), e);
+        }
     }
 
 }

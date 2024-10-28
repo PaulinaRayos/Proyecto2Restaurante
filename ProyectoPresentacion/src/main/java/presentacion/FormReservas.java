@@ -7,15 +7,22 @@ package presentacion;
 import dto.ClienteDTO;
 import dto.MesaDTO;
 import dto.ReservaDTO;
+import dto.RestauranteDTO;
+import entidadesJPA.Reserva;
 import excepciones.NegocioException;
 import excepciones.PersistenciaException;
 import interfaces.ICancelarReservaBO;
 import interfaces.IClienteBO;
 import interfaces.IConsultarReservasBO;
 import interfaces.IMesaBO;
+import interfaces.IRestauranteBO;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,6 +36,7 @@ import negocio.CancelarReservaBO;
 import negocio.ClienteBO;
 import negocio.ConsultarReservasBO;
 import negocio.MesaBO;
+import negocio.RestauranteBO;
 import utilidades.Forms;
 
 /**
@@ -41,9 +49,13 @@ public class FormReservas extends javax.swing.JFrame {
     private final ICancelarReservaBO cancelarReservabo;
     private final IClienteBO clientebo;
     private final IMesaBO mesabo;
+    private final IRestauranteBO restBO;
+    private Long idRestauranteSeleccionado;
+    private List<RestauranteDTO> listaRestaurantes;
     private List<ReservaDTO> reservas;
     private Long idReservaSeleccionada;
     private boolean programmaticallySettingDate = false;
+    private List<ReservaDTO> reservasFiltradas;
 
     /**
      * Creates new form FormReservas
@@ -53,9 +65,11 @@ public class FormReservas extends javax.swing.JFrame {
         this.clientebo = new ClienteBO();
         this.mesabo = new MesaBO();
         this.cancelarReservabo = new CancelarReservaBO();
+        this.restBO = new RestauranteBO();
 
         initComponents();
         this.cargarReservasEnTabla();
+        this.cargarRestaurantes();
 
         this.setLocationRelativeTo(this);
 
@@ -93,6 +107,8 @@ public class FormReservas extends javax.swing.JFrame {
         jFecha = new com.toedter.calendar.JDateChooser();
         btnCancelarReserva = new javax.swing.JButton();
         btnLimpiarFiltros = new javax.swing.JButton();
+        cbRestaurante = new javax.swing.JComboBox<>();
+        jLabel10 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -218,6 +234,14 @@ public class FormReservas extends javax.swing.JFrame {
             }
         });
 
+        cbRestaurante.setFont(new java.awt.Font("Times New Roman", 3, 14)); // NOI18N
+        cbRestaurante.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecciona restaurante" }));
+        cbRestaurante.setBorder(null);
+
+        jLabel10.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
+        jLabel10.setText("Restaurante:");
+        jLabel10.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -230,11 +254,11 @@ public class FormReservas extends javax.swing.JFrame {
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel1))
-                        .addGap(64, 64, 64)
+                        .addGap(61, 61, 61)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel5))
-                        .addGap(62, 62, 62)
+                        .addGap(65, 65, 65)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel7))
@@ -248,31 +272,43 @@ public class FormReservas extends javax.swing.JFrame {
                             .addComponent(jScrollPane1)
                             .addGroup(jPanel5Layout.createSequentialGroup()
                                 .addComponent(jLabelaa1)
+                                .addGap(644, 644, 644)
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel10)
+                                    .addComponent(cbRestaurante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(0, 0, Short.MAX_VALUE)))
                         .addContainerGap())))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(86, 86, 86)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel7)
-                    .addComponent(btnLimpiarFiltros))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCancelarReserva))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE))
-            .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGap(14, 14, 14)
-                .addComponent(jLabelaa1)
-                .addGap(41, 41, 41)
-                .addComponent(jLabel5)
+                .addComponent(jLabel10)
+                .addGap(2, 2, 2)
+                .addComponent(cbRestaurante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel1)
+                                .addComponent(jLabel7))
+                            .addComponent(btnLimpiarFiltros, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnCancelarReserva))
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))))
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(31, 31, 31)
+                .addComponent(jLabelaa1)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -367,26 +403,28 @@ public class FormReservas extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLimpiarFiltrosActionPerformed
     public void filtrarTelefono() {
         String textoBuscar = txtTelefono.getText();
-        List<ReservaDTO> reservasFiltradas = new ArrayList<>();
-        for (ReservaDTO reserva : reservas) {
+        List<ReservaDTO> reservasFiltradasPorTelefono = new ArrayList<>();
+        for (ReservaDTO reserva : reservasFiltradas) {
             ClienteDTO cliente = obtenerClienteSafe(reserva.getIdCliente()); // Usa el método auxiliar
             if (cliente != null) {
                 String telefono = cliente.getTelefono();
                 if (telefono.contains(textoBuscar)) {
-                    reservasFiltradas.add(reserva);
+                    reservasFiltradasPorTelefono.add(reserva);
                 }
             }
         }
 
         // Llenar la tabla con las reservas filtradas
-        llenarTablaReservas(reservasFiltradas);
+        llenarTablaReservas(reservasFiltradasPorTelefono);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelarReserva;
     private javax.swing.JButton btnLimpiarFiltros;
+    private javax.swing.JComboBox<String> cbRestaurante;
     private com.toedter.calendar.JDateChooser jFecha;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -408,8 +446,51 @@ private void SetImageLabel(JLabel labelname, String root) {
         this.repaint();
     }
 
-    private void cargarReservasEnTabla() {
+    private void cargarRestaurantes() {
         try {
+            cbRestaurante.removeAllItems(); // Limpiar elementos actuales
+            listaRestaurantes = restBO.obtenerRestaurantes(); // Obtener la lista de restaurantes
+
+            cbRestaurante.addItem("Seleccionar restaurante"); // Agregar opción de selección
+
+            // Llenar el JComboBox con las cadenas que deseas mostrar
+            for (RestauranteDTO restaurante : listaRestaurantes) {
+                String displayText = restaurante.getCiudad() + " - " + restaurante.getDireccion(); // Crear el texto para mostrar
+                cbRestaurante.addItem(displayText); // Agregar solo el texto
+            }
+
+            // Agregar un ActionListener para detectar la selección de un restaurante
+            cbRestaurante.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    int selectedIndex = cbRestaurante.getSelectedIndex(); // Obtener el índice seleccionado
+
+                    // Asegúrar de que no se haya seleccionado la opción de "Seleccionar restaurante"
+                    if (selectedIndex > 0) { // Si hay un restaurante seleccionado
+                        RestauranteDTO restauranteSeleccionado = listaRestaurantes.get(selectedIndex - 1); // Obtener el objeto correspondiente
+                        idRestauranteSeleccionado = restauranteSeleccionado.getId(); // Obtener el ID del restaurante seleccionado
+                        System.out.println("ID del restaurante seleccionado: " + idRestauranteSeleccionado);
+                        cargarReservasEnTabla();
+                    } else {
+                        // Restablecer el ID si se selecciona "Seleccionar restaurante"
+                        idRestauranteSeleccionado = null; // O puedes usar un valor predeterminado
+                    }
+                }
+            });
+
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(this, "Error al mostrar los restaurantes", "ERROR!", JOptionPane.ERROR_MESSAGE);
+        }
+
+    }
+
+    /*private void cargarReservasEnTabla() {
+                try {
+            // Asegúrar de que idRestauranteSeleccionado no sea nulo
+        if (idRestauranteSeleccionado == null) {
+            return; 
+        }
+       
             reservas = reservabo.obtenerTodasLasReservas(); // Obtiene todas las reservas
 
             // Verifica si hay reservas
@@ -418,6 +499,10 @@ private void SetImageLabel(JLabel labelname, String root) {
                 return; // Salir si no hay reservas
             }
 
+             // Filtrar reservas por el ID del restaurante seleccionado
+            List<ReservaDTO> reservasFiltradas = reservas.stream()
+                    .filter(reserva -> mesabo.obtenerIdRestaurantePorIdMesa(reserva.getIdMesa()).equals(idRestauranteSeleccionado))
+                    .collect(Collectors.toList());
             // Filtrar reservas para excluir las que están canceladas
             List<ReservaDTO> reservasFiltradas = reservas.stream()
                     .filter(reserva -> !"Cancelada".equalsIgnoreCase(reserva.getEstado()))
@@ -435,6 +520,59 @@ private void SetImageLabel(JLabel labelname, String root) {
             System.out.println("Error al cargar reservas: " + e.getMessage());
         } catch (Exception e) {
             System.out.println("Error inesperado al cargar reservas: " + e.getMessage());
+        }
+    }*/
+    private void cargarReservasEnTabla() {
+        try {
+            // Asegúrate de que idRestauranteSeleccionado no sea nulo
+            if (idRestauranteSeleccionado == null) {
+                return;
+            }
+
+            reservas = reservabo.obtenerTodasLasReservas(); // Obtiene todas las reservas
+
+            // Verifica si hay reservas
+            if (reservas == null || reservas.isEmpty()) {
+                System.out.println("No hay reservas disponibles.");
+                return; // Salir si no hay reservas
+            }
+
+            // Filtrar reservas usando el método auxiliar
+            List<ReservaDTO> reservasFiltradas = reservas.stream()
+                    .filter(this::esReservaValida)
+                    .collect(Collectors.toList());
+            this.reservasFiltradas = reservasFiltradas;
+            // Verificar si hay reservas filtradas
+            if (reservasFiltradas.isEmpty()) {
+                System.out.println("No hay reservas activas disponibles para este restaurante.");
+                limpiarTabla(); // Limpia la tabla si no hay reservas activas
+                return; // Salir si no hay reservas activas
+            }
+
+            // Llama al método para llenar la tabla con las reservas filtradas
+            llenarTablaReservas(reservasFiltradas);
+        } catch (NegocioException e) {
+            System.out.println("Error al cargar reservas: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error inesperado al cargar reservas: " + e.getMessage());
+        }
+    }
+    // Método para limpiar la tabla
+
+    private void limpiarTabla() {
+        DefaultTableModel modelo = (DefaultTableModel) tblReservaciones.getModel();
+        modelo.setRowCount(0); // Elimina todas las filas de la tabla
+        System.out.println("La tabla ha sido limpiada.");
+    }
+
+    private boolean esReservaValida(ReservaDTO reserva) {
+        try {
+            Long idRestaurante = mesabo.obtenerIdRestaurantePorIdMesa(reserva.getIdMesa());
+            return idRestaurante.equals(idRestauranteSeleccionado) && !"Cancelada".equalsIgnoreCase(reserva.getEstado());
+        } catch (NegocioException e) {
+            // Manejar la excepción (puedes imprimir un mensaje o simplemente retornar false)
+            System.out.println("Error al obtener ID de restaurante: " + e.getMessage());
+            return false; // Si hay un error, no incluimos la reserva
         }
     }
 
@@ -530,27 +668,27 @@ private void SetImageLabel(JLabel labelname, String root) {
 
     private void filtrarNombre() {
         String textoBuscar = txtNombre.getText().toLowerCase(); // Convierte a minúsculas para comparación
-        List<ReservaDTO> reservasFiltradas = new ArrayList<>();
+        List<ReservaDTO> reservasFiltradasPorNombre = new ArrayList<>();
 
         // Filtrar las reservas
-        for (ReservaDTO reserva : reservas) {
+        for (ReservaDTO reserva : reservasFiltradas) {
             ClienteDTO cliente = obtenerClienteSafe(reserva.getIdCliente()); // Usa el método auxiliar
             if (cliente != null) {
                 String nombreCompleto = (cliente.getNombre() + " " + cliente.getApellidoPaterno() + " " + cliente.getApellidoMaterno()).toLowerCase();
                 if (nombreCompleto.contains(textoBuscar)) {
-                    reservasFiltradas.add(reserva);
+                    reservasFiltradasPorNombre.add(reserva);
                 }
             }
         }
 
         // Llenar la tabla con las reservas filtradas
-        llenarTablaReservas(reservasFiltradas);
+        llenarTablaReservas(reservasFiltradasPorNombre);
     }
 
     private void filtrarFecha() {
         // Obtener la fecha seleccionada del JDateChooser
         java.util.Date fechaSeleccionada = jFecha.getDate();
-        List<ReservaDTO> reservasFiltradas = new ArrayList<>();
+        List<ReservaDTO> reservasFiltradasPorFecha = new ArrayList<>();
 
         // Comprobar si se ha seleccionado una fecha
         if (fechaSeleccionada != null) {
@@ -562,7 +700,7 @@ private void SetImageLabel(JLabel labelname, String root) {
             int diaSeleccionado = calendarSeleccionado.get(Calendar.DAY_OF_MONTH);
 
             // Filtrar las reservas
-            for (ReservaDTO reserva : reservas) {
+            for (ReservaDTO reserva : reservasFiltradas) {
                 // Suponiendo que tu ReservaDTO tiene un método getFechaHora() que devuelve la fecha de la reserva
                 if (reserva.getFechaHora() != null) {
                     Calendar calendarReserva = Calendar.getInstance();
@@ -572,14 +710,14 @@ private void SetImageLabel(JLabel labelname, String root) {
                     if (calendarReserva.get(Calendar.YEAR) == añoSeleccionado
                             && calendarReserva.get(Calendar.MONTH) == mesSeleccionado
                             && calendarReserva.get(Calendar.DAY_OF_MONTH) == diaSeleccionado) {
-                        reservasFiltradas.add(reserva);
+                        reservasFiltradasPorFecha.add(reserva);
                     }
                 }
             }
         }
 
         // Llenar la tabla con las reservas filtradas
-        llenarTablaReservas(reservasFiltradas);
+        llenarTablaReservas(reservasFiltradasPorFecha);
     }
 
     private void limpiarFiltros() {
@@ -594,7 +732,7 @@ private void SetImageLabel(JLabel labelname, String root) {
         cargarReservasEnTabla();
     }
 
-    private void cancelarReserva() throws Exception {
+    /*private void cancelarReserva() throws Exception {
         // Verificar si hay una reserva seleccionada
         if (idReservaSeleccionada != null) {
             try {
@@ -611,6 +749,64 @@ private void SetImageLabel(JLabel labelname, String root) {
                         cargarReservasEnTabla(); // Volver a cargar todas las reservas
                     } catch (PersistenciaException e) {
                         JOptionPane.showMessageDialog(this, "Error al cancelar la reserva: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "No se puede cancelar una reserva con estado: " + estadoActual, "Advertencia", JOptionPane.WARNING_MESSAGE);
+                }
+            } catch (PersistenciaException e) {
+                JOptionPane.showMessageDialog(this, "Error al obtener el estado de la reserva: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Por favor, selecciona una reserva para cancelar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+        }
+    }*/
+    private void cancelarReserva() throws Exception {
+        // Verificar si hay una reserva seleccionada
+        if (idReservaSeleccionada != null) {
+            try {
+                // Obtener el estado actual de la reserva
+                String estadoActual = reservabo.obtenerEstadoReservaPorId(idReservaSeleccionada);
+
+                // Verificar si la reserva puede ser cancelada
+                if ("Reservado".equalsIgnoreCase(estadoActual)) {
+                    // Obtener la reserva
+                    ReservaDTO reserva = reservabo.obtenerReservaPorId(idReservaSeleccionada);
+                    if (reserva == null) {
+                        throw new Exception("Reserva no encontrada con ID: " + idReservaSeleccionada);
+                    }
+
+                    // Obtener la fecha y hora actuales
+                    Date fechaActual = new Date();
+                    long diff = reserva.getFechaHora().getTime() - fechaActual.getTime();
+                    long diffHours = diff / (60 * 60 * 1000); // Diferencia en horas
+
+                    BigDecimal multa = BigDecimal.ZERO;
+                    String mensajeMulta;
+
+                    // Calcular la multa según el tiempo restante
+                    if (diffHours > 48) {
+                        mensajeMulta = "No se aplicará ninguna multa.";
+                    } else if (diffHours > 24) {
+                        multa = reserva.getCosto().multiply(new BigDecimal("0.25"));
+                        mensajeMulta = "Se aplicará una multa del 25%: " + multa.toString();
+                    } else {
+                        multa = reserva.getCosto().multiply(new BigDecimal("0.50"));
+                        mensajeMulta = "Se aplicará una multa del 50%: " + multa.toString();
+                    }
+
+                    // Mostrar el mensaje de confirmación
+                    int respuesta = JOptionPane.showConfirmDialog(this,
+                            mensajeMulta + "\n¿Desea continuar con la cancelación?",
+                            "Confirmar Cancelación",
+                            JOptionPane.YES_NO_OPTION);
+
+                    if (respuesta == JOptionPane.YES_OPTION) {
+                        // Realizar la cancelación
+                        cancelarReservabo.cancelarReserva(idReservaSeleccionada);
+                        JOptionPane.showMessageDialog(this, "Reserva cancelada con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                        cargarReservasEnTabla(); // Volver a cargar todas las reservas
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Cancelación de reserva cancelada.", "Información", JOptionPane.INFORMATION_MESSAGE);
                     }
                 } else {
                     JOptionPane.showMessageDialog(this, "No se puede cancelar una reserva con estado: " + estadoActual, "Advertencia", JOptionPane.WARNING_MESSAGE);

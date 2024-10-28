@@ -7,6 +7,8 @@ package presentacion;
 import dto.HorarioDTO;
 import dto.MesaDTO;
 import dto.RestauranteDTO;
+import entidadesJPA.Horario;
+import entidadesJPA.HorarioMesa;
 import excepciones.NegocioException;
 import interfaces.IAgregaMesasBO;
 import interfaces.IMesaBO;
@@ -31,6 +33,7 @@ import negocio.MesaBO;
 import negocio.RestauranteBO;
 import utilidades.Forms;
 import interfaces.IHorarioBO;
+import interfaces.IHorarioMesaBO;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -39,6 +42,7 @@ import java.util.logging.Logger;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import negocio.HorarioBO;
+import negocio.HorarioMesaBO;
 
 /**
  *
@@ -53,6 +57,7 @@ public class FormMesas extends javax.swing.JFrame {
     private Long idRestauranteSeleccionado;
     private Long idMesaSeleccionada;
     private final IHorarioBO horariobo;
+    private IHorarioMesaBO horarioMesabo;
 
     /**
      * Creates new form FormMesas
@@ -64,6 +69,7 @@ public class FormMesas extends javax.swing.JFrame {
         this.restBO = new RestauranteBO();
         this.agregadao = new AgregaMesasBO();
         this.horariobo = new HorarioBO();
+        this.horarioMesabo = new HorarioMesaBO();
         this.SetImageLabel(jLabel3, "src/main/java/Imagenes/logo.png");
 
         this.cargarMetodosIniciales();
@@ -408,7 +414,7 @@ public class FormMesas extends javax.swing.JFrame {
 
     private void cargarMetodosIniciales() {
         this.cargarRestaurantes();
-        this.cargarMesasEnTabla();
+
     }
 
     private void bCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCrearActionPerformed
@@ -422,6 +428,15 @@ public class FormMesas extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Por favor, seleccione un restaurante válido.", "Error", JOptionPane.ERROR_MESSAGE);
                 return; // Salir del método si no hay selección válida
             }
+
+            // Verificar si el restaurante tiene horarios asignados
+            List<HorarioDTO> horarios = horariobo.obtenerDiasAsignadosParaRestaurante(idRestauranteSeleccionado);
+            if (horarios.isEmpty()) {
+                // Mostrar un diálogo indicando que no hay horarios para el restaurante
+                JOptionPane.showMessageDialog(this, "No se puede agregar mesas sin horarios asignados al restaurante.", "Error", JOptionPane.ERROR_MESSAGE);
+                return; // Salir del método si no hay horarios
+            }
+
             // Obtener la ubicación seleccionada
             String ubicacion = (String) cbUbicacion.getSelectedItem();
 
@@ -591,15 +606,13 @@ private void SetImageLabel(JLabel labelname, String root) {
     private void cargarMesasEnTabla() {
         try {
             // Asegúrar de que idRestauranteSeleccionado no sea nulo
-        if (idRestauranteSeleccionado == null) {
-            return; 
-        }
-
+            if (idRestauranteSeleccionado == null) {
+                return;
+            }
+            RestauranteDTO restaurante = restBO.obtenerRestaurantePorId(idRestauranteSeleccionado);
             String ubicacionSeleccionada = cbUbicacion.getSelectedItem().toString();
 
             List<MesaDTO> mesas = mesaBO.obtenerTodasLasMesas();
-
-            List<HorarioDTO> horariosRestaurante = horariobo.obtenerDiasAsignadosParaRestaurante(idRestauranteSeleccionado);
 
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 
@@ -609,8 +622,6 @@ private void SetImageLabel(JLabel labelname, String root) {
             modelo.addColumn("Dia semana");
             modelo.addColumn("Ubicación");
             modelo.addColumn("Capacidad");
-            modelo.addColumn("Horario apertura");
-            modelo.addColumn("Horario cierre");
 
             // Llenar el modelo con los datos de las mesas filtradas
             for (MesaDTO mesa : mesas) {
@@ -618,20 +629,28 @@ private void SetImageLabel(JLabel labelname, String root) {
 
                 // Si coincide la ubicación, capacidad y restaurante, se agrega a la tabla
                 if (coincideRestaurante) {
-
-                    // Iterar sobre los horarios asignados al restaurante y crear una fila para cada día
-                    for (HorarioDTO horario : horariosRestaurante) {
-                        Object[] fila = new Object[6];
-
-                        fila[0] = mesa.getCodigoMesa();
-                        fila[1] = horario.getDiaSemana();
-                        fila[2] = mesa.getUbicacion();
-                        fila[3] = mesa.getCapacidad();
-                        fila[4] = sdf.format(horario.getHoraApertura());
-                        fila[5] = sdf.format(horario.getHoraCierre());
-
-                        modelo.addRow(fila);
+                    List<HorarioMesa> horariosMesa = horarioMesabo.obtenerHorariosPorMesa(mesa.getIdMesa());
+                    StringBuilder diasSemana = new StringBuilder();
+                    for (HorarioMesa horarioMesa : horariosMesa) {
+                        Horario horario = horarioMesa.getHorario(); // Obtener el objeto Horario
+                        if (horario != null) {
+                            if (diasSemana.length() > 0) {
+                                diasSemana.append(", "); // Añadir coma si ya hay días
+                            }
+                            diasSemana.append(horario.getDiaSemana()); // Concatenar el día
+                        }
                     }
+                    // Iterar sobre los horarios asignados al restaurante y crear una fila para cada día
+
+                    Object[] fila = new Object[4];
+
+                    fila[0] = mesa.getCodigoMesa();
+                    fila[1] = diasSemana.toString();
+                    fila[2] = mesa.getUbicacion();
+                    fila[3] = mesa.getCapacidad();
+
+                    modelo.addRow(fila);
+
                 }
             }
 

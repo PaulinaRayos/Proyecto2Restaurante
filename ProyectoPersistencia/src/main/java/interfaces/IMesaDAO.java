@@ -25,7 +25,7 @@ public interface IMesaDAO {
      * @param mesa La mesa a agregar.
      * @throws PersistenciaException Si ocurre un error durante la operación.
      */
-    void agregarMesa(Mesa mesa) throws PersistenciaException;
+    long agregarMesa(Mesa mesa) throws PersistenciaException;
 
     /**
      * Elimina una mesa de la base de datos por su ID.
@@ -76,6 +76,8 @@ public interface IMesaDAO {
      * @throws PersistenciaException Si ocurre un error durante la operación.
      */
     List<Mesa> obtenerTodasLasMesas() throws PersistenciaException;
+
+    Long obtenerIdRestaurantePorIdMesa(Long idMesa) throws PersistenciaException;
 
 
 }

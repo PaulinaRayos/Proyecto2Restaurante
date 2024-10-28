@@ -6,6 +6,7 @@ package interfaces;
 
 import dto.MesaDTO;
 import dto.TipoMesaDTO;
+import entidadesJPA.TipoMesa;
 import excepciones.NegocioException;
 import java.math.BigDecimal;
 import java.util.List;
@@ -25,4 +26,15 @@ public interface IMesaBO {
     List<TipoMesaDTO> obtenerTiposMesa() throws NegocioException;
 
     MesaDTO obtenerMesaPorId(Long idMesa) throws NegocioException;
+
+    Long obtenerIdRestaurantePorIdMesa(Long idMesa) throws NegocioException;
+
+    /**
+     * Obtiene un tipo de mesa por su ID.
+     *
+     * @param id El ID del tipo de mesa a buscar.
+     * @return El objeto TipoMesa correspondiente al ID proporcionado.
+     * @throws NegocioException Si ocurre un error durante la operación.
+     */
+    TipoMesa obtenerTipoMesaPorId(Long id) throws NegocioException;
 }

@@ -8,6 +8,8 @@ import conexion.IConexion;
 import entidadesJPA.Reserva;
 import excepciones.PersistenciaException;
 import interfaces.IReservaDAO;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 
@@ -149,6 +151,28 @@ public class ReservaDAO implements IReservaDAO {
             if (em != null && em.isOpen()) {
                 em.close();
             }
+        }
+    }
+
+    public void cancelarReserva(Long idReserva, Date fechaCancelacion, BigDecimal multa) throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
+        try {
+            em.getTransaction().begin();
+            Reserva reserva = em.find(Reserva.class, idReserva);
+            if (reserva != null) {
+                reserva.setEstado("Cancelada");
+                reserva.setFechaCancelacion(fechaCancelacion);
+                reserva.setMulta(multa);
+                em.merge(reserva); // Actualizar la reserva
+            }
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            throw new PersistenciaException("No se pudo cancelar la reserva con id: " + idReserva);
+        } finally {
+            em.close();
         }
     }
 

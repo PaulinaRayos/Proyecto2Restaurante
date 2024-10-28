@@ -7,15 +7,23 @@ package presentacion;
 import dto.ClienteDTO;
 import dto.MesaDTO;
 import dto.ReservaDTO;
+import dto.RestauranteDTO;
+import entidadesJPA.TipoMesa;
 import excepciones.NegocioException;
 import excepciones.PersistenciaException;
 import interfaces.IClienteBO;
 import interfaces.IConsultarReservasBO;
+import interfaces.IConsultarTipoMesaBO;
 import interfaces.IMesaBO;
+import interfaces.IRestauranteBO;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -24,7 +32,9 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import negocio.ClienteBO;
 import negocio.ConsultarReservasBO;
+import negocio.ConsultarTipoMesaBO;
 import negocio.MesaBO;
+import negocio.RestauranteBO;
 import utilidades.Forms;
 
 /**
@@ -32,13 +42,19 @@ import utilidades.Forms;
  * @author Chris
  */
 public class FormConsultas extends javax.swing.JFrame {
-
+    private final IConsultarTipoMesaBO tipomesabo;
     private final IConsultarReservasBO reservabo;
     private final IClienteBO clientebo;
     private final IMesaBO mesabo;
     private List<ReservaDTO> reservas;
     private Long idReservaSeleccionada;
     private boolean programmaticallySettingDate = false;
+    private List<ReservaDTO> reservasFiltradas;
+    private Long idRestauranteSeleccionado;
+    private List<RestauranteDTO> listaRestaurantes;
+    private Long idClienteSeleccionado;
+
+    private final IRestauranteBO restBO;
 
     /**
      * Creates new form FormConsultas
@@ -47,9 +63,12 @@ public class FormConsultas extends javax.swing.JFrame {
         this.reservabo = new ConsultarReservasBO();
         this.clientebo = new ClienteBO();
         this.mesabo = new MesaBO();
+        this.restBO = new RestauranteBO();
+        this.tipomesabo = new ConsultarTipoMesaBO();
 
         initComponents();
         this.cargarReservasEnTabla();
+        this.cargarRestaurantes();
 
         this.setLocationRelativeTo(this);
 
@@ -83,6 +102,13 @@ public class FormConsultas extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jFecha = new com.toedter.calendar.JDateChooser();
         btnLimpiarFiltros = new javax.swing.JButton();
+        cbRestaurante = new javax.swing.JComboBox<>();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        txtAreaRestaurante = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        txtTamañoMesa = new javax.swing.JTextField();
+        btnDetalleReserva = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -166,6 +192,53 @@ public class FormConsultas extends javax.swing.JFrame {
             }
         });
 
+        cbRestaurante.setFont(new java.awt.Font("Times New Roman", 3, 14)); // NOI18N
+        cbRestaurante.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecciona restaurante" }));
+        cbRestaurante.setBorder(null);
+
+        jLabel10.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
+        jLabel10.setText("Restaurante:");
+        jLabel10.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        jLabel2.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
+        jLabel2.setText("Área de restaurante:");
+        jLabel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        txtAreaRestaurante.setFont(new java.awt.Font("Arial", 3, 18)); // NOI18N
+        txtAreaRestaurante.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtAreaRestauranteActionPerformed(evt);
+            }
+        });
+        txtAreaRestaurante.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtAreaRestauranteKeyReleased(evt);
+            }
+        });
+
+        jLabel6.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
+        jLabel6.setText("Tamaño de mesa:");
+        jLabel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        txtTamañoMesa.setFont(new java.awt.Font("Arial", 3, 18)); // NOI18N
+        txtTamañoMesa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTamañoMesaActionPerformed(evt);
+            }
+        });
+        txtTamañoMesa.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtTamañoMesaKeyReleased(evt);
+            }
+        });
+
+        btnDetalleReserva.setText("Ver detalle Reserva");
+        btnDetalleReserva.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDetalleReservaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -176,54 +249,79 @@ public class FormConsultas extends javax.swing.JFrame {
                     .addComponent(jScrollPane1)
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabelaa1)
                             .addGroup(jPanel5Layout.createSequentialGroup()
                                 .addGap(9, 9, 9)
                                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel1))
-                                .addGap(64, 64, 64)
-                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel5))
-                                .addGap(62, 62, 62)
-                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel7)
                                     .addGroup(jPanel5Layout.createSequentialGroup()
-                                        .addComponent(jFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(28, 28, 28)
-                                        .addComponent(btnLimpiarFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addGap(0, 82, Short.MAX_VALUE)))
+                                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                                .addComponent(jLabel1)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(29, 29, 29)
+                                                .addComponent(jLabel2)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(txtAreaRestaurante, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                                .addComponent(jLabel5)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(24, 24, 24)
+                                                .addComponent(jLabel7)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(jLabel6)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(txtTamañoMesa, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                                        .addComponent(btnDetalleReserva))
+                                    .addGroup(jPanel5Layout.createSequentialGroup()
+                                        .addGap(286, 286, 286)
+                                        .addComponent(jLabel10)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(cbRestaurante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 0, Short.MAX_VALUE))))
+                            .addComponent(jLabelaa1))
+                        .addGap(18, 18, 18)
+                        .addComponent(btnLimpiarFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 6, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addComponent(jLabelaa1)
-                .addGap(41, 41, 41)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(73, 73, 73)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
-                            .addComponent(jLabel7))
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE))
-                            .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addGap(3, 3, 3)
-                                .addComponent(btnLimpiarFiltros)
-                                .addGap(0, 0, Short.MAX_VALUE))))
+                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2)
+                            .addComponent(txtAreaRestaurante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(11, 11, 11)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel6)
+                                .addComponent(txtTamañoMesa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel5)
+                                .addComponent(jLabel7)
+                                .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(13, 13, 13))
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addGap(14, 14, 14)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabelaa1)
+                            .addComponent(jLabel10)
+                            .addComponent(cbRestaurante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnDetalleReserva)
+                            .addComponent(btnLimpiarFiltros))
+                        .addGap(38, 38, 38)))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 507, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -334,14 +432,44 @@ public class FormConsultas extends javax.swing.JFrame {
         filtrarNombre();
     }//GEN-LAST:event_txtNombreKeyReleased
 
+    private void txtAreaRestauranteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAreaRestauranteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtAreaRestauranteActionPerformed
+
+    private void txtAreaRestauranteKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtAreaRestauranteKeyReleased
+        filtrarUbicacion();
+    }//GEN-LAST:event_txtAreaRestauranteKeyReleased
+
+    private void txtTamañoMesaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTamañoMesaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTamañoMesaActionPerformed
+
+    private void txtTamañoMesaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTamañoMesaKeyReleased
+        filtrarTipoMesa();
+    }//GEN-LAST:event_txtTamañoMesaKeyReleased
+
+    private void btnDetalleReservaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetalleReservaActionPerformed
+        try {
+            // TODO add your handling code here:
+            Forms.cargarForm(new FormDetallesReservaView(idReservaSeleccionada), this);
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(FormConsultas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnDetalleReservaActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnDetalleReserva;
     private javax.swing.JButton btnLimpiarFiltros;
+    private javax.swing.JComboBox<String> cbRestaurante;
     private com.toedter.calendar.JDateChooser jFecha;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabelaa1;
     private javax.swing.JPanel jPanel1;
@@ -350,7 +478,9 @@ public class FormConsultas extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblReservaciones;
+    private javax.swing.JTextField txtAreaRestaurante;
     private javax.swing.JTextField txtNombre;
+    private javax.swing.JTextField txtTamañoMesa;
     private javax.swing.JTextField txtTelefono;
     // End of variables declaration//GEN-END:variables
 private void SetImageLabel(JLabel labelname, String root) {
@@ -360,8 +490,52 @@ private void SetImageLabel(JLabel labelname, String root) {
         this.repaint();
     }
 
+    private void cargarRestaurantes() {
+        try {
+            cbRestaurante.removeAllItems(); // Limpiar elementos actuales
+            listaRestaurantes = restBO.obtenerRestaurantes(); // Obtener la lista de restaurantes
+
+            cbRestaurante.addItem("Seleccionar restaurante"); // Agregar opción de selección
+
+            // Llenar el JComboBox con las cadenas que deseas mostrar
+            for (RestauranteDTO restaurante : listaRestaurantes) {
+                String displayText = restaurante.getCiudad() + " - " + restaurante.getDireccion(); // Crear el texto para mostrar
+                cbRestaurante.addItem(displayText); // Agregar solo el texto
+            }
+
+            // Agregar un ActionListener para detectar la selección de un restaurante
+            cbRestaurante.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    int selectedIndex = cbRestaurante.getSelectedIndex(); // Obtener el índice seleccionado
+
+                    // Asegúrar de que no se haya seleccionado la opción de "Seleccionar restaurante"
+                    if (selectedIndex > 0) { // Si hay un restaurante seleccionado
+                        RestauranteDTO restauranteSeleccionado = listaRestaurantes.get(selectedIndex - 1); // Obtener el objeto correspondiente
+                        idRestauranteSeleccionado = restauranteSeleccionado.getId(); // Obtener el ID del restaurante seleccionado
+                        System.out.println("ID del restaurante seleccionado: " + idRestauranteSeleccionado);
+                        cargarReservasEnTabla();
+                        limpiarFiltros();
+                    } else {
+                        // Restablecer el ID si se selecciona "Seleccionar restaurante"
+                        idRestauranteSeleccionado = null; // O puedes usar un valor predeterminado
+                    }
+                }
+            });
+
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(this, "Error al mostrar los restaurantes", "ERROR!", JOptionPane.ERROR_MESSAGE);
+        }
+
+    }
+
     private void cargarReservasEnTabla() {
         try {
+            // Asegúrate de que idRestauranteSeleccionado no sea nulo
+            if (idRestauranteSeleccionado == null) {
+                return;
+            }
+
             reservas = reservabo.obtenerTodasLasReservas(); // Obtiene todas las reservas
 
             // Verifica si hay reservas
@@ -370,14 +544,15 @@ private void SetImageLabel(JLabel labelname, String root) {
                 return; // Salir si no hay reservas
             }
 
-            // Filtrar reservas para excluir las que están canceladas
+            // Filtrar reservas usando el método auxiliar
             List<ReservaDTO> reservasFiltradas = reservas.stream()
-                    .filter(reserva -> !"Cancelada".equalsIgnoreCase(reserva.getEstado()))
+                    .filter(this::esReservaValida)
                     .collect(Collectors.toList());
-
+            this.reservasFiltradas = reservasFiltradas;
             // Verificar si hay reservas filtradas
             if (reservasFiltradas.isEmpty()) {
-                System.out.println("No hay reservas activas disponibles.");
+                System.out.println("No hay reservas activas disponibles para este restaurante.");
+                limpiarTabla(); // Limpia la tabla si no hay reservas activas
                 return; // Salir si no hay reservas activas
             }
 
@@ -387,6 +562,24 @@ private void SetImageLabel(JLabel labelname, String root) {
             System.out.println("Error al cargar reservas: " + e.getMessage());
         } catch (Exception e) {
             System.out.println("Error inesperado al cargar reservas: " + e.getMessage());
+        }
+    }
+    // Método para limpiar la tabla
+
+    private void limpiarTabla() {
+        DefaultTableModel modelo = (DefaultTableModel) tblReservaciones.getModel();
+        modelo.setRowCount(0); // Elimina todas las filas de la tabla
+        System.out.println("La tabla ha sido limpiada.");
+    }
+
+    private boolean esReservaValida(ReservaDTO reserva) {
+        try {
+            Long idRestaurante = mesabo.obtenerIdRestaurantePorIdMesa(reserva.getIdMesa());
+            return idRestaurante.equals(idRestauranteSeleccionado);
+        } catch (NegocioException e) {
+            // Manejar la excepción (puedes imprimir un mensaje o simplemente retornar false)
+            System.out.println("Error al obtener ID de restaurante: " + e.getMessage());
+            return false; // Si hay un error, no incluimos la reserva
         }
     }
 
@@ -402,9 +595,10 @@ private void SetImageLabel(JLabel labelname, String root) {
             modelo.addColumn("ID Reserva");
             modelo.addColumn("Nombre Completo");
             modelo.addColumn("Teléfono");
-            modelo.addColumn("Personas");
             modelo.addColumn("Fecha y Hora");
             modelo.addColumn("Código de Mesa");
+            modelo.addColumn("Área");
+            modelo.addColumn("Tamaño de Mesa");
             modelo.addColumn("Estado");
 
             // Llenar el modelo con los datos de las reservas
@@ -414,14 +608,15 @@ private void SetImageLabel(JLabel labelname, String root) {
                     MesaDTO mesadto = mesabo.obtenerMesaPorId(reserva.getIdMesa());
 
                     if (cliente != null && mesadto != null) {
-                        Object[] fila = new Object[7];
+                        Object[] fila = new Object[8];
                         fila[0] = reserva.getIdReserva();
                         fila[1] = cliente.getNombre() + " " + cliente.getApellidoPaterno() + " " + cliente.getApellidoMaterno();
                         fila[2] = cliente.getTelefono();
-                        fila[3] = reserva.getNumeroPersonas();
-                        fila[4] = reserva.getFechaHora();
-                        fila[5] = mesadto.getCodigoMesa();
-                        fila[6] = reserva.getEstado();
+                        fila[3] = reserva.getFechaHora();
+                        fila[4] = mesadto.getCodigoMesa();
+                        fila[5] = mesadto.getUbicacion();
+                        fila[6] = tipomesabo.obtenerNombreTipoMesaPorIdMesa(mesadto.getIdMesa());
+                        fila[7] = reserva.getEstado();
 
                         modelo.addRow(fila);
                     } else {
@@ -482,44 +677,44 @@ private void SetImageLabel(JLabel labelname, String root) {
 
     private void filtrarNombre() {
         String textoBuscar = txtNombre.getText().toLowerCase(); // Convierte a minúsculas para comparación
-        List<ReservaDTO> reservasFiltradas = new ArrayList<>();
+        List<ReservaDTO> reservasFiltradasPorNombre = new ArrayList<>();
 
         // Filtrar las reservas
-        for (ReservaDTO reserva : reservas) {
+        for (ReservaDTO reserva : reservasFiltradas) {
             ClienteDTO cliente = obtenerClienteSafe(reserva.getIdCliente()); // Usa el método auxiliar
             if (cliente != null) {
                 String nombreCompleto = (cliente.getNombre() + " " + cliente.getApellidoPaterno() + " " + cliente.getApellidoMaterno()).toLowerCase();
                 if (nombreCompleto.contains(textoBuscar)) {
-                    reservasFiltradas.add(reserva);
+                    reservasFiltradasPorNombre.add(reserva);
                 }
             }
         }
 
         // Llenar la tabla con las reservas filtradas
-        llenarTablaReservas(reservasFiltradas);
+        llenarTablaReservas(reservasFiltradasPorNombre);
     }
 
     public void filtrarTelefono() {
         String textoBuscar = txtTelefono.getText();
-        List<ReservaDTO> reservasFiltradas = new ArrayList<>();
-        for (ReservaDTO reserva : reservas) {
+        List<ReservaDTO> reservasFiltradasPorTelefono = new ArrayList<>();
+        for (ReservaDTO reserva : reservasFiltradas) {
             ClienteDTO cliente = obtenerClienteSafe(reserva.getIdCliente()); // Usa el método auxiliar
             if (cliente != null) {
                 String telefono = cliente.getTelefono();
                 if (telefono.contains(textoBuscar)) {
-                    reservasFiltradas.add(reserva);
+                    reservasFiltradasPorTelefono.add(reserva);
                 }
             }
         }
 
         // Llenar la tabla con las reservas filtradas
-        llenarTablaReservas(reservasFiltradas);
+        llenarTablaReservas(reservasFiltradasPorTelefono);
     }
 
     private void filtrarFecha() {
         // Obtener la fecha seleccionada del JDateChooser
         java.util.Date fechaSeleccionada = jFecha.getDate();
-        List<ReservaDTO> reservasFiltradas = new ArrayList<>();
+        List<ReservaDTO> reservasFiltradasPorFecha = new ArrayList<>();
 
         // Comprobar si se ha seleccionado una fecha
         if (fechaSeleccionada != null) {
@@ -531,7 +726,7 @@ private void SetImageLabel(JLabel labelname, String root) {
             int diaSeleccionado = calendarSeleccionado.get(Calendar.DAY_OF_MONTH);
 
             // Filtrar las reservas
-            for (ReservaDTO reserva : reservas) {
+            for (ReservaDTO reserva : reservasFiltradas) {
                 // Suponiendo que tu ReservaDTO tiene un método getFechaHora() que devuelve la fecha de la reserva
                 if (reserva.getFechaHora() != null) {
                     Calendar calendarReserva = Calendar.getInstance();
@@ -541,14 +736,61 @@ private void SetImageLabel(JLabel labelname, String root) {
                     if (calendarReserva.get(Calendar.YEAR) == añoSeleccionado
                             && calendarReserva.get(Calendar.MONTH) == mesSeleccionado
                             && calendarReserva.get(Calendar.DAY_OF_MONTH) == diaSeleccionado) {
-                        reservasFiltradas.add(reserva);
+                        reservasFiltradasPorFecha.add(reserva);
                     }
                 }
             }
         }
 
         // Llenar la tabla con las reservas filtradas
-        llenarTablaReservas(reservasFiltradas);
+        llenarTablaReservas(reservasFiltradasPorFecha);
+    }
+
+    private void filtrarUbicacion() {
+        String textoBuscar = txtAreaRestaurante.getText().toLowerCase(); // Convierte a minúsculas para comparación
+        List<ReservaDTO> reservasFiltradasPorUbicacion = new ArrayList<>();
+
+        // Filtrar las reservas
+        for (ReservaDTO reserva : reservasFiltradas) {
+            MesaDTO mesa = obtenerMesaSafe(reserva.getIdMesa());
+            if (mesa != null && mesa.getUbicacion().toLowerCase().contains(textoBuscar)) {
+                reservasFiltradasPorUbicacion.add(reserva);
+            }
+        }
+
+        // Llenar la tabla con las reservas filtradas
+        llenarTablaReservas(reservasFiltradasPorUbicacion);
+    }
+
+private void filtrarTipoMesa() {
+    String textoBuscar = txtTamañoMesa.getText().toLowerCase();
+    List<ReservaDTO> reservasFiltradasPorTipoMesa = new ArrayList<>();
+
+    for (ReservaDTO reserva : reservas) {
+        try {
+            // Obtén el nombre del tipo de mesa usando el ID de la mesa
+            String nombreTipoMesa = tipomesabo.obtenerNombreTipoMesaPorIdMesa(reserva.getIdMesa());
+
+            // Verifica si el nombre del tipo de mesa no es nulo y contiene el texto buscado
+            if (nombreTipoMesa != null && nombreTipoMesa.toLowerCase().contains(textoBuscar)) {
+                reservasFiltradasPorTipoMesa.add(reserva);
+            }
+        } catch (NegocioException e) {
+            System.out.println("Error al obtener el nombre del tipo de mesa: " + e.getMessage());
+        }
+    }
+
+    // Llenar la tabla con las reservas filtradas
+    llenarTablaReservas(reservasFiltradasPorTipoMesa);
+}
+
+    private MesaDTO obtenerMesaSafe(Long idMesa) {
+        try {
+            return mesabo.obtenerMesaPorId(idMesa);
+        } catch (Exception e) {
+            System.out.println("Error al obtener mesa para ID: " + idMesa + " - " + e.getMessage());
+            return null; // Retorna null en caso de error
+        }
     }
 
     private void limpiarFiltros() {
@@ -558,7 +800,8 @@ private void SetImageLabel(JLabel labelname, String root) {
 
         // Limpiar el JDateChooser
         jFecha.setDate(null);
-
+        txtAreaRestaurante.setText("");
+        txtTamañoMesa.setText("");
         // Llamar al método que recarga todas las reservas
         cargarReservasEnTabla();
     }
@@ -567,13 +810,16 @@ private void SetImageLabel(JLabel labelname, String root) {
         try {
             // Obtener el cliente solo una vez para evitar múltiples llamadas
             ClienteDTO cliente = clientebo.obtenerClientePorId(reserva.getIdCliente());
-
+            MesaDTO mesadto = mesabo.obtenerMesaPorId(reserva.getIdMesa());
+            
             if (cliente != null) {
                 txtNombre.setText(cliente.getNombre() + " " + cliente.getApellidoPaterno() + " " + cliente.getApellidoMaterno());
                 txtTelefono.setText(cliente.getTelefono());
                 programmaticallySettingDate = true;
                 jFecha.setDate(reserva.getFechaHora()); // Asumiendo que tienes un método para obtener la fecha
                 programmaticallySettingDate = false;
+                txtAreaRestaurante.setText(mesadto.getUbicacion());
+                txtTamañoMesa.setText(tipomesabo.obtenerNombreTipoMesaPorIdMesa(mesadto.getIdMesa()));
             } else {
                 JOptionPane.showMessageDialog(this, "No se encontró el cliente para la reserva seleccionada.", "Advertencia", JOptionPane.WARNING_MESSAGE);
             }

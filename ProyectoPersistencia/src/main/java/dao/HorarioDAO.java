@@ -8,6 +8,7 @@ import conexion.IConexion;
 import entidadesJPA.Horario;
 import excepciones.PersistenciaException;
 import interfaces.IHorarioDAO;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -67,6 +68,39 @@ public class HorarioDAO implements IHorarioDAO {
         }
     }
 
+    public List<Long> obtenerIdsHorariosPorIdRestaurante(Long idRestaurante) throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
+        List<Long> listaIdsHorarios = new ArrayList<>();
+
+        try {
+            // Consulta para obtener los horarios del restaurante
+            TypedQuery<Horario> query = em.createQuery("SELECT h FROM Horario h WHERE h.restaurante.id = :idRestaurante", Horario.class);
+            query.setParameter("idRestaurante", idRestaurante);
+            List<Horario> horarios = query.getResultList();
+
+            // Obtener los IDs de los horarios
+            for (Horario horario : horarios) {
+                listaIdsHorarios.add(horario.getId());
+            }
+
+            return listaIdsHorarios; // Retornar la lista de IDs
+        } catch (Exception e) {
+            throw new PersistenciaException("Error al obtener los IDs de los horarios por ID de restaurante: " + e.getMessage(), e);
+        } finally {
+            em.close(); // Asegurarse de cerrar el EntityManager
+        }
+    }
+     public Horario obtenerHorarioPorId(Long idHorario) throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
+        try {
+            return em.find(Horario.class, idHorario); // Busca el horario por su ID
+        } catch (Exception e) {
+            throw new PersistenciaException("No se pudo obtener el horario con ID: " + idHorario, e);
+        } finally {
+            em.close();
+        }
+    }
+
     /**
      * Busca un horario por su ID.
      *
@@ -104,20 +138,20 @@ public class HorarioDAO implements IHorarioDAO {
         }
     }
 
-public List<Horario> buscarPorDiaYRestaurante(String diaSemana, Long idRestaurante) {
-    EntityManager em = this.conexion.crearConexion();
-    try {
-        return em.createQuery("SELECT h FROM Horario h WHERE h.diaSemana = :diaSemana AND h.restaurante.id = :idRestaurante", Horario.class)
-                .setParameter("diaSemana", diaSemana)
-                .setParameter("idRestaurante", idRestaurante)
-                .getResultList();
-    } catch (Exception e) {
-        // Manejo de excepciones si es necesario
-        return Collections.emptyList();
-    } finally {
-        em.close();
+    public List<Horario> buscarPorDiaYRestaurante(String diaSemana, Long idRestaurante) {
+        EntityManager em = this.conexion.crearConexion();
+        try {
+            return em.createQuery("SELECT h FROM Horario h WHERE h.diaSemana = :diaSemana AND h.restaurante.id = :idRestaurante", Horario.class)
+                    .setParameter("diaSemana", diaSemana)
+                    .setParameter("idRestaurante", idRestaurante)
+                    .getResultList();
+        } catch (Exception e) {
+            // Manejo de excepciones si es necesario
+            return Collections.emptyList();
+        } finally {
+            em.close();
+        }
     }
-}
 
     /**
      * Obtiene todos los horarios de la base de datos.

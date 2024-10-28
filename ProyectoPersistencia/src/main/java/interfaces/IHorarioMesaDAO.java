@@ -5,6 +5,7 @@
 package interfaces;
 
 import entidadesJPA.HorarioMesa;
+import excepciones.PersistenciaException;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,6 +66,8 @@ public interface IHorarioMesaDAO {
      * @return El HorarioMesa existente o uno nuevo si no se encuentra ninguno.
      */
     HorarioMesa obtenerOcrearHorarioMesa();
+
+    List<HorarioMesa> obtenerHorariosPorMesa(Long idMesa) throws PersistenciaException;
 
     
 }

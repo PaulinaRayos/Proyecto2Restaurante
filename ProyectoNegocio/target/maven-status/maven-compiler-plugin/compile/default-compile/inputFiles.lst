@@ -1,7 +1,9 @@
 C:\Users\pauli\OneDrive\Documentos\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\conversiones\ConvertidorGeneral.java
 C:\Users\pauli\OneDrive\Documentos\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\interfaces\IConsultarReservasBO.java
 C:\Users\pauli\OneDrive\Documentos\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\negocio\AgregaMesasBO.java
+C:\Users\pauli\OneDrive\Documentos\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\interfaces\IConsultarTipoMesaBO.java
 C:\Users\pauli\OneDrive\Documentos\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\dto\HistorialReservasDTO.java
+C:\Users\pauli\OneDrive\Documentos\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\interfaces\IHorarioMesaBO.java
 C:\Users\pauli\OneDrive\Documentos\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\interfaces\IAgregaMesasBO.java
 C:\Users\pauli\OneDrive\Documentos\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\dto\HorarioMesaDTO.java
 C:\Users\pauli\OneDrive\Documentos\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\negocio\ActualizaHorarioBO.java
@@ -14,6 +16,7 @@ C:\Users\pauli\OneDrive\Documentos\GitHub\Proyecto2Restaurante\ProyectoNegocio\s
 C:\Users\pauli\OneDrive\Documentos\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\negocio\MesaBO.java
 C:\Users\pauli\OneDrive\Documentos\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\negocio\ClienteBO.java
 C:\Users\pauli\OneDrive\Documentos\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\dto\ReservaDTO.java
+C:\Users\pauli\OneDrive\Documentos\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\negocio\ConsultarTipoMesaBO.java
 C:\Users\pauli\OneDrive\Documentos\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\negocio\HorarioBO.java
 C:\Users\pauli\OneDrive\Documentos\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\dto\HorarioDTO.java
 C:\Users\pauli\OneDrive\Documentos\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\excepciones\NegocioException.java
@@ -25,6 +28,7 @@ C:\Users\pauli\OneDrive\Documentos\GitHub\Proyecto2Restaurante\ProyectoNegocio\s
 C:\Users\pauli\OneDrive\Documentos\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\dto\TipoMesaDTO.java
 C:\Users\pauli\OneDrive\Documentos\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\interfaces\IHorarioBO.java
 C:\Users\pauli\OneDrive\Documentos\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\negocio\AgregarReservaBO.java
+C:\Users\pauli\OneDrive\Documentos\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\negocio\HorarioMesaBO.java
 C:\Users\pauli\OneDrive\Documentos\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\interfaces\ICancelarReservaBO.java
 C:\Users\pauli\OneDrive\Documentos\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\negocio\RestauranteBO.java
 C:\Users\pauli\OneDrive\Documentos\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\negocio\CancelarReservaBO.java

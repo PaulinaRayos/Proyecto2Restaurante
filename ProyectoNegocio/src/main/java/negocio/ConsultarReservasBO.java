@@ -126,7 +126,11 @@ public class ConsultarReservasBO implements IConsultarReservasBO {
                 reservaDTO.setNumeroPersonas(reserva.getNumPersonas());
                 reservaDTO.setEstado(reserva.getEstado());
                 reservaDTO.setIdMesa(reserva.getMesa().getId());
-                reservaDTO.setIdCliente(reserva.getCliente().getId()); // Suponiendo que tienes acceso al cliente
+                reservaDTO.setIdCliente(reserva.getCliente().getId());
+                reservaDTO.setCosto(reserva.getCosto());
+                reservaDTO.setFechaHoraCreada(reserva.getFechaHoraCreada());
+                reservaDTO.setMulta(reserva.getMulta());
+                reservaDTO.setFechaCancelacion(reserva.getFechaCancelacion());
 
                 return reservaDTO;
             } else {

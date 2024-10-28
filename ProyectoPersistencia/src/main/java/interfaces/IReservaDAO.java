@@ -6,6 +6,8 @@ package interfaces;
 
 import entidadesJPA.Reserva;
 import excepciones.PersistenciaException;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -73,6 +75,8 @@ public interface IReservaDAO {
      * @throws PersistenciaException Si ocurre un error durante la operación.
      */
     String obtenerEstadoReservaPorId(Long id) throws PersistenciaException;
+
+    void cancelarReserva(Long idReserva, Date fechaCancelacion, BigDecimal multa) throws PersistenciaException;
 
 
 

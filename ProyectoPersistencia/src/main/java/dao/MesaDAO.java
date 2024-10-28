@@ -18,7 +18,7 @@ import javax.persistence.TypedQuery;
  * acceso a datos de la entidad Mesa. Permite realizar operaciones CRUD (crear,
  * leer, actualizar y eliminar) sobre las mesas en la base de datos.
  * Contribuciones de Paulina Rodríguez Rodríguez Rayos.
- * 
+ *
  * @author Cristopher Alberto Elizalde Andrade - 240005
  */
 public class MesaDAO implements IMesaDAO {
@@ -40,17 +40,22 @@ public class MesaDAO implements IMesaDAO {
      * @param mesa La mesa a agregar.
      * @throws PersistenciaException Si ocurre un error durante la operación.
      */
-    public void agregarMesa(Mesa mesa) throws PersistenciaException {
+    public long agregarMesa(Mesa mesa) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
             em.getTransaction().begin();
             em.persist(mesa); // Persiste la entidad Mesa
             em.getTransaction().commit();
+
+            // Retorna el ID de la mesa recién creada
+            return mesa.getId();
         } catch (Exception e) {
             if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback(); // Revierte la transacción si ocurre un error
             }
             throw new PersistenciaException("No se pudo agregar la mesa.");
+        } finally {
+            em.close(); // Asegúrate de cerrar el EntityManager
         }
     }
 
@@ -162,6 +167,22 @@ public class MesaDAO implements IMesaDAO {
         }
     }
 
+    public Long obtenerIdRestaurantePorIdMesa(Long idMesa) throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
+        try {
+            Mesa mesa = em.find(Mesa.class, idMesa); // Busca la mesa por su ID
+            if (mesa != null) {
+                return mesa.getRestaurante().getId(); // Retorna el ID del restaurante
+            } else {
+                throw new PersistenciaException("Mesa no encontrada con id: " + idMesa);
+            }
+        } catch (Exception e) {
+            throw new PersistenciaException("Error al obtener el ID del restaurante para la mesa con id: " + idMesa, e);
+        } finally {
+            em.close(); // Asegúrate de cerrar el EntityManager
+        }
+    }
+
     /**
      * Elimina una mesa de la base de datos por su ID.
      *
@@ -185,5 +206,4 @@ public class MesaDAO implements IMesaDAO {
         }
     }
 
-   
 }

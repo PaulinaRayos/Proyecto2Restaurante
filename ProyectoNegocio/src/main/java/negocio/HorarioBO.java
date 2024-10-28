@@ -59,7 +59,14 @@ public class HorarioBO implements IHorarioBO {
             throw new NegocioException("Error al obtener el horario del restaurante.", e);
         }
     }
-
+    public List<Long> obtenerIdsHorariosPorIdRestaurante(Long idRestaurante) throws NegocioException{
+         try {
+            List<Long> listaIdsHorarios =horariodao.obtenerIdsHorariosPorIdRestaurante(idRestaurante);
+            return listaIdsHorarios;
+         } catch (PersistenciaException e) {
+            throw new NegocioException("Error al obtener el horario del restaurante.", e);
+        }
+    }
     public List<HorarioDTO> obtenerDiasAsignadosParaRestaurante(Long restauranteId) {
         List<Horario> horarios = horariodao.obtenerHorariosPorRestaurante(restauranteId);
         List<HorarioDTO> horariosDTO = new ArrayList<>();
@@ -76,6 +83,19 @@ public class HorarioBO implements IHorarioBO {
         }
 
         return horariosDTO;
+    }
+    public Horario obtenerHorarioPorIdHorario(Long idHorario) throws NegocioException {
+        try {
+            Horario horario = horariodao.obtenerHorarioPorId(idHorario);
+
+            if (horario == null) {
+                System.out.println("Horario no encontrado con ID: " + idHorario);
+                return null; // Si no se encontró el horario, retorna null
+            }
+            return horario;
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error al obtener el horario del restaurante.", e);
+        }
     }
 
 }

@@ -61,7 +61,7 @@ public class ClienteBO implements IClienteBO {
     public ClienteDTO obtenerClientePorId(Long id) throws NegocioException {
         try {
             Cliente cliente = cdao.obtenerClientePorId(id);
-            return ConvertidorGeneral.convertidoraDTO(cliente, ClienteDTO.class);
+            return mapearClienteAClienteDTO(cliente);
         } catch (PersistenciaException e) {
             throw new NegocioException("No se pudo obtener el id del cliente: " + id);
         }
@@ -84,35 +84,49 @@ public class ClienteBO implements IClienteBO {
         }
 
     }
-    
+
     public List<ClienteDTO> obtenerTodosLosClientes() throws NegocioException {
-    try {
-        List<Cliente> clientes = cdao.obtenerTodosLosClientes();
-        // Convertir la lista de Cliente a ClienteDTO
-        List<ClienteDTO> clientesDTO = new ArrayList<>();
-        for (Cliente cliente : clientes) {
-            clientesDTO.add(ConvertidorGeneral.convertidoraDTO(cliente, ClienteDTO.class));
+        try {
+            List<Cliente> clientes = cdao.obtenerTodosLosClientes();
+            // Convertir la lista de Cliente a ClienteDTO
+            List<ClienteDTO> clientesDTO = new ArrayList<>();
+            for (Cliente cliente : clientes) {
+                clientesDTO.add(ConvertidorGeneral.convertidoraDTO(cliente, ClienteDTO.class));
+            }
+            return clientesDTO;
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error al obtener todos los clientes", e);
         }
-        return clientesDTO;
-    } catch (PersistenciaException e) {
-        throw new NegocioException("Error al obtener todos los clientes", e);
     }
-}
-    
+
     public List<ClienteDTO> obtenerTodosLosClientesConTelefonoDesencriptado() throws NegocioException {
-    try {
-        List<Cliente> clientes = cdao.obtenerTodosLosClientes();
-        List<ClienteDTO> clientesDTO = new ArrayList<>();
-        
-        for (Cliente cliente : clientes) {
-            String telefonoDesencriptado = Encriptacion.decriptar(cliente.getTelefono());
-            ClienteDTO clienteDTO = new ClienteDTO(cliente.getId(), cliente.getNombre(), cliente.getApellidoPaterno(), cliente.getApellidoMaterno(), telefonoDesencriptado);
-            clientesDTO.add(clienteDTO);
+        try {
+            List<Cliente> clientes = cdao.obtenerTodosLosClientes();
+            List<ClienteDTO> clientesDTO = new ArrayList<>();
+
+            for (Cliente cliente : clientes) {
+                String telefonoDesencriptado = Encriptacion.decriptar(cliente.getTelefono());
+                ClienteDTO clienteDTO = new ClienteDTO(cliente.getId(), cliente.getNombre(), cliente.getApellidoPaterno(), cliente.getApellidoMaterno(), telefonoDesencriptado);
+                clientesDTO.add(clienteDTO);
+            }
+
+            return clientesDTO;
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error al obtener los clientes desencriptados", e);
         }
-        
-        return clientesDTO;
-    } catch (PersistenciaException e) {
-        throw new NegocioException("Error al obtener los clientes desencriptados", e);
     }
-}
+   public ClienteDTO mapearClienteAClienteDTO(Cliente cliente) {
+    if (cliente == null) {
+        return null; // Retorna null si el cliente es nulo
+    }
+
+    ClienteDTO clienteDTO = new ClienteDTO();
+    clienteDTO.setIdCliente(cliente.getId()); // Mapea el ID
+    clienteDTO.setNombre(cliente.getNombre()); // Mapea el nombre
+    clienteDTO.setApellidoPaterno(cliente.getApellidoPaterno()); // Mapea el apellido paterno
+    clienteDTO.setApellidoMaterno(cliente.getApellidoMaterno()); // Mapea el apellido materno
+    clienteDTO.setTelefono(cliente.getTelefono()); // Mapea el teléfono
+
+    return clienteDTO; // Retorna el objeto mapeado
+} 
 }

@@ -68,7 +68,7 @@ public class MesaBO implements IMesaBO {
     public MesaDTO obtenerMesaPorId(Long idMesa) throws NegocioException {
         try {
             Mesa mesa = mesadao.obtenerMesaPorId(idMesa);
-            return ConvertidorGeneral.convertidoraDTO(mesa, MesaDTO.class);
+            return mapearMesaAMesaDTO(mesa);
         } catch (PersistenciaException ex) {
             throw new NegocioException("No se pudo encontrar la mesa registrada." + idMesa);
         }
@@ -113,4 +113,52 @@ public class MesaBO implements IMesaBO {
             throw new NegocioException("Error al obtener los tipos de mesa", e);
         }
     }
+
+    public Long obtenerIdRestaurantePorIdMesa(Long idMesa) throws NegocioException {
+        try {
+            Mesa mesa = mesadao.obtenerMesaPorId(idMesa); // Llama al DAO
+            return mesa.getRestaurante().getId(); // Retorna el ID del restaurante
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error al obtener el ID del restaurante por ID de mesa: " + e.getMessage(), e);
+        }
+    }
+    
+    /**
+     * Obtiene un tipo de mesa por su ID.
+     *
+     * @param id El ID del tipo de mesa a buscar.
+     * @return El objeto TipoMesa correspondiente al ID proporcionado.
+     * @throws NegocioException Si ocurre un error durante la operación.
+     */
+    public TipoMesa obtenerTipoMesaPorId(Long id) throws NegocioException {
+        try {
+            return tipodao.obtenerTipoMesaPorId(id);
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error al obtener el tipo de mesa: " + e.getMessage(), e);
+        }
+    }
+    public MesaDTO mapearMesaAMesaDTO(Mesa mesa) {
+    if (mesa == null) {
+        return null; // Retorna null si la mesa es nula
+    }
+
+    MesaDTO mesaDTO = new MesaDTO();
+    mesaDTO.setIdMesa(mesa.getId()); // Mapea el ID
+    mesaDTO.setCodigoMesa(mesa.getCodigoMesa()); // Mapea el código de mesa
+    mesaDTO.setUbicacion(mesa.getUbicacion()); // Mapea la ubicación
+    mesaDTO.setCapacidad(mesa.getCapacidad()); // Mapea la capacidad
+
+    // Mapea el ID del tipo de mesa
+    if (mesa.getTipoMesa() != null) {
+        mesaDTO.setIdTipoMesa(mesa.getTipoMesa().getId()); // Mapea el ID del tipo de mesa
+    }
+
+    // Mapea el ID del restaurante
+    if (mesa.getRestaurante() != null) {
+        mesaDTO.setIdRestaurante(mesa.getRestaurante().getId()); // Mapea el ID del restaurante
+    }
+
+    return mesaDTO; // Retorna el objeto mapeado
 }
+}
+

@@ -6,11 +6,14 @@ package dao;
 
 import conexion.IConexion;
 import entidadesJPA.HorarioMesa;
+import excepciones.PersistenciaException;
 import interfaces.IHorarioMesaDAO;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 /**
@@ -56,7 +59,22 @@ public class HorarioMesaDAO implements IHorarioMesaDAO {
 
         }
     }
+    public List<HorarioMesa> obtenerHorariosPorMesa(Long idMesa) throws PersistenciaException {
+        EntityManager em = this.conexion.crearConexion();
+        List<HorarioMesa> horariosMesa = new ArrayList<>();
 
+        try {
+            Query query = em.createQuery("SELECT hm FROM HorarioMesa hm WHERE hm.mesa.id = :idMesa");
+            query.setParameter("idMesa", idMesa);
+            horariosMesa = query.getResultList();
+        } catch (Exception e) {
+            throw new PersistenciaException("Error al obtener los horarios de la mesa: " + e.getMessage(), e);
+        } finally {
+            em.close();
+        }
+
+        return horariosMesa;
+    }
     /**
      * Busca un horario de mesa por su ID.
      *

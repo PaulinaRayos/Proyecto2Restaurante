@@ -5,6 +5,8 @@ negocio\HorarioBO.class
 interfaces\IConsultarReservasBO.class
 negocio\AgregaMesasBO.class
 pruebas\pruebas.class
+interfaces\IConsultarTipoMesaBO.class
+negocio\HorarioMesaBO.class
 negocio\ActualizaHorarioBO.class
 negocio\AgregarReservaBO.class
 interfaces\IActualizaHorarioBO.class
@@ -12,6 +14,7 @@ dto\ClienteDTO.class
 dto\MesaDTO.class
 dto\TipoMesaDTO.class
 interfaces\IAgregaMesasBO.class
+interfaces\IHorarioMesaBO.class
 interfaces\IAgregarReservaBO.class
 dto\HorarioDTO.class
 interfaces\IHorarioBO.class
@@ -20,6 +23,7 @@ interfaces\ICancelarReservaBO.class
 dto\HorarioMesaDTO.class
 excepciones\NegocioException.class
 negocio\ClienteBO.class
+negocio\ConsultarTipoMesaBO.class
 interfaces\IMesaBO.class
 interfaces\IRestauranteBO.class
 negocio\MesaBO.class
