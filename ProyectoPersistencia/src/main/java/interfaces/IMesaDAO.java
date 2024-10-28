@@ -14,7 +14,7 @@ import java.util.List;
  * Proporciona métodos para realizar operaciones de creación, lectura,
  * actualización y eliminación (CRUD) de mesas en la base de datos.
  * Contribuciones de Paulina Rodríguez Rodríguez Rayos.
- * 
+ *
  * @author Cristopher Alberto Elizalde Andrade - 240005
  */
 public interface IMesaDAO {
@@ -77,7 +77,15 @@ public interface IMesaDAO {
      */
     List<Mesa> obtenerTodasLasMesas() throws PersistenciaException;
 
+    /**
+     * Obtiene el ID del restaurante asociado a una mesa específica.
+     *
+     * @param idMesa el ID de la mesa para la cual se desea obtener el ID del
+     * restaurante
+     * @return el ID del restaurante asociado a la mesa
+     * @throws PersistenciaException si ocurre un error al obtener el ID del
+     * restaurante
+     */
     Long obtenerIdRestaurantePorIdMesa(Long idMesa) throws PersistenciaException;
-
 
 }

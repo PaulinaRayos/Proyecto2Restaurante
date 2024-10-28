@@ -38,8 +38,10 @@ public class MesaDAO implements IMesaDAO {
      * Agrega una nueva mesa a la base de datos.
      *
      * @param mesa La mesa a agregar.
+     * @return
      * @throws PersistenciaException Si ocurre un error durante la operación.
      */
+    @Override
     public long agregarMesa(Mesa mesa) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -65,6 +67,7 @@ public class MesaDAO implements IMesaDAO {
      * @param mesas La lista de mesas a insertar.
      * @throws PersistenciaException Si ocurre un error durante la operación.
      */
+    @Override
     public void insertarMesas(List<Mesa> mesas) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
 
@@ -91,6 +94,7 @@ public class MesaDAO implements IMesaDAO {
      * @return La mesa correspondiente al ID proporcionado.
      * @throws PersistenciaException Si ocurre un error durante la operación.
      */
+    @Override
     public Mesa obtenerMesaPorId(Long id) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -107,6 +111,7 @@ public class MesaDAO implements IMesaDAO {
      * @return Una lista de todas las mesas.
      * @throws PersistenciaException Si ocurre un error durante la operación.
      */
+    @Override
     public List<Mesa> obtenerTodasLasMesas() throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         List<Mesa> mesas = null;
@@ -131,6 +136,7 @@ public class MesaDAO implements IMesaDAO {
      * @return El costo de reserva de la mesa, o null si no se encontró.
      * @throws PersistenciaException Si ocurre un error durante la operación.
      */
+    @Override
     public BigDecimal obtenerCostoPorIdMesa(Long idMesa) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         BigDecimal precioReserva = null;
@@ -157,6 +163,7 @@ public class MesaDAO implements IMesaDAO {
      * @return La cantidad total de mesas.
      * @throws PersistenciaException Si ocurre un error durante la operación.
      */
+    @Override
     public long obtenerCantidadDeMesas() throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -167,6 +174,16 @@ public class MesaDAO implements IMesaDAO {
         }
     }
 
+    /**
+     * Obtiene el ID del restaurante asociado a una mesa específica.
+     *
+     * @param idMesa el ID de la mesa para la cual se desea obtener el ID del
+     * restaurante
+     * @return el ID del restaurante asociado a la mesa
+     * @throws PersistenciaException si ocurre un error al obtener el ID del
+     * restaurante
+     */
+    @Override
     public Long obtenerIdRestaurantePorIdMesa(Long idMesa) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -189,6 +206,7 @@ public class MesaDAO implements IMesaDAO {
      * @param id El ID de la mesa a eliminar.
      * @throws PersistenciaException Si ocurre un error durante la operación.
      */
+    @Override
     public void eliminarMesa(Long id) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         try {

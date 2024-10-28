@@ -19,7 +19,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Calendar;
 import java.util.Date;
@@ -73,13 +72,8 @@ public class FormMenu extends javax.swing.JFrame {
 
         cargarClientes();
         cargarMesasEnTabla();
-        cbUbicacion.addActionListener(event -> {
-            cargarMesasEnTabla(); // Método que implementaremos para filtrar y cargar las mesas
-        });
 
-        cbCantidad.addActionListener(event -> {
-            cargarMesasEnTabla(); // Método que implementaremos para filtrar y cargar las mesas
-        });
+
 
         this.cargarRestaurantes();
     }
@@ -253,15 +247,13 @@ public class FormMenu extends javax.swing.JFrame {
                             .addComponent(jLabel9)
                             .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(cbUbicacion, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1)
+                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelaa)
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addComponent(jLabel6)
                                 .addGap(40, 40, 40)
-                                .addComponent(cbCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel1)
-                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(15, 15, 15)
-                        .addComponent(jLabelaa))
+                                .addComponent(cbCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGap(158, 158, 158)
                         .addComponent(bConfirmar)))
@@ -288,16 +280,16 @@ public class FormMenu extends javax.swing.JFrame {
                 .addComponent(cbUbicacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(cbCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jHora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(cbCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(38, 38, 38)
                 .addComponent(bConfirmar)
                 .addGap(160, 160, 160))
@@ -494,11 +486,11 @@ public class FormMenu extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(21, 21, 21)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
+                .addGap(109, 109, 109)
                 .addComponent(cbRestaurante, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30)
                 .addComponent(bHorarios)
@@ -543,9 +535,7 @@ public class FormMenu extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -576,6 +566,138 @@ public class FormMenu extends javax.swing.JFrame {
 
     private void bConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bConfirmarActionPerformed
         try {
+            // Verificar si se ha seleccionado un restaurante
+            if (idRestauranteSeleccionado == null) {
+                JOptionPane.showMessageDialog(this, "Por favor, seleccione un restaurante válido.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Verificar si se ha seleccionado una mesa
+            if (this.idMesaSeleccionada == null) {
+                JOptionPane.showMessageDialog(this, "Por favor, seleccione una mesa de la lista.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Obtener los datos del cliente y de la mesa
+            String clienteSeleccionado = (String) jComboBoxClientes.getSelectedItem();
+            int numPersonas = Integer.parseInt((String) cbCantidad.getSelectedItem());
+            Date fechaSeleccionada = (Date) jFecha.getDate();
+            Date horaSeleccionada = (Date) jHora.getValue();
+
+            // Verificar que se haya seleccionado la fecha y la hora
+            if (fechaSeleccionada == null || horaSeleccionada == null) {
+                JOptionPane.showMessageDialog(this, "Por favor, seleccione una fecha y hora para la reserva.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Validar que la fecha seleccionada no sea anterior a la fecha actual
+            Date fechaActual = new Date();
+            if (fechaSeleccionada.before(fechaActual)) {
+                JOptionPane.showMessageDialog(this, "La fecha seleccionada no puede ser anterior a la fecha actual.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Obtener el día de la semana de la fecha seleccionada
+            Calendar calendarFecha = Calendar.getInstance();
+            calendarFecha.setTime(fechaSeleccionada);
+            int diaSemanaNumero = calendarFecha.get(Calendar.DAY_OF_WEEK);
+            String diaSemana = convertirDiaSemana(diaSemanaNumero); // Método para convertir a texto
+
+            // Obtener la hora de apertura y cierre según el restaurante y el día de la semana
+            Date horaApertura = restBO.obtenerHoraApertura(idRestauranteSeleccionado, diaSemana);
+            Date horaCierre = restBO.obtenerHoraCierre(idRestauranteSeleccionado, diaSemana);
+
+            // Combinar fecha y hora seleccionadas
+            Calendar calendarHora = Calendar.getInstance();
+            calendarHora.setTime(horaSeleccionada);
+            calendarFecha.set(Calendar.HOUR_OF_DAY, calendarHora.get(Calendar.HOUR_OF_DAY));
+            calendarFecha.set(Calendar.MINUTE, calendarHora.get(Calendar.MINUTE));
+
+            Date fechaHoraFinal = calendarFecha.getTime();
+
+            // Validar la hora seleccionada
+            if (!esHoraValida(fechaHoraFinal, horaApertura, horaCierre)) {
+                JOptionPane.showMessageDialog(this, "La hora seleccionada debe estar entre el horario de apertura y al menos una hora antes del cierre.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Obtener el costo y los datos del cliente
+            BigDecimal costo = mesaBO.obtenerCostoPorIdMesa(this.idMesaSeleccionada);
+            String nombreCompleto = (String) jComboBoxClientes.getSelectedItem();
+            Long idCliente = clienteBO.obtenerIdClientePorNombre(nombreCompleto);
+
+            // Crear el DTO de reserva
+            ReservaDTO reservaDTO = new ReservaDTO(null, fechaHoraFinal, numPersonas, costo, "Reservado", null, BigDecimal.ZERO, idCliente, this.idMesaSeleccionada);
+
+            // Mostrar diálogo de confirmación con los detalles de la reserva
+            Forms.cargarForm(new FormDetallesReserva(reservaDTO, idCliente, this.idMesaSeleccionada), this);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al preparar la reserva: " + e.getMessage());
+        }
+    }//GEN-LAST:event_bConfirmarActionPerformed
+
+    public boolean esHoraValida(Date fechaSeleccionada, Date horaApertura, Date horaCierre) {
+        Calendar calSeleccionada = Calendar.getInstance();
+        calSeleccionada.setTime(fechaSeleccionada);
+
+        Calendar calApertura = Calendar.getInstance();
+        calApertura.setTime(horaApertura);
+
+        Calendar calCierre = Calendar.getInstance();
+        calCierre.setTime(horaCierre);
+
+        // Ajustar hora de cierre para que sea una hora antes
+        calCierre.add(Calendar.HOUR_OF_DAY, -1);
+
+        // Comparar solo las horas sin tener en cuenta la fecha
+        int horaSeleccionada = calSeleccionada.get(Calendar.HOUR_OF_DAY);
+        int minutoSeleccionado = calSeleccionada.get(Calendar.MINUTE);
+
+        int horaAperturaInt = calApertura.get(Calendar.HOUR_OF_DAY);
+        int minutoAperturaInt = calApertura.get(Calendar.MINUTE);
+
+        int horaCierreInt = calCierre.get(Calendar.HOUR_OF_DAY);
+        int minutoCierreInt = calCierre.get(Calendar.MINUTE);
+
+        // Validación de que la hora seleccionada esté dentro del rango permitido
+        if ((horaSeleccionada > horaAperturaInt || (horaSeleccionada == horaAperturaInt && minutoSeleccionado >= minutoAperturaInt))
+                && (horaSeleccionada < horaCierreInt || (horaSeleccionada == horaCierreInt && minutoSeleccionado < minutoCierreInt))) {
+            return true; // Hora válida
+        } else {
+            return false; // Hora inválida
+        }
+    }
+
+    private void aplicarFiltros() {
+//        try {
+//            // Obtener los valores seleccionados en los filtros
+//            String ubicacionSeleccionada = (String) cbUbicacion.getSelectedItem();
+//            int capacidadSeleccionada = Integer.parseInt((String) cbCantidad.getSelectedItem());
+//            Date fechaSeleccionada = (Date) jFecha.getDate();
+//
+//            // Verificar que se ha seleccionado una fecha
+//            if (fechaSeleccionada == null) {
+//                return; // O manejarlo de otra manera si es necesario
+//            }
+//
+//            // Obtener el día de la semana de la fecha seleccionada
+//            Calendar calendarFecha = Calendar.getInstance();
+//            calendarFecha.setTime(fechaSeleccionada);
+//            String diaSemana = convertirDiaSemana(calendarFecha.get(Calendar.DAY_OF_WEEK));
+//
+//            // Obtener las mesas filtradas
+//            List<MesaDTO> mesasFiltradas = mesaBO.obtenerMesasFiltradas(ubicacionSeleccionada, capacidadSeleccionada, diaSemana);
+//
+//            // Actualizar la tabla con las mesas filtradas
+//            actualizarTablaMesas(mesasFiltradas);
+//        } catch (Exception e) {
+//            JOptionPane.showMessageDialog(this, "Error al aplicar los filtros: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+//        }
+    }
+
+    private void xd() {
+        try {
             // Obtener los datos del cliente y de la mesa
             String clienteSeleccionado = (String) jComboBoxClientes.getSelectedItem();
 
@@ -602,70 +724,10 @@ public class FormMenu extends javax.swing.JFrame {
             ReservaDTO reservaDTO = new ReservaDTO(null, fechaHoraFinal, numPersonas, costo, "Reservado", null, BigDecimal.ZERO, idCliente, this.idMesaSeleccionada);
 
             // Mostrar diálogo de confirmación con los datos del cliente y la mesa
-            Forms.cargarForm(new FormDetallesReserva(reservaDTO,idCliente, this.idMesaSeleccionada), this);
+            Forms.cargarForm(new FormDetallesReserva(reservaDTO, idCliente, this.idMesaSeleccionada), this);
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error al preparar la reserva: " + e.getMessage());
-        }
-    }//GEN-LAST:event_bConfirmarActionPerformed
-
-    private void xd() {
-        try {
-            // Obtener el cliente seleccionado del JComboBox
-            String clienteSeleccionado = (String) jComboBoxClientes.getSelectedItem();
-            String selectedItem = (String) cbCantidad.getSelectedItem();
-            // Obtener el número de personas seleccionado
-            int numPersonas = Integer.parseInt(selectedItem); // Asumiendo que es un JComboBox con enteros
-
-            // Obtener la fecha seleccionada del JSpinner
-            Date fechaSeleccionada = (Date) jFecha.getDate(); // Asegúrate que jFecha está configurado correctamente
-
-            // Obtener la hora seleccionada del JSpinner
-            Date horaSeleccionada = (Date) jHora.getValue(); // Asegúrate que jHora está configurado correctamente
-
-            // Combinar fecha y hora
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(fechaSeleccionada); // Establecer la fecha seleccionada
-
-            // Extraer la hora y los minutos del JSpinner de hora
-            Calendar horaCalendar = Calendar.getInstance();
-            horaCalendar.setTime(horaSeleccionada);
-
-            // Establecer la hora y los minutos en el calendar principal
-            calendar.set(Calendar.HOUR_OF_DAY, horaCalendar.get(Calendar.HOUR_OF_DAY));
-            calendar.set(Calendar.MINUTE, horaCalendar.get(Calendar.MINUTE));
-            calendar.set(Calendar.SECOND, 0); // Puedes establecer los segundos si lo necesitas
-            calendar.set(Calendar.MILLISECOND, 0); // Puedes establecer los milisegundos si lo necesitas
-
-            // Crear el Date final combinando fecha y hora
-            Date fechaHoraFinal = calendar.getTime();
-
-            // Crear un objeto ReservaDTO
-            Long idReserva = null; // Si es autoincremental y se genera en la base de datos
-            BigDecimal costo = mesaBO.obtenerCostoPorIdMesa(this.idMesaSeleccionada); // Método para calcular el costo
-
-            String estado = "Reservado"; // Estado inicial, puede cambiar según tu lógica
-            Date fechaCancelacion = null; // O puedes establecerlo en caso de cancelación
-            BigDecimal multa = BigDecimal.ZERO; // O establecer según tu lógica
-
-            String nombreCompleto = (String) jComboBoxClientes.getSelectedItem(); // Obtener el nombre completo seleccionado
-            Long idCliente = clienteBO.obtenerIdClientePorNombre(nombreCompleto); // Obtener el ID del cliente
-
-            // Crear el objeto ReservaDTO con fechaHoraFinal
-            ReservaDTO reservaDTO = new ReservaDTO(idReserva, fechaHoraFinal, numPersonas, costo, estado, fechaCancelacion, multa, idCliente, this.idMesaSeleccionada);
-
-            // Llamar al método agregarReserva
-            try {
-                agregarReservaBO.agregarReserva(reservaDTO);
-                JOptionPane.showMessageDialog(this, "Reserva agregada exitosamente.");
-            } catch (Exception e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error al agregar la reserva: " + e.getMessage());
-
-            }
-        } catch (NegocioException ex) {
-            Logger.getLogger(FormMenu.class.getName()).log(Level.SEVERE, null, ex);
-
         }
     }
     private void bClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bClientesActionPerformed
@@ -756,6 +818,27 @@ public class FormMenu extends javax.swing.JFrame {
         this.repaint();
     }
 
+    private String convertirDiaSemana(int diaSemanaNumero) {
+        switch (diaSemanaNumero) {
+            case Calendar.SUNDAY:
+                return "Domingo";
+            case Calendar.MONDAY:
+                return "Lunes";
+            case Calendar.TUESDAY:
+                return "Martes";
+            case Calendar.WEDNESDAY:
+                return "Miércoles";
+            case Calendar.THURSDAY:
+                return "Jueves";
+            case Calendar.FRIDAY:
+                return "Viernes";
+            case Calendar.SATURDAY:
+                return "Sábado";
+            default:
+                return "";
+        }
+    }
+
     private void cargarRestaurantes() {
         try {
             cbRestaurante.removeAllItems(); // Limpiar elementos actuales
@@ -837,6 +920,7 @@ public class FormMenu extends javax.swing.JFrame {
         try {
             String ubicacionSeleccionada = cbUbicacion.getSelectedItem().toString();
             String capacidadSeleccionada = cbCantidad.getSelectedItem().toString();
+            Date fechaSeleccionada = (Date) jFecha.getDate(); // Asumiendo que jFecha es un JDatePicker
 
             List<MesaDTO> mesas = mesaBO.obtenerTodasLasMesas();
 
@@ -855,26 +939,37 @@ public class FormMenu extends javax.swing.JFrame {
             modelo.addColumn("Horario Apertura");
             modelo.addColumn("Horario Cierre");
 
-            // Llenar el modelo con los datos de las mesas y horarios filtrados
-            for (MesaDTO mesa : mesas) {
-                boolean coincideRestaurante = mesa.getIdRestaurante().equals(idRestauranteSeleccionado);
+            // Verificar que la fecha seleccionada no sea nula
+            if (fechaSeleccionada != null) {
+                // Obtener el día de la semana de la fecha seleccionada
+                Calendar calendarFecha = Calendar.getInstance();
+                calendarFecha.setTime(fechaSeleccionada);
+                String diaSemana = convertirDiaSemana(calendarFecha.get(Calendar.DAY_OF_WEEK));
 
-                // Si coincide la ubicación, capacidad y restaurante, se agrega a la tabla
-                if (coincideRestaurante) {
+                // Filtrar las mesas
+                for (MesaDTO mesa : mesas) {
+                    boolean coincideRestaurante = mesa.getIdRestaurante().equals(idRestauranteSeleccionado);
+                    boolean coincideUbicacion = mesa.getUbicacion().equals(ubicacionSeleccionada);
+                    boolean coincideCapacidad = mesa.getCapacidad() <= Integer.parseInt(capacidadSeleccionada);
 
-                    // Iterar sobre los horarios asignados al restaurante y crear una fila para cada día
-                    for (HorarioDTO horario : horariosRestaurante) {
-                        Object[] fila = new Object[7];
+                    // Si coincide la ubicación, capacidad y restaurante, se agrega a la tabla
+                    if (coincideRestaurante && coincideUbicacion && coincideCapacidad) {
+                        // Iterar sobre los horarios asignados al restaurante y crear una fila para cada día
+                        for (HorarioDTO horario : horariosRestaurante) {
+                            if (horario.getDiaSemana().equals(diaSemana)) { // Filtrar por día de la semana
+                                Object[] fila = new Object[7];
 
-                        fila[0] = mesa.getIdMesa();
-                        fila[1] = mesa.getCodigoMesa();
-                        fila[2] = horario.getDiaSemana();
-                        fila[3] = mesa.getUbicacion();
-                        fila[4] = mesa.getCapacidad();
-                        fila[5] = sdf.format(horario.getHoraApertura());
-                        fila[6] = sdf.format(horario.getHoraCierre());
+                                fila[0] = mesa.getIdMesa();
+                                fila[1] = mesa.getCodigoMesa();
+                                fila[2] = horario.getDiaSemana();
+                                fila[3] = mesa.getUbicacion();
+                                fila[4] = mesa.getCapacidad();
+                                fila[5] = sdf.format(horario.getHoraApertura());
+                                fila[6] = sdf.format(horario.getHoraCierre());
 
-                        modelo.addRow(fila);
+                                modelo.addRow(fila);
+                            }
+                        }
                     }
                 }
             }
@@ -904,6 +999,5 @@ public class FormMenu extends javax.swing.JFrame {
     private void guardarIdMesaSeleccionada(Long idMesa) {
         this.idMesaSeleccionada = idMesa;
     }
-
 
 }

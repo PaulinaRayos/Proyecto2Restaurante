@@ -7,7 +7,6 @@ package negocio;
 import conexion.Conexion;
 import conexion.IConexion;
 import dao.ClienteDAO;
-import dao.MesaDAO;
 import dao.ReservaDAO;
 import dto.ReservaDTO;
 import entidadesJPA.Cliente;
@@ -15,29 +14,44 @@ import entidadesJPA.Reserva;
 import excepciones.PersistenciaException;
 import interfaces.IClienteDAO;
 import interfaces.IConsultarReservasBO;
-import interfaces.IMesaDAO;
 import interfaces.IReservaDAO;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Clase que implementa la lógica de negocio para consultar reservas en el
+ * sistema. Proporciona métodos para obtener información sobre reservas junto
+ * con los datos de los clientes asociados.
  *
- * @author pauli
+ * @author Cristopher Alberto Elizalde Andrade - 240005
+ * @author Paulina Rodríguez Rodríguez Rayos - 117262
  */
 public class ConsultarReservasBO implements IConsultarReservasBO {
 
-    private final IConexion conexion;
-    private final IReservaDAO reservaDAO;
-    private final IMesaDAO mesaDAO;
-    private final IClienteDAO clienteDAO;
+    private final IConexion conexion; // Conexión a la base de datos
+    private final IReservaDAO reservaDAO; // DAO para manejar reservas
+    private final IClienteDAO clienteDAO; // DAO para manejar clientes
 
+    /**
+     * Constructor de la clase ConsultarReservasBO. Inicializa las conexiones y
+     * los DAOs necesarios.
+     */
     public ConsultarReservasBO() {
         this.conexion = new Conexion();
         this.reservaDAO = new ReservaDAO(conexion);
-        this.mesaDAO = new MesaDAO(conexion);
         this.clienteDAO = new ClienteDAO(conexion);
     }
 
+    /**
+     * Método para obtener todas las reservas junto con la información del
+     * cliente asociado.
+     *
+     * @return Lista de objetos ReservaDTO que contienen información de reservas
+     * y clientes.
+     * @throws Exception Si ocurre un error al obtener las reservas con los
+     * clientes.
+     */
+    @Override
     public List<ReservaDTO> obtenerReservasConClientes() throws Exception {
         try {
             List<Reserva> reservas = reservaDAO.obtenerTodasLasReservas();
@@ -66,6 +80,15 @@ public class ConsultarReservasBO implements IConsultarReservasBO {
         }
     }
 
+    /**
+     * Método para obtener todas las reservas del sistema y convertirlas en
+     * objetos ReservaDTO.
+     *
+     * @return Lista de objetos ReservaDTO que representan todas las reservas.
+     * @throws Exception Si ocurre un error al obtener las reservas desde la
+     * capa de persistencia.
+     */
+    @Override
     public List<ReservaDTO> obtenerTodasLasReservas() throws Exception {
         try {
             // Llama al DAO para obtener todas las reservas
@@ -77,10 +100,14 @@ public class ConsultarReservasBO implements IConsultarReservasBO {
                 ReservaDTO reservaDTO = new ReservaDTO();
                 reservaDTO.setIdReserva(reserva.getId());
                 reservaDTO.setFechaHora(reserva.getFechaHora());
+                reservaDTO.setFechaCancelacion(reserva.getFechaCancelacion());
+                reservaDTO.setFechaHoraCreada(reserva.getFechaHoraCreada());
                 reservaDTO.setNumeroPersonas(reserva.getNumPersonas());
                 reservaDTO.setEstado(reserva.getEstado());
+                reservaDTO.setCosto(reserva.getCosto());
+                reservaDTO.setMulta(reserva.getMulta());
                 reservaDTO.setIdMesa(reserva.getMesa().getId());
-                reservaDTO.setIdCliente(reserva.getCliente().getId()); // Suponiendo que tienes acceso al cliente
+                reservaDTO.setIdCliente(reserva.getCliente().getId());
 
                 // Agregar el DTO a la lista
                 reservasDTO.add(reservaDTO);
@@ -98,6 +125,7 @@ public class ConsultarReservasBO implements IConsultarReservasBO {
      * @return El estado de la reserva.
      * @throws PersistenciaException Si ocurre un error durante la operación.
      */
+    @Override
     public String obtenerEstadoReservaPorId(Long idReserva) throws PersistenciaException {
         try {
             return reservaDAO.obtenerEstadoReservaPorId(idReserva);
@@ -114,6 +142,7 @@ public class ConsultarReservasBO implements IConsultarReservasBO {
      * @return Un objeto ReservaDTO que representa la reserva.
      * @throws PersistenciaException Si ocurre un error durante la operación.
      */
+    @Override
     public ReservaDTO obtenerReservaPorId(Long idReserva) throws PersistenciaException {
         try {
             // Llama al DAO para obtener la reserva

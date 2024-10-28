@@ -5,7 +5,6 @@
  */
 package negocio;
 
-import static com.mysql.cj.MysqlType.TIME;
 import conexion.Conexion;
 import conexion.IConexion;
 import dao.ClienteDAO;
@@ -15,27 +14,31 @@ import dto.ReservaDTO;
 import entidadesJPA.Cliente;
 import entidadesJPA.Mesa;
 import entidadesJPA.Reserva;
-import excepciones.PersistenciaException;
 import interfaces.IMesaDAO;
 import interfaces.IClienteDAO;
 import interfaces.IReservaDAO;
-import java.util.List;
 import interfaces.IAgregarReservaBO;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Date;
 
 /**
+ * Clase que implementa la lógica de negocio para la gestión de reservas en un
+ * restaurante. Se encarga de agregar nuevas reservas a la base de datos y
+ * validar la información proporcionada.
  *
- * @author pauli
+ * @author Cristopher Alberto Elizalde Andrade - 240005
+ * @author Paulina Rodríguez Rodríguez Rayos - 117262
  */
 public class AgregarReservaBO implements IAgregarReservaBO {
 
-    private final IConexion conexion;
-    private final IReservaDAO reservaDAO;
-    private final IMesaDAO mesaDAO;
-    private final IClienteDAO clienteDAO;
+    private final IConexion conexion; // Interfaz para la conexión a la base de datos
+    private final IReservaDAO reservaDAO; // Interfaz para las operaciones relacionadas con reservas
+    private final IMesaDAO mesaDAO; // Interfaz para las operaciones relacionadas con mesas
+    private final IClienteDAO clienteDAO; // Interfaz para las operaciones relacionadas con clientes
 
+    /**
+     * Constructor de la clase AgregarReservaBO. Inicializa las interfaces
+     * necesarias para la conexión y el acceso a los datos.
+     */
     public AgregarReservaBO() {
         this.conexion = new Conexion();
         this.reservaDAO = new ReservaDAO(conexion);
@@ -43,6 +46,17 @@ public class AgregarReservaBO implements IAgregarReservaBO {
         this.clienteDAO = new ClienteDAO(conexion);
     }
 
+    /**
+     * Método para agregar una nueva reserva a la base de datos. Valida que los
+     * IDs del cliente y la mesa no sean nulos, carga la información del cliente
+     * y la mesa desde la base de datos, y persiste la nueva reserva.
+     *
+     * @param reservaDTO Objeto que contiene la información de la reserva a
+     * agregar.
+     * @throws Exception Si ocurre un error al agregar la reserva o si el
+     * cliente o mesa no se encuentran.
+     */
+    @Override
     public void agregarReserva(ReservaDTO reservaDTO) throws Exception {
 
         if (reservaDTO.getIdCliente() == null || reservaDTO.getIdMesa() == null) {
@@ -55,8 +69,8 @@ public class AgregarReservaBO implements IAgregarReservaBO {
         reserva.setNumPersonas(reservaDTO.getNumeroPersonas());
         reserva.setCosto(reservaDTO.getCosto()); // Suponiendo que tienes un costo calculado
         reserva.setEstado(reservaDTO.getEstado()); // Estado inicial de la reserva
-        
-        Date fechaCreada = new Date(); 
+
+        Date fechaCreada = new Date();
         reserva.setFechaHoraCreada(fechaCreada);
 
         // Cargar el cliente desde la base de datos
@@ -83,16 +97,5 @@ public class AgregarReservaBO implements IAgregarReservaBO {
         }
 
     }
-
-    @Override
-    public void actualizarReserva(ReservaDTO reservaDTO) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public List<ReservaDTO> obtenerReservasPorCliente(Long idCliente) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
 
 }

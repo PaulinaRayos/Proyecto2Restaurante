@@ -20,9 +20,9 @@ import javax.persistence.TypedQuery;
  * Implementación de la interfaz IHorarioMesaDAO que proporciona métodos para el
  * acceso a datos de la entidad HorarioMesa. Esta clase permite realizar
  * operaciones de creación, búsqueda, actualización y obtención de horarios de
- * mesas en la base de datos.
- * Contribuciones de Paulina Rodríguez Rodríguez Rayos.
- * 
+ * mesas en la base de datos. Contribuciones de Paulina Rodríguez Rodríguez
+ * Rayos.
+ *
  * @author Cristopher Alberto Elizalde Andrade - 240005
  */
 public class HorarioMesaDAO implements IHorarioMesaDAO {
@@ -43,6 +43,7 @@ public class HorarioMesaDAO implements IHorarioMesaDAO {
      *
      * @param horarioMesa El objeto HorarioMesa a crear.
      */
+    @Override
     public void crearHorarioMesa(HorarioMesa horarioMesa) {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -59,6 +60,16 @@ public class HorarioMesaDAO implements IHorarioMesaDAO {
 
         }
     }
+
+    /**
+     * Obtiene una lista de horarios asociados a una mesa específica.
+     *
+     * @param idMesa el ID de la mesa cuyas horas se desean obtener
+     * @return una lista de objetos HorarioMesa que pertenecen a la mesa
+     * especificada
+     * @throws PersistenciaException si ocurre un error al obtener los horarios
+     */
+    @Override
     public List<HorarioMesa> obtenerHorariosPorMesa(Long idMesa) throws PersistenciaException {
         EntityManager em = this.conexion.crearConexion();
         List<HorarioMesa> horariosMesa = new ArrayList<>();
@@ -75,6 +86,7 @@ public class HorarioMesaDAO implements IHorarioMesaDAO {
 
         return horariosMesa;
     }
+
     /**
      * Busca un horario de mesa por su ID.
      *
@@ -82,6 +94,7 @@ public class HorarioMesaDAO implements IHorarioMesaDAO {
      * @return El objeto HorarioMesa correspondiente al ID proporcionado, o null
      * si no se encuentra.
      */
+    @Override
     public HorarioMesa horarioMesaPorId(Long id) {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -96,6 +109,7 @@ public class HorarioMesaDAO implements IHorarioMesaDAO {
      *
      * @return Una lista de todos los objetos HorarioMesa.
      */
+    @Override
     public List<HorarioMesa> horarioMesaTodos() {
         EntityManager em = this.conexion.crearConexion();
         try {
@@ -113,6 +127,7 @@ public class HorarioMesaDAO implements IHorarioMesaDAO {
      * @return Un Optional que contiene el primer HorarioMesa encontrado en la
      * base de datos o Optional.empty() si no se encontró ninguno.
      */
+    @Override
     public Optional<HorarioMesa> buscarHorarioMesa() {
         EntityManager em = this.conexion.crearConexion();
         // Crear una consulta para buscar cualquier HorarioMesa
@@ -134,6 +149,7 @@ public class HorarioMesaDAO implements IHorarioMesaDAO {
      *
      * @return El HorarioMesa existente o uno nuevo si no se encuentra ninguno.
      */
+    @Override
     public HorarioMesa obtenerOcrearHorarioMesa() {
 
         // 1. Buscar si ya existe un HorarioMesa con ciertas características (si aplica algún filtro)
@@ -156,6 +172,7 @@ public class HorarioMesaDAO implements IHorarioMesaDAO {
      *
      * @param horarioMesa El objeto HorarioMesa a actualizar.
      */
+    @Override
     public void actualizarHorarioMesa(HorarioMesa horarioMesa) {
         EntityManager em = this.conexion.crearConexion();
         EntityTransaction tx = em.getTransaction();

@@ -21,7 +21,7 @@ import utilidades.Forms;
  */
 public class FormCreaRestaurante extends javax.swing.JFrame {
 
-    private IRestauranteBO restbo;
+    private final IRestauranteBO restbo;
 
     /**
      * Creates new form FormCreaRestaurante

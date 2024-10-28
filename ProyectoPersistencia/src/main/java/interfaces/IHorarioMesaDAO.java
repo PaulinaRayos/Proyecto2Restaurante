@@ -11,10 +11,10 @@ import java.util.Optional;
 
 /**
  * Interfaz que define las operaciones de acceso a datos para la entidad
- * HorarioMesa. Proporciona métodos para realizar operaciones de creación, lectura,
- * actualización y eliminación (CRUD) de HorariosMesa en la base de datos.
- * Contribuciones de Paulina Rodríguez Rodríguez Rayos.
- * 
+ * HorarioMesa. Proporciona métodos para realizar operaciones de creación,
+ * lectura, actualización y eliminación (CRUD) de HorariosMesa en la base de
+ * datos. Contribuciones de Paulina Rodríguez Rodríguez Rayos.
+ *
  * @author Cristopher Alberto Elizalde Andrade - 240005
  */
 public interface IHorarioMesaDAO {
@@ -67,7 +67,14 @@ public interface IHorarioMesaDAO {
      */
     HorarioMesa obtenerOcrearHorarioMesa();
 
+    /**
+     * Obtiene una lista de horarios asociados a una mesa específica.
+     *
+     * @param idMesa el ID de la mesa cuyas horas se desean obtener
+     * @return una lista de objetos HorarioMesa que pertenecen a la mesa
+     * especificada
+     * @throws PersistenciaException si ocurre un error al obtener los horarios
+     */
     List<HorarioMesa> obtenerHorariosPorMesa(Long idMesa) throws PersistenciaException;
 
-    
 }

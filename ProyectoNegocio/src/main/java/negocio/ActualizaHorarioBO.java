@@ -6,67 +6,84 @@ package negocio;
 
 import conexion.Conexion;
 import conexion.IConexion;
-import conversiones.ConvertidorGeneral;
 import dao.HorarioDAO;
-import dao.HorarioMesaDAO;
 import dao.RestauranteDAO;
 import dto.HorarioDTO;
 import entidadesJPA.Horario;
-import entidadesJPA.HorarioMesa;
 import entidadesJPA.Restaurante;
 import excepciones.NegocioException;
 import excepciones.PersistenciaException;
 import interfaces.IRestauranteDAO;
 import interfaces.IHorarioDAO;
-import java.util.Optional;
 import interfaces.IActualizaHorarioBO;
-import interfaces.IHorarioMesaDAO;
 import java.util.List;
 
 /**
+ * Clase que implementa la lógica de negocio para la actualización de horarios
+ * de restaurantes. Se encarga de guardar y actualizar la información de
+ * horarios en la base de datos.
  *
- * @author Chris
+ * @author Cristopher Alberto Elizalde Andrade - 240005
+ * @author Paulina Rodríguez Rodríguez Rayos - 117262
  */
 public class ActualizaHorarioBO implements IActualizaHorarioBO {
 
-    private final IConexion conexion;
-    private IRestauranteDAO restdao;
-    private IHorarioDAO horariodao;
-    private IHorarioMesaDAO horariomesadao;
+    private final IConexion conexion; // Interfaz para la conexión a la base de datos
+    private final IRestauranteDAO restdao; // Interfaz para las operaciones de restaurante
+    private final IHorarioDAO horariodao; // Interfaz para las operaciones de horario
 
+    /**
+     * Constructor de la clase ActualizaHorarioBO. Inicializa las interfaces
+     * necesarias para la conexión y el acceso a los datos.
+     */
     public ActualizaHorarioBO() {
         this.conexion = new Conexion();
         this.restdao = new RestauranteDAO(conexion);
         this.horariodao = new HorarioDAO(conexion);
-        this.horariomesadao = new HorarioMesaDAO(conexion);
     }
 
+    /**
+     * Método para guardar un horario en la base de datos. Si ya existe un
+     * horario para el día de la semana específico, se actualiza. Si no existe,
+     * se crea un nuevo horario.
+     *
+     * @param horarioDTO Objeto que contiene la información del horario a
+     * guardar.
+     * @throws NegocioException Si ocurre un error al guardar o actualizar el
+     * horario.
+     */
     @Override
     public void guardarHorario(HorarioDTO horarioDTO) throws NegocioException {
         try {
 
             Restaurante restaurante = restdao.obtenerPorId(horarioDTO.getIdRestaurante());
-            // Buscar si existe un horario para el día de la semana específico
-            //Optional<Horario> horarioExistente = horariodao.buscarPorDiaSemana(horarioDTO.getDiaSemana());
-            // Buscar horarios para el día de la semana específico y el restaurante
-        List<Horario> horariosExistentes = horariodao.buscarPorDiaYRestaurante(horarioDTO.getDiaSemana(), horarioDTO.getIdRestaurante());
 
-        if (!horariosExistentes.isEmpty()) {
-            // Si existen, actualizar las horas de apertura y cierre del primer horario encontrado
-            Horario horarioActualizar = horariosExistentes.get(0); // O puedes decidir cómo manejar múltiples horarios
-            horarioActualizar.setHoraApartura(horarioDTO.getHoraApertura());
-            horarioActualizar.setHoraCierre(horarioDTO.getHoraCierre());
-            horariodao.actualizarHorario(horarioActualizar);
-        } else {
-            // Si no existen, crear un nuevo horario
-            Horario horario = convertidorEntidad(horarioDTO);
-            horariodao.crearHorario(horario);
+            List<Horario> horariosExistentes = horariodao.buscarPorDiaYRestaurante(horarioDTO.getDiaSemana(), horarioDTO.getIdRestaurante());
+
+            if (!horariosExistentes.isEmpty()) {
+                // Si existen, actualizar las horas de apertura y cierre del primer horario encontrado
+                Horario horarioActualizar = horariosExistentes.get(0); // O puedes decidir cómo manejar múltiples horarios
+                horarioActualizar.setHoraApartura(horarioDTO.getHoraApertura());
+                horarioActualizar.setHoraCierre(horarioDTO.getHoraCierre());
+                horariodao.actualizarHorario(horarioActualizar);
+            } else {
+                // Si no existen, crear un nuevo horario
+                Horario horario = convertidorEntidad(horarioDTO);
+                horariodao.crearHorario(horario);
+            }
+        } catch (Exception e) {
+            throw new NegocioException("Error al guardar o actualizar el horario: " + e.getMessage(), e);
         }
-    } catch (Exception e) {
-        throw new NegocioException("Error al guardar o actualizar el horario: " + e.getMessage(), e);
     }
-    }
-    public  Horario convertidorEntidad(HorarioDTO horarioDTO) throws PersistenciaException {
+
+    /**
+     * Método para convertir un objeto HorarioDTO en un objeto Horario.
+     *
+     * @param horarioDTO Objeto que contiene la información del horario.
+     * @return Un objeto Horario correspondiente al horarioDTO.
+     * @throws PersistenciaException Si ocurre un error al acceder a los datos.
+     */
+    public Horario convertidorEntidad(HorarioDTO horarioDTO) throws PersistenciaException {
         if (horarioDTO == null) {
             return null;
         }

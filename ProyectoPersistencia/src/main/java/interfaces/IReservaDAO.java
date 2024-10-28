@@ -15,7 +15,7 @@ import java.util.List;
  * Reserva. Proporciona métodos para realizar operaciones de creación, lectura,
  * actualización y eliminación (CRUD) de reservas en la base de datos.
  * Contribuciones de Paulina Rodríguez Rodríguez Rayos.
- * 
+ *
  * @author Cristopher Alberto Elizalde Andrade - 240005
  */
 public interface IReservaDAO {
@@ -51,7 +51,8 @@ public interface IReservaDAO {
     Reserva obtenerReservaPorId(Long id) throws PersistenciaException;
 
     /**
-     * Obtiene reservas de la base de datos que coinciden con el estado proporcionado.
+     * Obtiene reservas de la base de datos que coinciden con el estado
+     * proporcionado.
      *
      * @param estado El estado de las reservas a buscar.
      * @return Una lista de reservas que coinciden con el estado.
@@ -76,8 +77,15 @@ public interface IReservaDAO {
      */
     String obtenerEstadoReservaPorId(Long id) throws PersistenciaException;
 
+    /**
+     * Cancela una reserva específica, actualizando su estado y aplicando una
+     * multa si es necesario.
+     *
+     * @param idReserva el ID de la reserva a cancelar
+     * @param fechaCancelacion la fecha en que se realiza la cancelación
+     * @param multa la multa a aplicar por la cancelación de la reserva
+     * @throws PersistenciaException si ocurre un error al cancelar la reserva
+     */
     void cancelarReserva(Long idReserva, Date fechaCancelacion, BigDecimal multa) throws PersistenciaException;
-
-
 
 }

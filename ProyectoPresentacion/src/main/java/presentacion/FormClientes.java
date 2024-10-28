@@ -5,10 +5,8 @@
 package presentacion;
 
 import dto.ClienteDTO;
-import dto.MesaDTO;
 import dto.ReservaDTO;
 import excepciones.NegocioException;
-import excepciones.PersistenciaException;
 import interfaces.ICancelarReservaBO;
 import interfaces.IClienteBO;
 import interfaces.IConsultarReservasBO;
@@ -18,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -58,7 +55,6 @@ public class FormClientes extends javax.swing.JFrame {
         this.clientebo = new ClienteBO();
         this.mesabo = new MesaBO();
         this.cancelarReservabo = new CancelarReservaBO();
-
 
         this.cargarClientesEnTabla();
 
@@ -170,6 +166,8 @@ public class FormClientes extends javax.swing.JFrame {
             }
         });
 
+        btnLimpiarFiltros.setBackground(new java.awt.Color(255, 51, 153));
+        btnLimpiarFiltros.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
         btnLimpiarFiltros.setText("Limpiar filtros");
         btnLimpiarFiltros.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -198,9 +196,9 @@ public class FormClientes extends javax.swing.JFrame {
                                     .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel5))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 246, Short.MAX_VALUE)
-                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btnLimpiarFiltros)
-                                    .addComponent(bInsertar))))
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(bInsertar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnLimpiarFiltros, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                         .addGap(56, 56, 56)))
                 .addContainerGap())
         );
@@ -366,17 +364,20 @@ public class FormClientes extends javax.swing.JFrame {
     private javax.swing.JTextField txtNombre;
     private javax.swing.JTextField txtTelefono;
     // End of variables declaration//GEN-END:variables
-private void SetImageLabel(JLabel labelname, String root) {
+
+// Método para establecer una imagen en un JLabel específico.
+    private void SetImageLabel(JLabel labelname, String root) {
         ImageIcon image = new ImageIcon(root);
         Icon icon = new ImageIcon(image.getImage().getScaledInstance(labelname.getWidth(), labelname.getHeight(), Image.SCALE_DEFAULT));
         labelname.setIcon(icon);
         this.repaint();
     }
 
+// Método para cargar los clientes en una tabla.
     private void cargarClientesEnTabla() {
         try {
             List<ClienteDTO> clientes = clientebo.obtenerTodosLosClientesConTelefonoDesencriptado(); // Obtiene todos los clientes
-            this.clientes=clientes;
+            this.clientes = clientes;
             System.out.println("Clientes obtenidos: " + clientes.size());
 
             if (clientes == null || clientes.isEmpty()) {
@@ -392,6 +393,7 @@ private void SetImageLabel(JLabel labelname, String root) {
         }
     }
 
+    // Método para llenar una tabla con la lista de clientes.
     private void llenarTablaClientes(List<ClienteDTO> clientes) {
         try {
             if (clientes == null || clientes.isEmpty()) {
@@ -458,10 +460,12 @@ private void SetImageLabel(JLabel labelname, String root) {
         }
     }
 
+    // Método para guardar el ID del cliente seleccionado.
     private void guardarIdClienteSeleccionada(Long idCliente) {
         this.idClienteSeleccionado = idCliente;
     }
 
+    // Método para filtrar la lista de clientes por nombre.
     private void filtrarNombre() {
         String textoBuscar = txtNombre.getText().toLowerCase(); // Convierte a minúsculas para comparación
         List<ClienteDTO> clientesFiltrados = new ArrayList<>();
@@ -481,6 +485,7 @@ private void SetImageLabel(JLabel labelname, String root) {
         llenarTablaClientes(clientesFiltrados);
     }
 
+    // Método para filtrar clientes por número de teléfono.
     public void filtrarTelefono() {
         String textoBuscar = txtTelefono.getText();
         List<ClienteDTO> clientesFiltrados = new ArrayList<>();
@@ -497,6 +502,7 @@ private void SetImageLabel(JLabel labelname, String root) {
         llenarTablaClientes(clientesFiltrados);
     }
 
+    // Método para cargar los detalles de un cliente en los campos de texto.
     private void cargarDetallesCliente(ClienteDTO cliente) {
         try {
 
@@ -512,6 +518,7 @@ private void SetImageLabel(JLabel labelname, String root) {
         }
     }
 
+    // Método para limpiar los filtros de búsqueda y recargar la tabla de clientes.
     private void limpiarFiltros() {
         // Limpiar campos de texto
         txtNombre.setText("");

@@ -5,23 +5,27 @@
 package interfaces;
 
 import dto.ReservaDTO;
-import java.util.List;
 
 /**
+ * Interfaz que define la lógica de negocio para la gestión de reservas en un
+ * restaurante. Esta interfaz proporciona el contrato para la implementación de
+ * métodos que permiten agregar nuevas reservas a la base de datos.
  *
- * @author pauli
+ * @author Cristopher Alberto Elizalde Andrade - 240005
+ * @author Paulina Rodríguez Rodríguez Rayos - 117262
  */
 public interface IAgregarReservaBO {
 
-    void actualizarReserva(ReservaDTO reservaDTO) throws Exception;
-
-
-
+    /**
+     * Método para agregar una nueva reserva a la base de datos. Valida que los
+     * IDs del cliente y la mesa no sean nulos, carga la información del cliente
+     * y la mesa desde la base de datos, y persiste la nueva reserva.
+     *
+     * @param reservaDTO Objeto que contiene la información de la reserva a
+     * agregar.
+     * @throws Exception Si ocurre un error al agregar la reserva o si el
+     * cliente o mesa no se encuentran.
+     */
     void agregarReserva(ReservaDTO reservaDTO) throws Exception;
 
-    List<ReservaDTO> obtenerReservasPorCliente(Long idCliente) throws Exception;
-    
-
-    
-    
 }

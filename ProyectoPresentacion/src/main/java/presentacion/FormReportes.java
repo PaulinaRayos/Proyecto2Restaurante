@@ -4,10 +4,33 @@
  */
 package presentacion;
 
+import dto.ClienteDTO;
+import dto.MesaDTO;
+import dto.ReporteDTO;
+import dto.ReservaDTO;
+import dto.TipoMesaDTO;
+import excepciones.NegocioException;
+import interfaces.IClienteBO;
+import interfaces.IConsultarReservasBO;
+import interfaces.IMesaBO;
+import interfaces.IReporteBO;
 import java.awt.Image;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.persistence.PersistenceException;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import negocio.ClienteBO;
+import negocio.ConsultarReservasBO;
+import negocio.MesaBO;
+import negocio.ReporteBO;
 import utilidades.Forms;
 
 /**
@@ -16,13 +39,100 @@ import utilidades.Forms;
  */
 public class FormReportes extends javax.swing.JFrame {
 
+    DefaultTableModel modeloTabla = new DefaultTableModel();
+    private final IClienteBO clienteBO;
+    private final IMesaBO mesabo;
+    private final IReporteBO reportebo;
+    private final IConsultarReservasBO consultaBO;
+    private List<ReservaDTO> reservas;
+    private List<ReservaDTO> reservasFiltradas;
+
     /**
      * Creates new form FormReportes
      */
     public FormReportes() {
         initComponents();
+        this.reportebo = new ReporteBO();
+        this.consultaBO = new ConsultarReservasBO();
+        this.clienteBO = new ClienteBO();
+        this.mesabo = new MesaBO();
+        try {
+            this.reservas = consultaBO.obtenerTodasLasReservas();
+        } catch (Exception e) {
+            Logger.getLogger(FormReportes.class.getName()).log(Level.SEVERE, null, e);
+        }
         this.setLocationRelativeTo(this);
+        this.actualizarTabla(reservas);
+
         this.SetImageLabel(jLabel3, "src/main/java/Imagenes/logo.png");
+    }
+
+    /**
+     * Metodo para limpiar la tabla de Reportes.
+     */
+    private void limpiarTabla() {
+        modeloTabla = (DefaultTableModel) tblReportes.getModel();
+        if (modeloTabla.getRowCount() > 0) {
+            for (int i = modeloTabla.getRowCount() - 1; i > -1; i--) {
+                modeloTabla.removeRow(i);
+            }
+        }
+    }
+
+    /**
+     * Actualiza la tabla de reportes con la información de las reservas
+     * especificados. Crea un nuevo modelo de tabla y lo asigna a la tabla de
+     * reportes.
+     *
+     * @param reservas La lista de las reservas que se utilizará para actualizar
+     * la tabla.
+     */
+    private void actualizarTabla(List<ReservaDTO> reservas) {
+        try {
+            DefaultTableModel reservasTabla = new DefaultTableModel() {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false; // Hacer que todas las celdas sean no editables
+                }
+            };
+            reservasTabla.addColumn("Fecha/Hora");
+            reservasTabla.addColumn("Cliente");
+            reservasTabla.addColumn("Codigo mesa");
+            reservasTabla.addColumn("Tipo de mesa");
+            reservasTabla.addColumn("Ubicación");
+            reservasTabla.addColumn("Costo");
+            reservasTabla.addColumn("Multa");
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            for (ReservaDTO reserva : reservas) {
+
+                ClienteDTO cliente = clienteBO.obtenerClientePorId(reserva.getIdCliente());
+                MesaDTO mesa = mesabo.obtenerMesaPorId(reserva.getIdMesa());
+                TipoMesaDTO tipoMesa = mesabo.obtenerTipoMesaaPorId(mesa.getIdTipoMesa());
+
+                String nombreCliente = cliente.getNombre() + " " + cliente.getApellidoPaterno() + " " + cliente.getApellidoMaterno();
+
+                String costoFormato = String.format("%.2f", reserva.getCosto());
+                String multaFormato = reserva.getMulta() != null ? String.format("%.2f", reserva.getMulta()) : "0.00";
+                Object[] fila = {
+                    dateFormat.format(reserva.getFechaHora()),
+                    nombreCliente,
+                    mesa.getCodigoMesa(),
+                    tipoMesa.getNombreTipo(),
+                    mesa.getUbicacion(),
+                    "$" + costoFormato + " MXN",
+                    "$" + multaFormato + " MXN"
+                };
+
+                reservasTabla.addRow(fila);
+            }
+
+            tblReportes.setModel(reservasTabla);
+
+        } catch (PersistenceException | NegocioException ex) {
+            Logger.getLogger(FormReportes.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -54,6 +164,7 @@ public class FormReportes extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         cbTipoMesa = new javax.swing.JComboBox<>();
         jLabel10 = new javax.swing.JLabel();
+        bFiltro = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -177,7 +288,7 @@ public class FormReportes extends javax.swing.JFrame {
         jLabel8.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         cbUbicacion.setFont(new java.awt.Font("Times New Roman", 3, 14)); // NOI18N
-        cbUbicacion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "General", "Terraza", "Ventana" }));
+        cbUbicacion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecciona ubicacion mesa", "General", "Terraza", "Ventana" }));
         cbUbicacion.setBorder(null);
         cbUbicacion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -190,7 +301,7 @@ public class FormReportes extends javax.swing.JFrame {
         jLabel9.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         cbTipoMesa.setFont(new java.awt.Font("Times New Roman", 3, 14)); // NOI18N
-        cbTipoMesa.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "General", "Terraza", "Ventana" }));
+        cbTipoMesa.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecciona tipo de mesa", "Mesa pequeña", "Mesa mediana", "Mesa grande" }));
         cbTipoMesa.setBorder(null);
         cbTipoMesa.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -202,6 +313,15 @@ public class FormReportes extends javax.swing.JFrame {
         jLabel10.setText("Tipo de Mesa:");
         jLabel10.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
+        bFiltro.setBackground(new java.awt.Color(255, 51, 153));
+        bFiltro.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
+        bFiltro.setText("Filtrar");
+        bFiltro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bFiltroActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -209,7 +329,6 @@ public class FormReportes extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabelaa1)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel4Layout.createSequentialGroup()
@@ -218,43 +337,50 @@ public class FormReportes extends javax.swing.JFrame {
                                 .addComponent(jLabel8)
                                 .addGap(18, 18, 18)
                                 .addComponent(jFechaFin, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(cbTipoMesa, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                                 .addComponent(jLabel7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel10)
-                                .addGap(60, 60, 60)))
-                        .addGap(103, 103, 103)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGap(18, 18, 18)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                                .addComponent(jLabel9)
-                                .addGap(60, 60, 60))
-                            .addComponent(cbUbicacion, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(55, 55, 55))
+                            .addComponent(cbTipoMesa, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel10))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel9)
+                            .addComponent(cbUbicacion, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(bFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(23, 23, 23))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabelaa1)
+                        .addGap(55, 55, 55))))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabelaa1)
-                .addGap(24, 24, 24)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel9)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(cbUbicacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel8)
-                        .addComponent(jFechaFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jLabel10)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(cbTipoMesa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addGap(18, 18, 18)
-                        .addComponent(jFechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabelaa1)
+                        .addGap(24, 24, 24)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(bFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel8)
+                                .addComponent(jFechaFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(jLabel10)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(cbTipoMesa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(jLabel7)
+                                .addGap(18, 18, 18)
+                                .addComponent(jFechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(21, Short.MAX_VALUE))
         );
 
@@ -327,10 +453,103 @@ public class FormReportes extends javax.swing.JFrame {
     }//GEN-LAST:event_cbTipoMesaActionPerformed
 
     private void bPDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bPDFActionPerformed
+        if (reservasFiltradas != null && !reservasFiltradas.isEmpty()) {
+            try {
+                // Convertir tramitesFiltrados a ReporteDTO
+                List<ReporteDTO> reportes = reportebo.convertirReservasAReportes(reservasFiltradas);
 
+                reportebo.generarReporte(reportes);
+                JOptionPane.showMessageDialog(this, "Reporte generado exitosamente");
+            } catch (NegocioException ex) {
+                JOptionPane.showMessageDialog(this, "El reporte no ha sido generado, seleccione un filtro y inténtelo ", "Error!", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            int respuesta = JOptionPane.showConfirmDialog(this,
+                    "No ha seleccionado ningún filtro. ¿Desea continuar sin filtros?",
+                    "Confirmación",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE);
+
+            if (respuesta == JOptionPane.YES_OPTION) {
+                try {
+                    // Generar reporte sin filtros
+                    List<ReporteDTO> reportes = reportebo.convertirReservasAReportes(reservas);
+                    reportebo.generarReporte(reportes);
+                    JOptionPane.showMessageDialog(this, "Reporte generado exitosamente");
+                } catch (NegocioException ex) {
+                    JOptionPane.showMessageDialog(this, "El reporte no ha sido generado, seleccione un filtro y inténtelo ", "Error!", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Operación cancelada. Por favor, seleccione un filtro e intente nuevamente.", "Operación Cancelada", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
     }//GEN-LAST:event_bPDFActionPerformed
 
+    private void bFiltroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bFiltroActionPerformed
+        reservasFiltradas = new ArrayList<>();
+
+        if (cbTipoMesa.getSelectedItem() != null) {
+            String tipoMesaSeleccionado = cbTipoMesa.getSelectedItem().toString().trim();
+            if (!tipoMesaSeleccionado.equals("Selecciona el tipo mesa")) {
+                List<ReservaDTO> reservasPorTipo = new ArrayList<>();
+                for (ReservaDTO reserva : reservas) {
+                    try {
+                        MesaDTO mesa = mesabo.obtenerMesaPorId(reserva.getIdMesa());
+                        TipoMesaDTO tipomesa = mesabo.obtenerTipoMesaaPorId(mesa.getIdTipoMesa());
+                        String tipoMesa = tipomesa.getNombreTipo();
+                        if (tipoMesa.equalsIgnoreCase(tipoMesaSeleccionado)) {
+                            reservasPorTipo.add(reserva);
+                        }
+                    } catch (NegocioException ex) {
+                        Logger.getLogger(FormReportes.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                reservasFiltradas = reservasPorTipo;
+            }
+        }
+
+        // Filtro de ubicación
+        if (cbUbicacion.getSelectedItem() != null) {
+            String ubicacionSeleccionada = cbUbicacion.getSelectedItem().toString().trim();
+            if (!ubicacionSeleccionada.equals("Selecciona ubicacion mesa")) {
+                List<ReservaDTO> reservasPorUbicacion = new ArrayList<>();
+                for (ReservaDTO reserva : reservas) {
+                    try {
+                        MesaDTO mesa = mesabo.obtenerMesaPorId(reserva.getIdMesa());
+                        String ubicacionMesa = mesa.getUbicacion();
+                        if (ubicacionMesa.equalsIgnoreCase(ubicacionSeleccionada)) {
+                            reservasPorUbicacion.add(reserva);
+                        }
+                    } catch (NegocioException ex) {
+                        Logger.getLogger(FormReportes.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                reservasFiltradas = reservasPorUbicacion;
+            }
+        }
+
+        // Filtro de rango de fecha
+        Date fechaInicioSeleccionada = jFechaInicio.getDate();
+        Date fechaFinSeleccionada = jFechaFin.getDate();
+        if (fechaInicioSeleccionada != null && fechaFinSeleccionada != null) {
+            List<ReservaDTO> reservasPorFecha = new ArrayList<>();
+            for (ReservaDTO reserva : reservas) {
+                Date fechaReserva = reserva.getFechaHora();
+                if ((fechaReserva.equals(fechaInicioSeleccionada) || fechaReserva.after(fechaInicioSeleccionada))
+                        && (fechaReserva.equals(fechaFinSeleccionada) || fechaReserva.before(fechaFinSeleccionada))) {
+                    reservasPorFecha.add(reserva);
+                }
+            }
+            reservasFiltradas = reservasPorFecha;
+        }
+
+        // Limpiar y actualizar la tabla con los resultados filtrados
+        limpiarTabla();
+        actualizarTabla(reservasFiltradas);
+    }//GEN-LAST:event_bFiltroActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bFiltro;
     private javax.swing.JButton bPDF;
     private javax.swing.JComboBox<String> cbTipoMesa;
     private javax.swing.JComboBox<String> cbUbicacion;

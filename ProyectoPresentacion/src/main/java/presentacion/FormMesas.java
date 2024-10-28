@@ -7,9 +7,11 @@ package presentacion;
 import dto.HorarioDTO;
 import dto.MesaDTO;
 import dto.RestauranteDTO;
+import dto.TipoMesaDTO;
 import entidadesJPA.Horario;
 import entidadesJPA.HorarioMesa;
 import excepciones.NegocioException;
+import excepciones.PersistenciaException;
 import interfaces.IAgregaMesasBO;
 import interfaces.IMesaBO;
 import interfaces.IRestauranteBO;
@@ -124,7 +126,7 @@ public class FormMesas extends javax.swing.JFrame {
         jLabel9.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         cbUbicacion.setFont(new java.awt.Font("Times New Roman", 3, 14)); // NOI18N
-        cbUbicacion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "General", "Terraza", "Ventana" }));
+        cbUbicacion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar ubicación", "General", "Terraza", "Ventana" }));
         cbUbicacion.setBorder(null);
         cbUbicacion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -419,39 +421,99 @@ public class FormMesas extends javax.swing.JFrame {
 
     private void bCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCrearActionPerformed
         try {
-            // Obtener el restaurante seleccionado
-            RestauranteDTO restauranteSeleccionado = restBO.obtenerRestaurantePorId(idRestauranteSeleccionado);
-
             // Verificar si se ha seleccionado un restaurante
             if (idRestauranteSeleccionado == null) {
-                // Mostrar un diálogo indicando que debe seleccionar un restaurante
                 JOptionPane.showMessageDialog(this, "Por favor, seleccione un restaurante válido.", "Error", JOptionPane.ERROR_MESSAGE);
                 return; // Salir del método si no hay selección válida
             }
 
+            // Obtener el restaurante seleccionado
+            RestauranteDTO restauranteSeleccionado = restBO.obtenerRestaurantePorId(idRestauranteSeleccionado);
+
             // Verificar si el restaurante tiene horarios asignados
             List<HorarioDTO> horarios = horariobo.obtenerDiasAsignadosParaRestaurante(idRestauranteSeleccionado);
             if (horarios.isEmpty()) {
-                // Mostrar un diálogo indicando que no hay horarios para el restaurante
-                JOptionPane.showMessageDialog(this, "No se puede agregar mesas sin horarios asignados al restaurante.", "Error", JOptionPane.ERROR_MESSAGE);
-                return; // Salir del método si no hay horarios
+                int respuesta = JOptionPane.showConfirmDialog(this,
+                        "No hay horarios configurados del restaurante aun. ¿Desea agregar los horarios del restaurante ahora?",
+                        "Horarios de Restaurante",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE);
+
+                if (respuesta == JOptionPane.YES_OPTION) {
+                    // Lógica para abrir el formulario de agregar tipos de mesa
+                    Forms.cargarForm(new FormHorarios(), this);
+                    return; // Salir del método después de abrir el formulario
+                } else {
+                    return; // Salir del método si el usuario no desea agregar tipos de mesa
+                }
+            }
+
+            // Verificar si se ha seleccionado un día
+            String diaSeleccionado = (String) cbDia.getSelectedItem();
+            if (diaSeleccionado == null || diaSeleccionado.isEmpty() || diaSeleccionado.equals("Seleccionar día")) {
+                JOptionPane.showMessageDialog(this, "Por favor, seleccione un día de la semana.", "Error", JOptionPane.ERROR_MESSAGE);
+                return; // Salir del método si no hay día seleccionado
             }
 
             // Obtener la ubicación seleccionada
             String ubicacion = (String) cbUbicacion.getSelectedItem();
 
+            // Validar que se ha seleccionado una ubicación
+            if (ubicacion == null || ubicacion.isEmpty() || ubicacion.equals("Seleccionar ubicación")) {
+                JOptionPane.showMessageDialog(this, "Por favor, seleccione una ubicación.", "Error", JOptionPane.ERROR_MESSAGE);
+                return; // Salir del método si no hay ubicación seleccionada
+            }
+
+            // Verificar si existen tipos de mesa
+            List<TipoMesaDTO> tiposMesa = mesaBO.obtenerTiposMesa();
+            if (tiposMesa.isEmpty()) {
+                // Mostrar mensaje y dar opción para agregar tipos de mesa
+                int respuesta = JOptionPane.showConfirmDialog(this,
+                        "No hay tipos de mesa disponibles. ¿Desea agregar tipos de mesa ahora?",
+                        "Tipos de Mesa",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE);
+
+                if (respuesta == JOptionPane.YES_OPTION) {
+                    // Lógica para abrir el formulario de agregar tipos de mesa
+                    mesaBO.inicializarTiposMesaPredeterminados();
+                    return; // Salir del método después de abrir el formulario
+                } else {
+                    return; // Salir del método si el usuario no desea agregar tipos de mesa
+                }
+            }
+
             // Crear un mapa para almacenar la cantidad de mesas por tipo
             Map<String, Integer> cantidadPorTipo = new HashMap<>();
+            boolean hayMesas = false; // Bandera para verificar si al menos una mesa fue agregada
 
             // Agregar las cantidades de mesas según los campos de texto
             if (!txtPequeña.getText().isEmpty()) {
-                cantidadPorTipo.put("Mesa pequeña", Integer.parseInt(txtPequeña.getText()));
+                int cantidadPequeña = Integer.parseInt(txtPequeña.getText());
+                if (cantidadPequeña > 0) {
+                    cantidadPorTipo.put("Mesa pequeña", cantidadPequeña);
+                    hayMesas = true; // Hay al menos una mesa
+                }
             }
             if (!txtMediana.getText().isEmpty()) {
-                cantidadPorTipo.put("Mesa mediana", Integer.parseInt(txtMediana.getText()));
+                int cantidadMediana = Integer.parseInt(txtMediana.getText());
+                if (cantidadMediana > 0) {
+                    cantidadPorTipo.put("Mesa mediana", cantidadMediana);
+                    hayMesas = true; // Hay al menos una mesa
+                }
             }
             if (!txtGrande.getText().isEmpty()) {
-                cantidadPorTipo.put("Mesa grande", Integer.parseInt(txtGrande.getText()));
+                int cantidadGrande = Integer.parseInt(txtGrande.getText());
+                if (cantidadGrande > 0) {
+                    cantidadPorTipo.put("Mesa grande", cantidadGrande);
+                    hayMesas = true; // Hay al menos una mesa
+                }
+            }
+
+            // Validar que se haya agregado al menos una mesa
+            if (!hayMesas) {
+                JOptionPane.showMessageDialog(this, "Por favor, ingrese al menos 1 mesa en algún tipo de mesa.", "Error", JOptionPane.ERROR_MESSAGE);
+                return; // Salir del método si no hay mesas
             }
 
             // Llamar al método agregarMesas
@@ -572,12 +634,17 @@ private void SetImageLabel(JLabel labelname, String root) {
                     int selectedIndex = cbRestaurante.getSelectedIndex(); // Obtener el índice seleccionado
 
                     // Asegúrar de que no se haya seleccionado la opción de "Seleccionar restaurante"
-                    if (selectedIndex > 0) { // Si hay un restaurante seleccionado
-                        RestauranteDTO restauranteSeleccionado = listaRestaurantes.get(selectedIndex - 1); // Obtener el objeto correspondiente
-                        idRestauranteSeleccionado = restauranteSeleccionado.getId(); // Obtener el ID del restaurante seleccionado
-                        System.out.println("ID del restaurante seleccionado: " + idRestauranteSeleccionado);
-                        cargarDia();
-                        cargarMesasEnTabla();
+                    if (selectedIndex > 0) {
+                        try {
+                            // Si hay un restaurante seleccionado
+                            RestauranteDTO restauranteSeleccionado = listaRestaurantes.get(selectedIndex - 1); // Obtener el objeto correspondiente
+                            idRestauranteSeleccionado = restauranteSeleccionado.getId(); // Obtener el ID del restaurante seleccionado
+                            System.out.println("ID del restaurante seleccionado: " + idRestauranteSeleccionado);
+                            cargarDia();
+                            cargarMesasEnTabla();
+                        } catch (PersistenciaException ex) {
+                            Logger.getLogger(FormMesas.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     } else {
                         // Restablecer el ID si se selecciona "Seleccionar restaurante"
                         idRestauranteSeleccionado = null; // O puedes usar un valor predeterminado
@@ -596,6 +663,7 @@ private void SetImageLabel(JLabel labelname, String root) {
 
 // Limpiar el JComboBox antes de llenarlo
         cbDia.removeAllItems();
+        cbDia.addItem("Selecciona el día");
 
 // Llenar el JComboBox con los días asignados
         for (HorarioDTO horario : horarios) {
@@ -603,7 +671,7 @@ private void SetImageLabel(JLabel labelname, String root) {
         }
     }
 
-    private void cargarMesasEnTabla() {
+    private void cargarMesasEnTabla() throws PersistenciaException {
         try {
             // Asegúrar de que idRestauranteSeleccionado no sea nulo
             if (idRestauranteSeleccionado == null) {
