@@ -1133,6 +1133,9 @@ public class FormMenu extends javax.swing.JFrame {
 
             // Llenar el modelo con los datos de las mesas filtradas
             List<MesaDTO> mesasFiltradas = aplicaFiltros(mesas);
+            if(mesasFiltradas.isEmpty()){
+                 JOptionPane.showMessageDialog(this, "No se encontró ninguna mesa disponible.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            }
             for (MesaDTO mesa : mesasFiltradas) {
                 boolean coincideRestaurante = mesa.getIdRestaurante().equals(idRestauranteSeleccionado);
 
