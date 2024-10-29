@@ -7,6 +7,9 @@ package dto;
 import java.util.Date;
 
 /**
+ * Clase que representa un Data Transfer Object (DTO) para agregar filtros a los
+ * reportes. Se utiliza para transferir los datos filtrados para los resportes
+ * en pdf.
  *
  * @author Chris
  */
@@ -29,7 +32,7 @@ public class FiltrosReportesDTO {
      * @param fechaInicio La fecha de inicio utilizada como filtro.
      * @param fechaFin La fecha de fin utilizada como filtro.
      * @param tipoMesa El tipo de mesa utilizada como filtro.
-     * @param ubicacion
+     * @param ubicacion La ubicacion de la mesa utilizada como filtro.
      */
     public FiltrosReportesDTO(Date fechaInicio, Date fechaFin, String tipoMesa, String ubicacion) {
         this.fechaInicio = fechaInicio;
@@ -93,18 +96,18 @@ public class FiltrosReportesDTO {
     }
 
     /**
-     * Obtiene la ubicacion de le mesa utilizada como filtro.
+     * Obtiene la ubicación para el filtro.
      *
-     * @return El tipo de trámite utilizado como filtro.
+     * @return Ubicación del filtro.
      */
     public String getUbicacion() {
         return ubicacion;
     }
 
     /**
-     * Establece la ubicacion de la mesa utilizado como filtro.
+     * Establece la ubicación para el filtro.
      *
-     * @param ubicacion La ubicacion utilizado como filtro.
+     * @param ubicacion Nueva ubicación a establecer.
      */
     public void setUbicacion(String ubicacion) {
         this.ubicacion = ubicacion;

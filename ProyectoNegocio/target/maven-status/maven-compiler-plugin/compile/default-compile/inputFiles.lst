@@ -19,12 +19,10 @@ C:\Users\Chris\Documents\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\ja
 C:\Users\Chris\Documents\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\interfaces\IActualizaHorarioBO.java
 C:\Users\Chris\Documents\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\negocio\MesaBO.java
 C:\Users\Chris\Documents\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\negocio\RestauranteBO.java
-C:\Users\Chris\Documents\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\pruebas\pruebas.java
 C:\Users\Chris\Documents\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\interfaces\IConsultarTipoMesaBO.java
 C:\Users\Chris\Documents\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\negocio\ClienteBO.java
 C:\Users\Chris\Documents\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\negocio\ConsultarReservasBO.java
 C:\Users\Chris\Documents\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\negocio\AgregarReservaBO.java
-C:\Users\Chris\Documents\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\pruebas\pruebaReservaBO.java
 C:\Users\Chris\Documents\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\interfaces\IConsultarReservasBO.java
 C:\Users\Chris\Documents\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\negocio\ReporteBO.java
 C:\Users\Chris\Documents\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\interfaces\IAgregarReservaBO.java
@@ -34,5 +32,4 @@ C:\Users\Chris\Documents\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\ja
 C:\Users\Chris\Documents\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\interfaces\IRestauranteBO.java
 C:\Users\Chris\Documents\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\interfaces\IClienteBO.java
 C:\Users\Chris\Documents\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\dto\ReporteDTO.java
-C:\Users\Chris\Documents\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\dto\HistorialReservasDTO.java
 C:\Users\Chris\Documents\GitHub\Proyecto2Restaurante\ProyectoNegocio\src\main\java\dto\HorarioMesaDTO.java

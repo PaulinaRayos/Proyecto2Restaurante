@@ -5,7 +5,6 @@ negocio\ConsultarReservasBO.class
 negocio\HorarioBO.class
 interfaces\IConsultarReservasBO.class
 negocio\AgregaMesasBO.class
-pruebas\pruebas.class
 interfaces\IConsultarTipoMesaBO.class
 negocio\HorarioMesaBO.class
 negocio\ActualizaHorarioBO.class
@@ -21,7 +20,6 @@ dto\ReporteDTO.class
 interfaces\IAgregarReservaBO.class
 dto\HorarioDTO.class
 interfaces\IHorarioBO.class
-pruebas\pruebaReservaBO.class
 interfaces\ICancelarReservaBO.class
 dto\HorarioMesaDTO.class
 excepciones\NegocioException.class
@@ -35,4 +33,3 @@ conversiones\ConvertidorGeneral.class
 negocio\CancelarReservaBO.class
 dto\ReservaDTO.class
 dto\RestauranteDTO.class
-dto\HistorialReservasDTO.class

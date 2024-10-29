@@ -121,8 +121,10 @@ public class RestauranteBO implements IRestauranteBO {
      * apertura
      * @param diaSemana el dia de la semana
      * @return la hora de apertura.
-     * @throws NegocioException
+     * @throws NegocioException Si ocurre un error al buscar la hora de apertura
+     * del restaurante
      */
+    @Override
     public Date obtenerHoraApertura(Long idRestaurante, String diaSemana) throws NegocioException {
         try {
             Date horaApertura = restdao.obtenerHoraApertura(idRestaurante, diaSemana);
@@ -142,7 +144,8 @@ public class RestauranteBO implements IRestauranteBO {
      * cierre
      * @param diaSemana el dia de la semana
      * @return la hora de cirre.
-     * @throws NegocioException
+     * @throws NegocioException Si ocurre un error al buscar la hora de cierre
+     * del restaurante
      */
     @Override
     public Date obtenerHoraCierre(Long idRestaurante, String diaSemana) throws NegocioException {

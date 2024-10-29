@@ -22,6 +22,10 @@ public class MesaDTO {
     private Long idRestaurante; // Identificador del restaurante al que pertenece la mesa
 
     // Constructor vacío
+    /**
+     * Constructor por defecto de la clase MesaDTO. Inicializa una nueva
+     * instancia con valores predeterminados.
+     */
     public MesaDTO() {
     }
 

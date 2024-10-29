@@ -10,6 +10,10 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * Interfaz que define los métodos para la lógica de negocio relacionada con la
+ * gestión de restaurantes. Proporciona operaciones para crear, actualizar,
+ * eliminar y consultar información sobre restaurantes.
+ *
  * @author Cristopher Alberto Elizalde Andrade - 240005
  * @author Paulina Rodríguez Rodríguez Rayos - 117262
  */
@@ -57,7 +61,7 @@ public interface IRestauranteBO {
      * cierre
      * @param diaSemana el dia de la semana
      * @return la hora de cirre.
-     * @throws NegocioException
+     * @throws NegocioException Si ocurre un error al buscar la hora de cierre del restaurante
      */
     Date obtenerHoraCierre(Long idRestaurante, String diaSemana) throws NegocioException;
 
@@ -68,7 +72,7 @@ public interface IRestauranteBO {
      * apertura
      * @param diaSemana el dia de la semana
      * @return la hora de apertura.
-     * @throws NegocioException
+     * @throws NegocioException Si ocurre un error al buscar la hora de apertura del restaurante
      */
     Date obtenerHoraApertura(Long idRestaurante, String diaSemana) throws NegocioException;
 

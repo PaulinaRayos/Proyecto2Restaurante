@@ -22,6 +22,12 @@ import java.util.List;
 public class ConvertidorGeneral {
 
     /**
+     * Constructor por defecto de la clase ConvertidorGeneral.
+     */
+    public ConvertidorGeneral() {
+    }
+
+    /**
      * Método genérico para convertir un objeto DTO en una entidad.
      *
      * @param <D> Tipo del objeto DTO.
