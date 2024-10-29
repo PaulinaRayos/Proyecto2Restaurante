@@ -7,7 +7,6 @@ package entidadesJPA;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,9 +26,9 @@ import javax.persistence.TemporalType;
  *
  * Esta clase incluye información sobre la fecha y hora de la reserva, el número
  * de personas, el costo, el estado, y los posibles cargos por cancelación.
- * Además, establece relaciones con las entidades Cliente y Mesa.
- * Contribuciones de Paulina Rodríguez Rodríguez Rayos.
- * 
+ * Además, establece relaciones con las entidades Cliente y Mesa. Contribuciones
+ * de Paulina Rodríguez Rodríguez Rayos.
+ *
  * @author Cristopher Alberto Elizalde Andrade - 240005
  */
 @Entity
@@ -37,46 +36,70 @@ import javax.persistence.TemporalType;
 public class Reserva implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    /**
+     * Identificador único de la reserva.
+     */
     @Id
     @Column(name = "id_reserva")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * Fecha y hora de la reserva.
+     */
     @Column(name = "fecha_hora")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaHora;
 
+    /**
+     * Número de personas para la reserva.
+     */
     @Column(name = "numero_personas")
     private int numPersonas;
 
+    /**
+     * Costo total de la reserva.
+     */
     @Column(name = "costo")
     private BigDecimal costo;
 
+    /**
+     * Estado de la reserva (por ejemplo, confirmada, cancelada).
+     */
     @Column(name = "estado")
     private String estado;
 
+    /**
+     * Fecha de cancelación de la reserva, si corresponde.
+     */
     @Column(name = "fecha_cancelacion")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCancelacion;
 
+    /**
+     * Multa aplicada en caso de cancelación, si corresponde.
+     */
     @Column(name = "multa")
     private BigDecimal multa;
 
+    /**
+     * Fecha y hora en que se creó la reserva.
+     */
     @Column(name = "fecha_hora_creada")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaHoraCreada;
 
     /**
-     * Relación muchos a uno con la entidad Cliente.
-     * Cada reserva está asociada a un cliente específico que la realiza.
+     * Relación muchos a uno con la entidad Cliente. Cada reserva está asociada
+     * a un cliente específico que la realiza.
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_cliente", nullable = false)
     private Cliente cliente;
 
     /**
-     * Relación muchos a uno con la entidad Mesa.
-     * Cada reserva está asociada a una mesa específica.
+     * Relación muchos a uno con la entidad Mesa. Cada reserva está asociada a
+     * una mesa específica.
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_mesa", nullable = false)
@@ -152,170 +175,190 @@ public class Reserva implements Serializable {
     }
 
     //Getters & Setters
-
     /**
+     * Obtiene el ID de la reserva.
      *
-     * @return
+     * @return ID de la reserva.
      */
     public Long getId() {
         return id;
     }
 
     /**
+     * Establece el ID de la reserva.
      *
-     * @param id
+     * @param id Nuevo ID de la reserva.
      */
     public void setId(Long id) {
         this.id = id;
     }
 
     /**
+     * Obtiene la fecha y hora de la reserva.
      *
-     * @return
+     * @return Fecha y hora de la reserva.
      */
     public Date getFechaHora() {
         return fechaHora;
     }
 
     /**
+     * Establece la fecha y hora de la reserva.
      *
-     * @param fechaHora
+     * @param fechaHora Nueva fecha y hora de la reserva.
      */
     public void setFechaHora(Date fechaHora) {
         this.fechaHora = fechaHora;
     }
 
     /**
+     * Obtiene el número de personas de la reserva.
      *
-     * @return
+     * @return Número de personas en la reserva.
      */
     public int getNumPersonas() {
         return numPersonas;
     }
 
     /**
+     * Establece el número de personas en la reserva.
      *
-     * @param numPersonas
+     * @param numPersonas Número de personas para la reserva.
      */
     public void setNumPersonas(int numPersonas) {
         this.numPersonas = numPersonas;
     }
 
     /**
+     * Obtiene el costo de la reserva.
      *
-     * @return
+     * @return Costo de la reserva.
      */
     public BigDecimal getCosto() {
         return costo;
     }
 
     /**
+     * Establece el costo de la reserva.
      *
-     * @param costo
+     * @param costo Nuevo costo de la reserva.
      */
     public void setCosto(BigDecimal costo) {
         this.costo = costo;
     }
 
     /**
+     * Obtiene el estado de la reserva.
      *
-     * @return
+     * @return Estado de la reserva.
      */
     public String getEstado() {
         return estado;
     }
 
     /**
+     * Establece el estado de la reserva.
      *
-     * @param estado
+     * @param estado Nuevo estado de la reserva.
      */
     public void setEstado(String estado) {
         this.estado = estado;
     }
 
     /**
+     * Obtiene la fecha de cancelación de la reserva.
      *
-     * @return
+     * @return Fecha de cancelación de la reserva.
      */
     public Date getFechaCancelacion() {
         return fechaCancelacion;
     }
 
     /**
+     * Establece la fecha de cancelación de la reserva.
      *
-     * @param fechaCancelacion
+     * @param fechaCancelacion Nueva fecha de cancelación de la reserva.
      */
     public void setFechaCancelacion(Date fechaCancelacion) {
         this.fechaCancelacion = fechaCancelacion;
     }
 
     /**
+     * Obtiene la multa por cancelación de la reserva.
      *
-     * @return
+     * @return Multa por cancelación de la reserva.
      */
     public BigDecimal getMulta() {
         return multa;
     }
 
     /**
+     * Establece la multa por cancelación de la reserva.
      *
-     * @param multa
+     * @param multa Nueva multa de cancelación de la reserva.
      */
     public void setMulta(BigDecimal multa) {
         this.multa = multa;
     }
 
     /**
+     * Obtiene la fecha y hora de creación de la reserva.
      *
-     * @return
+     * @return Fecha y hora en que se creó la reserva.
      */
     public Date getFechaHoraCreada() {
         return fechaHoraCreada;
     }
 
     /**
+     * Establece la fecha y hora de creación de la reserva.
      *
-     * @param fechaHoraCreada
+     * @param fechaHoraCreada Nueva fecha y hora de creación de la reserva.
      */
     public void setFechaHoraCreada(Date fechaHoraCreada) {
         this.fechaHoraCreada = fechaHoraCreada;
     }
 
     /**
+     * Obtiene el cliente asociado con la reserva.
      *
-     * @return
+     * @return Cliente de la reserva.
      */
     public Cliente getCliente() {
         return cliente;
     }
 
     /**
+     * Asigna un cliente a la reserva.
      *
-     * @param cliente
+     * @param cliente Cliente asociado con la reserva.
      */
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
 
     /**
+     * Obtiene la mesa asignada para la reserva.
      *
-     * @return
+     * @return Mesa asignada para la reserva.
      */
     public Mesa getMesa() {
         return mesa;
     }
 
     /**
+     * Asigna una mesa a la reserva.
      *
-     * @param mesa
+     * @param mesa Mesa asignada para la reserva.
      */
     public void setMesa(Mesa mesa) {
         this.mesa = mesa;
     }
 
     /**
+     * Calcula el código hash para la reserva.
      *
-     * @return
+     * @return Código hash basado en el ID de la reserva.
      */
     @Override
     public int hashCode() {
@@ -325,26 +368,25 @@ public class Reserva implements Serializable {
     }
 
     /**
+     * Compara esta reserva con otro objeto para determinar si son iguales.
      *
-     * @param object
-     * @return
+     * @param object Objeto a comparar.
+     * @return true si ambos objetos representan la misma reserva, false en caso
+     * contrario.
      */
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Reserva)) {
             return false;
         }
         Reserva other = (Reserva) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return (this.id != null || other.id == null) && (this.id == null || this.id.equals(other.id));
     }
 
     /**
+     * Genera una representación en cadena de texto de la reserva.
      *
-     * @return
+     * @return Cadena de texto que representa la reserva.
      */
     @Override
     public String toString() {

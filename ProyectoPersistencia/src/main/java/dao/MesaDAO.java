@@ -38,7 +38,7 @@ public class MesaDAO implements IMesaDAO {
      * Agrega una nueva mesa a la base de datos.
      *
      * @param mesa La mesa a agregar.
-     * @return
+     * @return regresa un tipo long
      * @throws PersistenciaException Si ocurre un error durante la operación.
      */
     @Override

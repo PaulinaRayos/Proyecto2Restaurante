@@ -256,7 +256,8 @@ public class ClienteDAO implements IClienteDAO {
      * Obtiene los telefonos desencriptados de los clientes
      *
      * @return La lista de los telefonos desencriptados
-     * @throws PersistenciaException
+     * @throws PersistenciaException Si ocurre un error al obtener los telefonos
+     * desencriptados
      */
     @Override
     public List<String> obtenerTelefonosDesencriptados() throws PersistenciaException {
@@ -282,7 +283,8 @@ public class ClienteDAO implements IClienteDAO {
      * Obtiene todos los clientes con su telefono desencriptado
      *
      * @return La lista de los clientes con sus telefonos desencriptados
-     * @throws PersistenciaException
+     * @throws PersistenciaException Si ocurre un error al obtener todos los
+     * clientes con su telefono desencriptado
      */
     @Override
     public List<ClienteDTO> obtenerTodosLosClientesConTelefonoDesencriptado() throws PersistenciaException {
