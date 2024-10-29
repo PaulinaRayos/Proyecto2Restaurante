@@ -1234,17 +1234,20 @@ public class FormMenu extends javax.swing.JFrame {
                 }
 
             }
+
+
             for (MesaDTO mesa : mesas) {
                 List<HorarioMesa> horariosMesa = horarioMesabo.obtenerHorariosPorMesa(mesa.getIdMesa());
                 String diaSemana = obtenerDiaSemana(fechaSeleccionada);
-                boolean puedeSeleccionar = true;
+                boolean puedeSeleccionar = false;
                 // Crea un calendar para la hora seleccionada
                 Calendar calendarSeleccionada = Calendar.getInstance();
-                calendarSeleccionada.setTime(fechaSeleccionada);
+                calendarSeleccionada.setTime(horaSeleccionadaDate);
                 calendarSeleccionada.set(Calendar.HOUR_OF_DAY, horaSeleccionada);
                 calendarSeleccionada.set(Calendar.MINUTE, 0);
                 for (HorarioMesa horario : horariosMesa) {
                     if (horario.getHorario().getDiaSemana().equalsIgnoreCase(diaSemana)) {
+                        puedeSeleccionar = true;
                         Date horaCierre = horario.getHorario().getHoraCierre();
 
                         // Verifica si falta menos de una hora para la hora de cierre
