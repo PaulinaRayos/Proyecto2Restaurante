@@ -11,8 +11,12 @@ import excepciones.NegocioException;
 import java.util.List;
 
 /**
+ * Interfaz que define los métodos para la lógica de negocio relacionada con la
+ * generación de reportes en el sistema. Permite obtener datos sobre el
+ * rendimiento de los restaurantes y reservas.
  *
- * @author Chris
+ * @author Cristopher Alberto Elizalde Andrade - 240005
+ * @author Paulina Rodríguez Rodríguez Rayos - 117262
  */
 public interface IReporteBO {
 
@@ -34,6 +38,13 @@ public interface IReporteBO {
      *
      * @param listaReservas La lista de ReporteDTO que se utilizará para generar
      * el reporte.
+     */
+    /**
+     * Genera un reporte basado en la lista de reservas proporcionada.
+     *
+     * @param listaReservas Lista de reservas para generar el reporte
+     * @throws NegocioException Si ocurre algún error durante la generación del
+     * reporte
      */
     void generarReporte(List<ReporteDTO> listaReservas) throws NegocioException;
 

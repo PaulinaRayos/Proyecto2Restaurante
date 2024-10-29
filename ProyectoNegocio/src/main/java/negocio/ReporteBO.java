@@ -39,9 +39,10 @@ import java.util.List;
 import recursos.FiltrosReportes;
 
 /**
- * Clase que implementa la lógica de negocio relacionada con la generación de reportes.
- * Proporciona métodos para interactuar con los datos de reservas, clientes y mesas.
- * 
+ * Clase que implementa la lógica de negocio para la generación de reportes.
+ * Proporciona métodos para crear reportes basados en reservas y otros datos
+ * relevantes.
+ *
  * @author Cristopher Alberto Elizalde Andrade - 240005
  * @author Paulina Rodríguez Rodríguez Rayos - 117262
  */
@@ -53,8 +54,9 @@ public class ReporteBO implements IReporteBO {
     private final IMesaBO mesadao;
 
     /**
-     * Constructor que inicializa las dependencias necesarias para la generación de reportes.
-     * Se establece la conexión a la base de datos y se inicializan los DAOs requeridos.
+     * Constructor que inicializa las dependencias necesarias para la generación
+     * de reportes. Se establece la conexión a la base de datos y se inicializan
+     * los DAOs requeridos.
      */
     public ReporteBO() {
         this.conexion = new Conexion();
@@ -126,8 +128,10 @@ public class ReporteBO implements IReporteBO {
      * Genera un reporte en formato PDF a partir de una lista de ReporteDTO.
      * Permite al administrador seleccionar la ubicación y el nombre del archivo PDF.
      *
-     * @param listaReservas La lista de ReporteDTO que se utilizará para generar
-     * el reporte.
+     * @param listaReservas Lista de reservas para generar el reporte.
+     * @return ReporteDTO Objeto que representa el reporte generado.
+     * @throws NegocioException Si ocurre un error durante la generación
+     *                          del reporte.
      */
     @Override
     public void generarReporte(List<ReporteDTO> listaReservas) throws NegocioException {

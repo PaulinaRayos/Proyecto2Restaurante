@@ -29,6 +29,10 @@ public class ReservaDTO {
     private Date fechaHoraCreada; // Fecha y hora en que se creó la reserva
 
     // Constructor por defecto
+    /**
+     * Constructor por defecto de la clase ReservaDTO. Inicializa un objeto de
+     * reserva con valores predeterminados.
+     */
     public ReservaDTO() {
     }
 

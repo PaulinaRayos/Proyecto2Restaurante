@@ -7,6 +7,9 @@ package interfaces;
 import excepciones.NegocioException;
 
 /**
+ * Interfaz que define los métodos para consultar los tipos de mesas disponibles
+ * en el sistema. Proporciona acceso a información sobre diferentes
+ * configuraciones de mesas en los restaurantes.
  *
  * @author Cristopher Alberto Elizalde Andrade - 240005
  * @author Paulina Rodríguez Rodríguez Rayos - 117262

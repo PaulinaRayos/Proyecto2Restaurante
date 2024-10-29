@@ -31,8 +31,11 @@ import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
+ * Constructor por defecto de la clase AgregaMesasBO. Inicializa una nueva
+ * instancia del gestor de mesas.
  *
- * @author Chris
+ * @author Cristopher Alberto Elizalde Andrade - 240005
+ * @author Paulina Rodríguez Rodríguez Rayos - 117262
  */
 public class AgregaMesasBO implements IAgregaMesasBO {
 
@@ -43,6 +46,10 @@ public class AgregaMesasBO implements IAgregaMesasBO {
     private final IHorarioBO horariobo;
     private final IHorarioMesaBO horarioMesabo;
 
+    /**
+     * Constructor por defecto de la clase AgregaMesasBO. Inicializa una nueva
+     * instancia del gestor de mesas.
+     */
     public AgregaMesasBO() {
         this.conexion = new Conexion();
         this.mesaDAO = new MesaDAO(conexion);
