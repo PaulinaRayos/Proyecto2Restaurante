@@ -5,6 +5,7 @@
 package interfaces;
 
 import dto.ReservaDTO;
+import entidadesJPA.Reserva;
 import excepciones.PersistenciaException;
 import java.util.List;
 
@@ -54,5 +55,10 @@ public interface IConsultarReservasBO {
      * @throws PersistenciaException Si ocurre un error durante la operación.
      */
     ReservaDTO obtenerReservaPorId(Long idReserva) throws PersistenciaException;
+
+    // Método para obtener la reserva activa del cliente
+    Reserva obtenerReservaActiva(Long idCliente, Long idRestaurante) throws PersistenciaException;
+
+    List<Reserva> obtenerReservasActivasPorClienteYRestaurante(Long idCliente, Long idRestaurante);
 
 }

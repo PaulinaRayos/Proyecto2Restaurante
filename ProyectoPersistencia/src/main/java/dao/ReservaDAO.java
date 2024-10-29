@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 /**
  * Clase que implementa la interfaz IReservaDAO y proporciona métodos para el
@@ -201,4 +202,29 @@ public class ReservaDAO implements IReservaDAO {
             em.close();
         }
     }
+
+    public List<Reserva> obtenerReservasActivasPorClienteYRestaurante(Long idCliente, Long idRestaurante) {
+        EntityManager em = this.conexion.crearConexion();
+        List<Reserva> reservasActivas = null; // Inicializar la lista
+
+        try {
+            // Crear la consulta JPQL
+            String jpql = "SELECT r FROM Reserva r WHERE r.cliente.id = :idCliente AND r.mesa.restaurante.id = :idRestaurante AND r.estado != 'Cancelada'";
+            TypedQuery<Reserva> query = em.createQuery(jpql, Reserva.class);
+
+            // Establecer los parámetros
+            query.setParameter("idCliente", idCliente);
+            query.setParameter("idRestaurante", idRestaurante);
+
+            // Ejecutar la consulta y obtener el resultado
+            reservasActivas = query.getResultList();
+        } catch (Exception e) {
+            e.printStackTrace(); // Manejar la excepción adecuadamente
+        } finally {
+            em.close(); // Asegúrate de cerrar el EntityManager
+        }
+
+        return reservasActivas; // Retornar la lista de reservas
+    }
+
 }

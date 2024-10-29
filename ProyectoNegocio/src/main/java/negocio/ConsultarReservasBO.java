@@ -170,4 +170,15 @@ public class ConsultarReservasBO implements IConsultarReservasBO {
             throw new PersistenciaException("Error al obtener la reserva con id: " + idReserva, e);
         }
     }
+
+
+
+    public List<Reserva> obtenerReservasActivasPorClienteYRestaurante(Long idCliente, Long idRestaurante) {
+        return reservaDAO.obtenerReservasActivasPorClienteYRestaurante(idCliente, idRestaurante);
+    }
+
+    @Override
+    public Reserva obtenerReservaActiva(Long idCliente, Long idRestaurante) throws PersistenciaException {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

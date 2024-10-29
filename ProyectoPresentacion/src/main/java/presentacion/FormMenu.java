@@ -11,6 +11,7 @@ import dto.ReservaDTO;
 import dto.RestauranteDTO;
 import entidadesJPA.Horario;
 import entidadesJPA.HorarioMesa;
+import entidadesJPA.Reserva;
 import excepciones.NegocioException;
 import excepciones.PersistenciaException;
 import interfaces.IAgregarReservaBO;
@@ -669,6 +670,15 @@ public class FormMenu extends javax.swing.JFrame {
                 return;
             }
 
+// Verificar si el cliente ya tiene reservas activas en el restaurante
+            List<Reserva> reservasActivas = reservabo.obtenerReservasActivasPorClienteYRestaurante(idClienteSeleccionado, idRestauranteSeleccionado);
+            boolean tieneReservaActiva = !reservasActivas.isEmpty();
+
+            if (tieneReservaActiva) {
+                JOptionPane.showMessageDialog(this, "El cliente ya tiene una reserva activa en este restaurante.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             // Obtener el día de la semana de la fecha seleccionada
             Calendar calendarFecha = Calendar.getInstance();
             calendarFecha.setTime(fechaSeleccionada);
@@ -737,7 +747,6 @@ public class FormMenu extends javax.swing.JFrame {
         }
     }
 
-    
     private void xd() {
         try {
             // Obtener los datos del cliente y de la mesa
@@ -946,7 +955,6 @@ public class FormMenu extends javax.swing.JFrame {
         }
     }
 
-    
     // Método para cargar los clientes en una tabla.
     private void cargarClientesEnTabla() {
         try {

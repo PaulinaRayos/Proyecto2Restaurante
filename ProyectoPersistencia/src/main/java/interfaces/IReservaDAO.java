@@ -88,4 +88,8 @@ public interface IReservaDAO {
      */
     void cancelarReserva(Long idReserva, Date fechaCancelacion, BigDecimal multa) throws PersistenciaException;
 
+    List<Reserva> obtenerReservasActivasPorClienteYRestaurante(Long idCliente, Long idRestaurante);
+
+
+
 }
