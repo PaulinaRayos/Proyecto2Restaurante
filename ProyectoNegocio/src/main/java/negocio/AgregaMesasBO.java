@@ -123,7 +123,7 @@ public class AgregaMesasBO implements IAgregaMesasBO {
 
                     int capacidadMesa = ThreadLocalRandom.current().nextInt(capacidadMin, capacidadMax + 1);
 
-                    mesaDTO.setCapacidad(capacidadMesa);
+                    mesaDTO.setCapacidad(0);
                     mesaDTO.setCodigoMesa(generarCodigoMesa(ubicacion, capacidadMesa, numeroUnico));
                     mesaDTO.setUbicacion(ubicacion);
                     mesaDTO.setIdTipoMesa(tipoMesa.getId()); // Suponiendo que en el DTO el tipo es String

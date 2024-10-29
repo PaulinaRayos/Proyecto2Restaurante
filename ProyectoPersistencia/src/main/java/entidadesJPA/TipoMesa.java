@@ -93,38 +93,75 @@ public class TipoMesa implements Serializable {
     }
 
     //Getters & Setters
+
+    /**
+     *
+     * @return
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     *
+     * @param id
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getNombreTipo() {
         return nombreTipo;
     }
 
+    /**
+     *
+     * @param nombreTipo
+     */
     public void setNombreTipo(String nombreTipo) {
         this.nombreTipo = nombreTipo;
     }
 
+    /**
+     *
+     * @return
+     */
     public BigDecimal getPrecioReserva() {
         return precioReserva;
     }
 
+    /**
+     *
+     * @param precioReserva
+     */
     public void setPrecioReserva(BigDecimal precioReserva) {
         this.precioReserva = precioReserva;
     }
 
+    /**
+     *
+     * @return
+     */
     public List<Mesa> getMesas() {
         return mesas;
     }
 
+    /**
+     *
+     * @param mesas
+     */
     public void setMesas(List<Mesa> mesas) {
         this.mesas = mesas;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public int hashCode() {
         int hash = 0;
@@ -132,6 +169,11 @@ public class TipoMesa implements Serializable {
         return hash;
     }
 
+    /**
+     *
+     * @param object
+     * @return
+     */
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
@@ -145,6 +187,10 @@ public class TipoMesa implements Serializable {
         return true;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String toString() {
         return "TipoMesa{" + "id=" + id + ", nombreTipo=" + nombreTipo + ", precioReserva=" + precioReserva + '}';

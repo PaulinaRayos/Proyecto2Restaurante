@@ -91,7 +91,7 @@ public class Mesa implements Serializable {
      * @param capacidad Capacidad de la mesa.
      * @param tipoMesa Tipo de la mesa.
      * @param restaurante Restaurante al que pertenece la mesa.
-     * @param horarioMesaList Lista de horarios asociados a la mesa.
+     * @param HorarioMesaList
      */
     public Mesa(String codigoMesa, String ubicacion, int capacidad, TipoMesa tipoMesa, Restaurante restaurante, List<HorarioMesa> HorarioMesaList) {
         this.codigoMesa = codigoMesa;
@@ -105,13 +105,13 @@ public class Mesa implements Serializable {
     /**
      * Constructor completo para inicializar una Mesa con todos los atributos.
      *
-     * @param id ID de la mesa.
+     * @param Id
      * @param codigoMesa Código de la mesa.
      * @param ubicacion Ubicación de la mesa.
      * @param capacidad Capacidad de la mesa.
      * @param tipoMesa Tipo de la mesa.
      * @param restaurante Restaurante al que pertenece la mesa.
-     * @param horarioMesaList Lista de horarios asociados a la mesa.
+     * @param HorarioMesaList
      */
     public Mesa(Long Id, String codigoMesa, String ubicacion, int capacidad, TipoMesa tipoMesa, Restaurante restaurante, List<HorarioMesa> HorarioMesaList) {
         this.id = id;
@@ -137,54 +137,107 @@ public class Mesa implements Serializable {
     }
 
     //Getters & Setters
+
+    /**
+     *
+     * @return id
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     *
+     * @param id
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     *
+     * @return codigoMesa
+     */
     public String getCodigoMesa() {
         return codigoMesa;
     }
 
+    /**
+     *
+     * @param codigoMesa
+     */
     public void setCodigoMesa(String codigoMesa) {
         this.codigoMesa = codigoMesa;
     }
 
+    /**
+     *
+     * @return ubicacion
+     */
     public String getUbicacion() {
         return ubicacion;
     }
 
+    /**
+     *
+     * @param ubicacion
+     */
     public void setUbicacion(String ubicacion) {
         this.ubicacion = ubicacion;
     }
 
+    /**
+     *
+     * @return capacidad
+     */
     public int getCapacidad() {
         return capacidad;
     }
 
+    /**
+     *
+     * @param capacidad
+     */
     public void setCapacidad(int capacidad) {
         this.capacidad = capacidad;
     }
 
+    /**
+     *
+     * @return
+     */
     public TipoMesa getTipoMesa() {
         return tipoMesa;
     }
 
+    /**
+     *
+     * @param tipoMesa tipoMesa
+     */
     public void setTipoMesa(TipoMesa tipoMesa) {
         this.tipoMesa = tipoMesa;
     }
 
+    /**
+     *
+     * @return restaurante
+     */
     public Restaurante getRestaurante() {
         return restaurante;
     }
 
+    /**
+     *
+     * @param restaurante
+     */
     public void setRestaurante(Restaurante restaurante) {
         this.restaurante = restaurante;
     }
 
+    /**
+     *
+     * @return hash
+     */
     @Override
     public int hashCode() {
         int hash = 0;
@@ -192,6 +245,11 @@ public class Mesa implements Serializable {
         return hash;
     }
 
+    /**
+     *
+     * @param object
+     * @return boolean
+     */
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
@@ -205,6 +263,10 @@ public class Mesa implements Serializable {
         return true;
     }
 
+    /**
+     *
+     * @return String
+     */
     @Override
     public String toString() {
         return "Mesa{" + "id=" + id +

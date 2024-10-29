@@ -152,86 +152,171 @@ public class Reserva implements Serializable {
     }
 
     //Getters & Setters
+
+    /**
+     *
+     * @return
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     *
+     * @param id
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     *
+     * @return
+     */
     public Date getFechaHora() {
         return fechaHora;
     }
 
+    /**
+     *
+     * @param fechaHora
+     */
     public void setFechaHora(Date fechaHora) {
         this.fechaHora = fechaHora;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getNumPersonas() {
         return numPersonas;
     }
 
+    /**
+     *
+     * @param numPersonas
+     */
     public void setNumPersonas(int numPersonas) {
         this.numPersonas = numPersonas;
     }
 
+    /**
+     *
+     * @return
+     */
     public BigDecimal getCosto() {
         return costo;
     }
 
+    /**
+     *
+     * @param costo
+     */
     public void setCosto(BigDecimal costo) {
         this.costo = costo;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getEstado() {
         return estado;
     }
 
+    /**
+     *
+     * @param estado
+     */
     public void setEstado(String estado) {
         this.estado = estado;
     }
 
+    /**
+     *
+     * @return
+     */
     public Date getFechaCancelacion() {
         return fechaCancelacion;
     }
 
+    /**
+     *
+     * @param fechaCancelacion
+     */
     public void setFechaCancelacion(Date fechaCancelacion) {
         this.fechaCancelacion = fechaCancelacion;
     }
 
+    /**
+     *
+     * @return
+     */
     public BigDecimal getMulta() {
         return multa;
     }
 
+    /**
+     *
+     * @param multa
+     */
     public void setMulta(BigDecimal multa) {
         this.multa = multa;
     }
 
+    /**
+     *
+     * @return
+     */
     public Date getFechaHoraCreada() {
         return fechaHoraCreada;
     }
 
+    /**
+     *
+     * @param fechaHoraCreada
+     */
     public void setFechaHoraCreada(Date fechaHoraCreada) {
         this.fechaHoraCreada = fechaHoraCreada;
     }
 
+    /**
+     *
+     * @return
+     */
     public Cliente getCliente() {
         return cliente;
     }
 
+    /**
+     *
+     * @param cliente
+     */
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
 
+    /**
+     *
+     * @return
+     */
     public Mesa getMesa() {
         return mesa;
     }
 
+    /**
+     *
+     * @param mesa
+     */
     public void setMesa(Mesa mesa) {
         this.mesa = mesa;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public int hashCode() {
         int hash = 0;
@@ -239,6 +324,11 @@ public class Reserva implements Serializable {
         return hash;
     }
 
+    /**
+     *
+     * @param object
+     * @return
+     */
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
@@ -252,6 +342,10 @@ public class Reserva implements Serializable {
         return true;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String toString() {
         return "Reserva{" + "id=" + id + ", fechaHora=" + fechaHora + ", numPersonas=" + numPersonas + ", costo=" + costo + ", estado=" + estado + ", fechaCancelacion=" + fechaCancelacion + ", multa=" + multa + ", cliente=" + cliente + ", mesa=" + mesa + '}';

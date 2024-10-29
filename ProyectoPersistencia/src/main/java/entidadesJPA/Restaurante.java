@@ -91,46 +91,91 @@ public class Restaurante implements Serializable {
     }
 
     //Getters & Setters
+
+    /**
+     *
+     * @return
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     *
+     * @param id
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     *
+     * @return
+     */
     public List<Mesa> getMesas() {
         return mesas;
     }
 
+    /**
+     *
+     * @param mesas
+     */
     public void setMesas(List<Mesa> mesas) {
         this.mesas = mesas;
     }
 
+    /**
+     *
+     * @return
+     */
     public List<Horario> getHorarios() {
         return horarios;
     }
 
+    /**
+     *
+     * @param horarios
+     */
     public void setHorarios(List<Horario> horarios) {
         this.horarios = horarios;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getDirrecion() {
         return direccion;
     }
 
+    /**
+     *
+     * @param dirrecion
+     */
     public void setDirrecion(String dirrecion) {
         this.direccion = dirrecion;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getCiudad() {
         return ciudad;
     }
 
+    /**
+     *
+     * @param ciudad
+     */
     public void setCiudad(String ciudad) {
         this.ciudad = ciudad;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public int hashCode() {
         int hash = 0;
@@ -138,6 +183,11 @@ public class Restaurante implements Serializable {
         return hash;
     }
 
+    /**
+     *
+     * @param object
+     * @return
+     */
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
@@ -151,6 +201,10 @@ public class Restaurante implements Serializable {
         return true;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

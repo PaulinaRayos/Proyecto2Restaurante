@@ -86,30 +86,59 @@ public class HorarioMesa implements Serializable {
     }
 
     // Getters y Setters
+
+    /**
+     *
+     * @return
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     *
+     * @param id
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     *
+     * @return
+     */
     public Horario getHorario() {
         return horario;
     }
 
+    /**
+     *
+     * @param horario
+     */
     public void setHorario(Horario horario) {
         this.horario = horario;
     }
 
+    /**
+     *
+     * @return
+     */
     public Mesa getMesa() {
         return mesa;
     }
 
+    /**
+     *
+     * @param mesa
+     */
     public void setMesa(Mesa mesa) {
         this.mesa = mesa;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String toString() {
         return "HorarioMesa{" + "id=" + id + ", horario=" + horario + ", mesa=" + mesa + '}';

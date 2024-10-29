@@ -117,54 +117,107 @@ public class Horario implements Serializable {
     }
 
     // Getters y Setters
+
+    /**
+     *
+     * @return
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     *
+     * @param id
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getDiaSemana() {
         return diaSemana;
     }
 
+    /**
+     *
+     * @param diaSemana
+     */
     public void setDiaSemana(String diaSemana) {
         this.diaSemana = diaSemana;
     }
 
+    /**
+     *
+     * @return
+     */
     public Date getHoraApertura() {
         return horaApertura;
     }
 
+    /**
+     *
+     * @param horaApertura
+     */
     public void setHoraApartura(Date horaApertura) {
         this.horaApertura = horaApertura;
     }
 
+    /**
+     *
+     * @return
+     */
     public Date getHoraCierre() {
         return horaCierre;
     }
 
+    /**
+     *
+     * @param horaCierre
+     */
     public void setHoraCierre(Date horaCierre) {
         this.horaCierre = horaCierre;
     }
 
+    /**
+     *
+     * @return
+     */
     public Restaurante getRestaurante() {
         return restaurante;
     }
 
+    /**
+     *
+     * @param restaurante
+     */
     public void setRestaurante(Restaurante restaurante) {
         this.restaurante = restaurante;
     }
 
+    /**
+     *
+     * @return
+     */
     public List<HorarioMesa> getHorarioMesaList() {
         return horarioMesaList;
     }
 
+    /**
+     *
+     * @param horarioMesaList
+     */
     public void setHorarioMesaList(List<HorarioMesa> horarioMesaList) {
         this.horarioMesaList = horarioMesaList;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public int hashCode() {
         int hash = 0;
@@ -172,6 +225,11 @@ public class Horario implements Serializable {
         return hash;
     }
 
+    /**
+     *
+     * @param object
+     * @return
+     */
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
@@ -185,6 +243,10 @@ public class Horario implements Serializable {
         return true;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String toString() {
         return "Horario{" + "id=" + id + ", diaSemana=" + diaSemana + ", horaApertura=" + horaApertura + ", horaCierre=" + horaCierre + ", restaurante=" + restaurante + ", horarioMesaList=" + horarioMesaList + '}';
