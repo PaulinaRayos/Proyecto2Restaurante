@@ -171,8 +171,7 @@ public class ConsultarReservasBO implements IConsultarReservasBO {
         }
     }
 
-
-
+    @Override
     public List<Reserva> obtenerReservasActivasPorClienteYRestaurante(Long idCliente, Long idRestaurante) {
         return reservaDAO.obtenerReservasActivasPorClienteYRestaurante(idCliente, idRestaurante);
     }

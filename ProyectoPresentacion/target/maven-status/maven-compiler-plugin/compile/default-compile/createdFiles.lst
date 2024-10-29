@@ -46,6 +46,7 @@ presentacion\FormReservas.class
 presentacion\FormClientes$4.class
 presentacion\FormConsultas$11.class
 presentacion\FormConsultas.class
+presentacion\FormDetallesReserva$3.class
 presentacion\FormMenu$10.class
 presentacion\FormMenu$7.class
 presentacion\FormConsultas$5.class
@@ -56,6 +57,7 @@ presentacion\FormClientes.class
 presentacion\FormMenu$13.class
 presentacion\FormReportes$2.class
 presentacion\FormReservas$7.class
+presentacion\FormDetallesReserva$2.class
 presentacion\FormClientes$1.class
 Demostracion\Demo.class
 presentacion\FormReportes$5.class

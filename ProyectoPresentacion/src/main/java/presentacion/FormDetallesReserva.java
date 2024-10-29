@@ -83,6 +83,8 @@ public class FormDetallesReserva extends javax.swing.JFrame {
         lblCantidad = new javax.swing.JLabel();
         lblUbicacion = new javax.swing.JLabel();
         lblNumMesa = new javax.swing.JLabel();
+        bConfirmar = new javax.swing.JButton();
+        bCancelar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -168,6 +170,24 @@ public class FormDetallesReserva extends javax.swing.JFrame {
         lblNumMesa.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
         lblNumMesa.setText("name");
 
+        bConfirmar.setBackground(new java.awt.Color(255, 51, 153));
+        bConfirmar.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
+        bConfirmar.setText("Confirmar");
+        bConfirmar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bConfirmarActionPerformed(evt);
+            }
+        });
+
+        bCancelar.setBackground(new java.awt.Color(255, 51, 153));
+        bCancelar.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
+        bCancelar.setText("Cancelar");
+        bCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bCancelarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -175,26 +195,33 @@ public class FormDetallesReserva extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap(129, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(14, 14, 14)
-                        .addComponent(jLabelaa1))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel8)
-                            .addComponent(jLabel10)
-                            .addComponent(jLabel9))
-                        .addGap(63, 63, 63)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblTelefono)
-                            .addComponent(lblFechaHora)
-                            .addComponent(lblCantidad)
-                            .addComponent(lblUbicacion)
-                            .addComponent(lblNumMesa)
-                            .addComponent(lblNombre))))
-                .addGap(187, 187, 187))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(14, 14, 14)
+                                .addComponent(jLabelaa1))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel7)
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel8)
+                                    .addComponent(jLabel10)
+                                    .addComponent(jLabel9))
+                                .addGap(63, 63, 63)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblTelefono)
+                                    .addComponent(lblFechaHora)
+                                    .addComponent(lblCantidad)
+                                    .addComponent(lblUbicacion)
+                                    .addComponent(lblNumMesa)
+                                    .addComponent(lblNombre))))
+                        .addGap(187, 187, 187))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addComponent(bCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(bConfirmar, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(165, 165, 165))))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -225,7 +252,11 @@ public class FormDetallesReserva extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
                     .addComponent(lblNumMesa))
-                .addContainerGap(102, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(bConfirmar)
+                    .addComponent(bCancelar))
+                .addGap(25, 25, 25))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -267,6 +298,31 @@ public class FormDetallesReserva extends javax.swing.JFrame {
         Forms.cargarForm(new FormMenu(), this);
     }//GEN-LAST:event_jLabel3MouseClicked
 
+    private void bConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bConfirmarActionPerformed
+        try {
+            reserva.setIdCliente(idCliente);
+            reserva.setIdMesa(idMesa);
+            agregarReservaBO.agregarReserva(reserva);
+            JOptionPane.showMessageDialog(this, "Reserva agregada exitosamente.");
+            Forms.cargarForm(new FormMenu(), this);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al agregar la reserva: " + e.getMessage());
+
+        }
+    }//GEN-LAST:event_bConfirmarActionPerformed
+
+    private void bCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCancelarActionPerformed
+        int respuesta = JOptionPane.showConfirmDialog(this,
+                "¿Está seguro de que desea cancelar?",
+                "Confirmar cancelación",
+                JOptionPane.YES_NO_OPTION);
+
+        if (respuesta == JOptionPane.YES_OPTION) {
+            Forms.cargarForm(new FormMenu(), this); // Regresar a la pantalla principal
+        }
+    }//GEN-LAST:event_bCancelarActionPerformed
+
     private void cargarDatosReserva() {
         try {
             ClienteDTO cliente = clientebo.obtenerClientePorId(reserva.getIdCliente());
@@ -288,6 +344,8 @@ public class FormDetallesReserva extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bCancelar;
+    private javax.swing.JButton bConfirmar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel3;
