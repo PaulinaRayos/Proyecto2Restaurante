@@ -23,6 +23,7 @@ public interface IMesaDAO {
      * Agrega una nueva mesa a la base de datos.
      *
      * @param mesa La mesa a agregar.
+     * @return regresa un tipo long
      * @throws PersistenciaException Si ocurre un error durante la operación.
      */
     long agregarMesa(Mesa mesa) throws PersistenciaException;

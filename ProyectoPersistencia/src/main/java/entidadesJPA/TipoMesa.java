@@ -19,11 +19,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
- * Clase que representa la entidad TipoMesa en la base de datos. 
- * Mapea la tabla 'tipos_mesa' y define los atributos correspondientes,
- * así como las relaciones con otras entidades.
- * Contribuciones de Paulina Rodríguez Rodríguez Rayos.
- * 
+ * Clase que representa la entidad TipoMesa en la base de datos. Mapea la tabla
+ * 'tipos_mesa' y define los atributos correspondientes, así como las relaciones
+ * con otras entidades. Contribuciones de Paulina Rodríguez Rodríguez Rayos.
+ *
  * @author Cristopher Alberto Elizalde Andrade - 240005
  */
 @Entity
@@ -31,20 +30,29 @@ import javax.persistence.Table;
 public class TipoMesa implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    /**
+     * Identificador único del tipo de mesa.
+     */
     @Id
     @Column(name = "id_tipo_mesa")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "nombre_tipo")
+    /**
+     * Nombre del tipo de mesa (por ejemplo, "Mesa para dos", "Mesa familiar").
+     */
+    @Column(name = "nombre_tipo", length = 50, nullable = false)
     private String nombreTipo;
 
-    @Column(name = "precio_reserva")
+    /**
+     * Precio de reserva del tipo de mesa.
+     */
+    @Column(name = "precio_reserva", nullable = false)
     private BigDecimal precioReserva;
 
     /**
-     * Relación uno a muchos con la entidad Mesa.
-     * Cada tipo de mesa puede estar asociado a múltiples mesas.
+     * Relación uno a muchos con la entidad Mesa. Cada tipo de mesa puede estar
+     * asociado a múltiples mesas.
      */
     @OneToMany(mappedBy = "tipoMesa", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private List<Mesa> mesas;
@@ -67,7 +75,8 @@ public class TipoMesa implements Serializable {
     }
 
     /**
-     * Constructor que inicializa un tipo de mesa con nombre y precio de reserva.
+     * Constructor que inicializa un tipo de mesa con nombre y precio de
+     * reserva.
      *
      * @param nombreTipo el nombre del tipo de mesa
      * @param precioReserva el precio de reserva del tipo de mesa
@@ -93,74 +102,83 @@ public class TipoMesa implements Serializable {
     }
 
     //Getters & Setters
-
     /**
+     * Devuelve el ID del tipo de mesa.
      *
-     * @return
+     * @return ID del tipo de mesa.
      */
     public Long getId() {
         return id;
     }
 
     /**
+     * Establece el ID del tipo de mesa.
      *
-     * @param id
+     * @param id ID del tipo de mesa.
      */
     public void setId(Long id) {
         this.id = id;
     }
 
     /**
+     * Devuelve el nombre del tipo de mesa.
      *
-     * @return
+     * @return Nombre del tipo de mesa.
      */
     public String getNombreTipo() {
         return nombreTipo;
     }
 
     /**
+     * Establece el nombre del tipo de mesa.
      *
-     * @param nombreTipo
+     * @param nombreTipo Nombre del tipo de mesa.
      */
     public void setNombreTipo(String nombreTipo) {
         this.nombreTipo = nombreTipo;
     }
 
     /**
+     * Devuelve el precio de reserva del tipo de mesa.
      *
-     * @return
+     * @return Precio de reserva del tipo de mesa.
      */
     public BigDecimal getPrecioReserva() {
         return precioReserva;
     }
 
     /**
+     * Establece el precio de reserva del tipo de mesa.
      *
-     * @param precioReserva
+     * @param precioReserva Precio de reserva del tipo de mesa.
      */
     public void setPrecioReserva(BigDecimal precioReserva) {
         this.precioReserva = precioReserva;
     }
 
     /**
+     * Devuelve la lista de mesas asociadas a este tipo.
      *
-     * @return
+     * @return Lista de mesas.
      */
     public List<Mesa> getMesas() {
         return mesas;
     }
 
     /**
+     * Establece la lista de mesas asociadas a este tipo.
      *
-     * @param mesas
+     * @param mesas Lista de mesas.
      */
     public void setMesas(List<Mesa> mesas) {
         this.mesas = mesas;
     }
 
+    // Métodos de sobreescritura de Object
     /**
+     * Calcula y devuelve el código hash para el tipo de mesa, basado en su ID.
      *
-     * @return
+     * @return Código hash del tipo de mesa.
      */
     @Override
     public int hashCode() {
@@ -170,13 +188,14 @@ public class TipoMesa implements Serializable {
     }
 
     /**
+     * Compara este tipo de mesa con otro objeto para verificar igualdad,
+     * basándose en el campo ID.
      *
-     * @param object
-     * @return
+     * @param object Objeto a comparar.
+     * @return Verdadero si los objetos son iguales, falso en caso contrario.
      */
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof TipoMesa)) {
             return false;
         }
@@ -188,8 +207,9 @@ public class TipoMesa implements Serializable {
     }
 
     /**
+     * Devuelve una representación en cadena de la clase `TipoMesa`.
      *
-     * @return
+     * @return Cadena de texto con los detalles del tipo de mesa.
      */
     @Override
     public String toString() {

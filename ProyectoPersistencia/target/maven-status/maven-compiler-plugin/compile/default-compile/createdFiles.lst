@@ -6,7 +6,6 @@ interfaces\IMesaDAO.class
 interfaces\IReservaDAO.class
 excepciones\PersistenciaException.class
 entidadesJPA\Restaurante.class
-pruebas\test.class
 entidadesJPA\Mesa.class
 interfaces\IRestauranteDAO.class
 dao\ClienteDAO.class

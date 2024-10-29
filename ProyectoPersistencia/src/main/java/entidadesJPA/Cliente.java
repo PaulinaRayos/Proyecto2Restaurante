@@ -23,35 +23,53 @@ import javax.persistence.Table;
  * con otras entidades, en particular la relación con reservas.
  *
  * Esta clase implementa Serializable para permitir la serialización de objetos
- * Cliente.
- * Contribuciones de Paulina Rodríguez Rodríguez Rayos.
- * 
+ * Cliente. Contribuciones de Paulina Rodríguez Rodríguez Rayos.
+ *
  * @author Cristopher Alberto Elizalde Andrade - 240005
  */
 @Entity
 @Table(name = "cliente")
 public class Cliente implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L; // Versión de la clase para serialización
+
+    /**
+     * Identificador único del cliente. Se genera automáticamente mediante
+     * estrategia de identidad.
+     */
     @Id
     @Column(name = "id_cliente")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "nombres")
+    /**
+     * Nombres del cliente.
+     */
+    @Column(name = "nombres", length = 50)
     private String nombre;
 
-    @Column(name = "apellido_paterno", nullable = false)
+    /**
+     * Apellido paterno del cliente. Este campo no puede ser nulo.
+     */
+    @Column(name = "apellido_paterno", nullable = false, length = 50)
     private String apellidoPaterno;
 
-    @Column(name = "apellido_materno")
+    /**
+     * Apellido materno del cliente.
+     */
+    @Column(name = "apellido_materno", length = 50)
     private String apellidoMaterno;
 
-    @Column(name = "telefono", unique = true)
-    private String telefono;
     /**
-     * Relación uno a muchos con la entidad Reserva.
-     * Un cliente puede tener múltiples reservas.
+     * Número telefónico del cliente. Este campo debe ser único en la base de
+     * datos.
+     */
+    @Column(name = "telefono", unique = true, length = 255)
+    private String telefono;
+
+    /**
+     * Relación uno a muchos con la entidad Reserva. Un cliente puede tener
+     * múltiples reservas.
      */
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private List<Reserva> reservas;
@@ -107,91 +125,100 @@ public class Cliente implements Serializable {
         this.reservas = new ArrayList();
     }
 
-
     /**
+     * Obtiene el ID del cliente.
      *
-     * @return id
+     * @return ID del cliente.
      */
-
     public Long getId() {
         return id;
     }
 
     /**
+     * Establece el ID del cliente.
      *
-     * @param id
+     * @param id Nuevo ID del cliente.
      */
     public void setId(Long id) {
         this.id = id;
     }
 
     /**
+     * Obtiene el nombre del cliente.
      *
-     * @return
+     * @return Nombre del cliente.
      */
     public String getNombre() {
         return nombre;
     }
 
     /**
+     * Establece el nombre del cliente.
      *
-     * @param nombre
+     * @param nombre Nuevo nombre del cliente.
      */
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
     /**
+     * Obtiene el apellido paterno del cliente.
      *
-     * @return
+     * @return Apellido paterno del cliente.
      */
     public String getApellidoPaterno() {
         return apellidoPaterno;
     }
 
     /**
+     * Establece el apellido paterno del cliente.
      *
-     * @param apellidoPaterno
+     * @param apellidoPaterno Nuevo apellido paterno del cliente.
      */
     public void setApellidoPaterno(String apellidoPaterno) {
         this.apellidoPaterno = apellidoPaterno;
     }
 
     /**
+     * Obtiene el apellido materno del cliente.
      *
-     * @return
+     * @return Apellido materno del cliente.
      */
     public String getApellidoMaterno() {
         return apellidoMaterno;
     }
 
     /**
+     * Establece el apellido materno del cliente.
      *
-     * @param apellidoMaterno
+     * @param apellidoMaterno Nuevo apellido materno del cliente.
      */
     public void setApellidoMaterno(String apellidoMaterno) {
         this.apellidoMaterno = apellidoMaterno;
     }
 
     /**
+     * Obtiene el teléfono del cliente.
      *
-     * @return
+     * @return Teléfono del cliente.
      */
     public String getTelefono() {
         return telefono;
     }
 
     /**
+     * Establece el teléfono del cliente.
      *
-     * @param telefono
+     * @param telefono Nuevo número de teléfono del cliente.
      */
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
 
     /**
+     * Genera un código hash para el objeto Cliente, basado en el ID.
      *
-     * @return
+     * @return Código hash del cliente.
      */
     @Override
     public int hashCode() {
@@ -201,13 +228,15 @@ public class Cliente implements Serializable {
     }
 
     /**
+     * Compara si dos objetos Cliente son iguales, basándose en el ID.
      *
-     * @param object
-     * @return
+     * @param object Objeto a comparar.
+     * @return {@code true} si los objetos son iguales, {@code false} en caso
+     * contrario.
      */
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
+        // Advertencia: Este método no funciona si los campos de ID no están establecidos.
         if (!(object instanceof Cliente)) {
             return false;
         }
@@ -219,12 +248,14 @@ public class Cliente implements Serializable {
     }
 
     /**
+     * Genera una representación en cadena de texto del objeto Cliente.
      *
-     * @return
+     * @return Cadena de texto que representa al cliente.
      */
     @Override
     public String toString() {
-        return "Cliente{" + "id=" + id + ", nombre=" + nombre + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", telefono=" + telefono + '}';
+        return "Cliente{" + "id=" + id + ", nombre=" + nombre + ", apellidoPaterno=" + apellidoPaterno
+                + ", apellidoMaterno=" + apellidoMaterno + ", telefono=" + telefono + '}';
     }
 
 }

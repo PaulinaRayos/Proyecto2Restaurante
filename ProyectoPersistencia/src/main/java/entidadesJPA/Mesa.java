@@ -14,7 +14,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -22,9 +21,9 @@ import javax.persistence.Table;
 /**
  * Clase que representa la entidad Mesa en la base de datos. Mapea la tabla
  * 'mesa' y define los atributos correspondientes, así como las relaciones con
- * otras entidades como TipoMesa y Restaurante.
- * Contribuciones de Paulina Rodríguez Rodríguez Rayos.
- * 
+ * otras entidades como TipoMesa y Restaurante. Contribuciones de Paulina
+ * Rodríguez Rodríguez Rayos.
+ *
  * @author Cristopher Alberto Elizalde Andrade - 240005
  */
 @Entity
@@ -32,39 +31,51 @@ import javax.persistence.Table;
 public class Mesa implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    /**
+     * Identificador único de la mesa.
+     */
     @Id
     @Column(name = "id_mesa")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "codigo_mesa")
+    /**
+     * Código identificador de la mesa.
+     */
+    @Column(name = "codigo_mesa", length = 30)
     private String codigoMesa;
 
-    @Column(name = "ubicacion")
+    /**
+     * Ubicación de la mesa en el restaurante (por ejemplo, terraza, ventana).
+     */
+    @Column(name = "ubicacion", length = 50)
     private String ubicacion;
 
+    /**
+     * Capacidad máxima de la mesa, es decir, cuántas personas puede acomodar.
+     */
     @Column(name = "capacidad")
     private int capacidad;
 
     /**
-     * Relación muchos a uno con la entidad TipoMesa.
-     * Cada mesa está asociada a un tipo específico de mesa.
-     */     
+     * Relación muchos a uno con la entidad TipoMesa. Cada mesa está asociada a
+     * un tipo específico de mesa.
+     */
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_tipo_mesa", nullable = false)
     private TipoMesa tipoMesa;
 
     /**
-     * Relación muchos a uno con la entidad Restaurante.
-     * Cada mesa está asociada a un restaurante específico.
-     */ 
+     * Relación muchos a uno con la entidad Restaurante. Cada mesa está asociada
+     * a un restaurante específico.
+     */
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_restaurante", nullable = false)
     private Restaurante restaurante;
     /**
-     * Relación uno a muchos con la entidad HorarioMesa.
-     * Una mesa puede estar asociada a múltiples horarios de mesa.
-     */ 
+     * Relación uno a muchos con la entidad HorarioMesa. Una mesa puede estar
+     * asociada a múltiples horarios de mesa.
+     */
     @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private List<HorarioMesa> HorarioMesaList;
 
@@ -91,7 +102,7 @@ public class Mesa implements Serializable {
      * @param capacidad Capacidad de la mesa.
      * @param tipoMesa Tipo de la mesa.
      * @param restaurante Restaurante al que pertenece la mesa.
-     * @param HorarioMesaList
+     * @param HorarioMesaList Lista de los horarioMesa
      */
     public Mesa(String codigoMesa, String ubicacion, int capacidad, TipoMesa tipoMesa, Restaurante restaurante, List<HorarioMesa> HorarioMesaList) {
         this.codigoMesa = codigoMesa;
@@ -105,16 +116,16 @@ public class Mesa implements Serializable {
     /**
      * Constructor completo para inicializar una Mesa con todos los atributos.
      *
-     * @param Id
+     * @param Id Id de la mesa.
      * @param codigoMesa Código de la mesa.
      * @param ubicacion Ubicación de la mesa.
      * @param capacidad Capacidad de la mesa.
      * @param tipoMesa Tipo de la mesa.
      * @param restaurante Restaurante al que pertenece la mesa.
-     * @param HorarioMesaList
+     * @param HorarioMesaList Lista de los horarioMesa
      */
     public Mesa(Long Id, String codigoMesa, String ubicacion, int capacidad, TipoMesa tipoMesa, Restaurante restaurante, List<HorarioMesa> HorarioMesaList) {
-        this.id = id;
+        this.id = Id;
         this.codigoMesa = codigoMesa;
         this.ubicacion = ubicacion;
         this.capacidad = capacidad;
@@ -137,106 +148,118 @@ public class Mesa implements Serializable {
     }
 
     //Getters & Setters
-
     /**
+     * Obtiene el ID de la mesa.
      *
-     * @return id
+     * @return ID de la mesa.
      */
     public Long getId() {
         return id;
     }
 
     /**
+     * Establece el ID de la mesa.
      *
-     * @param id
+     * @param id Nuevo ID de la mesa.
      */
     public void setId(Long id) {
         this.id = id;
     }
 
     /**
+     * Obtiene el código de la mesa.
      *
-     * @return codigoMesa
+     * @return código único de la mesa.
      */
     public String getCodigoMesa() {
         return codigoMesa;
     }
 
     /**
+     * Establece el código de la mesa.
      *
-     * @param codigoMesa
+     * @param codigoMesa Nuevo código para la mesa.
      */
     public void setCodigoMesa(String codigoMesa) {
         this.codigoMesa = codigoMesa;
     }
 
     /**
+     * Obtiene la ubicación de la mesa.
      *
-     * @return ubicacion
+     * @return Ubicación de la mesa.
      */
     public String getUbicacion() {
         return ubicacion;
     }
 
     /**
+     * Establece la ubicación de la mesa.
      *
-     * @param ubicacion
+     * @param ubicacion Nueva ubicación de la mesa.
      */
     public void setUbicacion(String ubicacion) {
         this.ubicacion = ubicacion;
     }
 
     /**
+     * Obtiene la capacidad de la mesa.
      *
-     * @return capacidad
+     * @return Capacidad de personas de la mesa.
      */
     public int getCapacidad() {
         return capacidad;
     }
 
     /**
+     * Establece la capacidad de la mesa.
      *
-     * @param capacidad
+     * @param capacidad Nueva capacidad de la mesa.
      */
     public void setCapacidad(int capacidad) {
         this.capacidad = capacidad;
     }
 
     /**
+     * Obtiene el tipo de mesa.
      *
-     * @return
+     * @return Tipo de mesa.
      */
     public TipoMesa getTipoMesa() {
         return tipoMesa;
     }
 
     /**
+     * Establece el tipo de mesa.
      *
-     * @param tipoMesa tipoMesa
+     * @param tipoMesa Nuevo tipo de mesa.
      */
     public void setTipoMesa(TipoMesa tipoMesa) {
         this.tipoMesa = tipoMesa;
     }
 
     /**
+     * Obtiene el restaurante al que pertenece la mesa.
      *
-     * @return restaurante
+     * @return Restaurante asociado a la mesa.
      */
     public Restaurante getRestaurante() {
         return restaurante;
     }
 
     /**
+     * Asigna el restaurante al que pertenece la mesa.
      *
-     * @param restaurante
+     * @param restaurante Restaurante asociado a la mesa.
      */
     public void setRestaurante(Restaurante restaurante) {
         this.restaurante = restaurante;
     }
 
     /**
+     * Calcula el hash code de la mesa usando su ID.
      *
-     * @return hash
+     * @return Hash code de la mesa.
      */
     @Override
     public int hashCode() {
@@ -246,37 +269,35 @@ public class Mesa implements Serializable {
     }
 
     /**
+     * Compara si esta mesa es igual a otro objeto.
      *
-     * @param object
-     * @return boolean
+     * @param object Objeto a comparar.
+     * @return true si ambos objetos son iguales, false en caso contrario.
      */
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Mesa)) {
             return false;
         }
         Mesa other = (Mesa) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return (this.id != null || other.id == null) && (this.id == null || this.id.equals(other.id));
     }
 
     /**
+     * Genera una representación en cadena de texto de la mesa.
      *
-     * @return String
+     * @return Cadena de texto que representa la mesa.
      */
     @Override
     public String toString() {
-        return "Mesa{" + "id=" + id +
-                ", codigoMesa=" + codigoMesa +
-                ", ubicacion=" + ubicacion +
-                ", capacidad=" + capacidad +
-                ", tipoMesa=" + tipoMesa +
-                ", restaurante=" + restaurante +
-                ", HorarioMesaList=" + HorarioMesaList +
-                '}';
+        return "Mesa{" + "id=" + id
+                + ", codigoMesa=" + codigoMesa
+                + ", ubicacion=" + ubicacion
+                + ", capacidad=" + capacidad
+                + ", tipoMesa=" + tipoMesa
+                + ", restaurante=" + restaurante
+                + ", HorarioMesaList=" + HorarioMesaList
+                + '}';
     }
 
 }

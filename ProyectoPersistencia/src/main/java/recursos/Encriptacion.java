@@ -21,12 +21,19 @@ import javax.xml.bind.DatatypeConverter;
  *
  * Se recomienda no utilizar claves de cifrado codificadas directamente en el
  * código en aplicaciones de producción, y considerar métodos más seguros para
- * la gestión de claves.
- * Contribuciones de Paulina Rodríguez Rodríguez Rayos.
- * 
+ * la gestión de claves. Contribuciones de Paulina Rodríguez Rodríguez Rayos.
+ *
  * @author Cristopher Alberto Elizalde Andrade - 240005
  */
 public class Encriptacion {
+
+    /**
+     * Constructor por defecto de la clase Encriptacion. Este constructor
+     * permite la creación de instancias de Encriptacion.
+     */
+    public Encriptacion() {
+        // Constructor por defecto
+    }
 
     /**
      * Objeto SecureRandom utilizado para generar un vector de inicialización

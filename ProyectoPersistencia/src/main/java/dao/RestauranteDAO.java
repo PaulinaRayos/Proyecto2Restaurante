@@ -133,7 +133,7 @@ public class RestauranteDAO implements IRestauranteDAO {
      * apertura
      * @param diaSemana el dia de la semana
      * @return la hora de apertura.
-     * @throws PersistenciaException
+     * @throws PersistenciaException Si ocurre un error durante la operación.
      */
     @Override
     public Date obtenerHoraApertura(Long idRestaurante, String diaSemana) throws PersistenciaException {
@@ -158,7 +158,7 @@ public class RestauranteDAO implements IRestauranteDAO {
      * cierre
      * @param diaSemana el dia de la semana
      * @return la hora de cirre.
-     * @throws PersistenciaException
+     * @throws PersistenciaException Si ocurre un error durante la operación.
      */
     @Override
     public Date obtenerHoraCierre(Long idRestaurante, String diaSemana) throws PersistenciaException {
