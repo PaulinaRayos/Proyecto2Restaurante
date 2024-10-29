@@ -24,9 +24,9 @@ import javax.persistence.TemporalType;
 /**
  * Clase que representa la entidad Horario en la base de datos. Mapea la tabla
  * 'horario' y define los atributos correspondientes, así como las relaciones
- * con otras entidades, como Restaurante y HorarioMesa.
- * Contribuciones de Paulina Rodríguez Rodríguez Rayos.
- * 
+ * con otras entidades, como Restaurante y HorarioMesa. Contribuciones de
+ * Paulina Rodríguez Rodríguez Rayos.
+ *
  * @author Cristopher Alberto Elizalde Andrade - 240005
  */
 @Entity
@@ -34,34 +34,46 @@ import javax.persistence.TemporalType;
 public class Horario implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    /**
+     * Identificador único del horario.
+     */
     @Id
     @Column(name = "id_horario")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "dia_semana")
+    /**
+     * Día de la semana para el horario (por ejemplo, Lunes, Martes, etc.).
+     */
+    @Column(name = "dia_semana", length = 30)
     private String diaSemana;
 
+    /**
+     * Hora de apertura del establecimiento.
+     */
     @Column(name = "hora_apertura")
     @Temporal(TemporalType.TIMESTAMP)
     private Date horaApertura;
 
+    /**
+     * Hora de cierre del establecimiento.
+     */
     @Column(name = "hora_cierre")
     @Temporal(TemporalType.TIMESTAMP)
     private Date horaCierre;
 
     /**
-     * Relación muchos a uno con la entidad Restaurante.
-     * Un horario está asociado a un único restaurante.
+     * Relación muchos a uno con la entidad Restaurante. Un horario está
+     * asociado a un único restaurante.
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_restaurante", nullable = false)
     private Restaurante restaurante;
 
     /**
-     * Relación uno a muchos con la entidad HorarioMesa.
-     * Un horario puede tener múltiples asignaciones de mesas.
-     */ 
+     * Relación uno a muchos con la entidad HorarioMesa. Un horario puede tener
+     * múltiples asignaciones de mesas.
+     */
     @OneToMany(mappedBy = "horario", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private List<HorarioMesa> horarioMesaList;
 
@@ -117,106 +129,118 @@ public class Horario implements Serializable {
     }
 
     // Getters y Setters
-
     /**
+     * Obtiene el ID del horario.
      *
-     * @return
+     * @return ID del horario.
      */
     public Long getId() {
         return id;
     }
 
     /**
+     * Establece el ID del horario.
      *
-     * @param id
+     * @param id Nuevo ID del horario.
      */
     public void setId(Long id) {
         this.id = id;
     }
 
     /**
+     * Obtiene el día de la semana asociado a este horario.
      *
-     * @return
+     * @return Día de la semana.
      */
     public String getDiaSemana() {
         return diaSemana;
     }
 
     /**
+     * Establece el día de la semana para este horario.
      *
-     * @param diaSemana
+     * @param diaSemana Nuevo día de la semana.
      */
     public void setDiaSemana(String diaSemana) {
         this.diaSemana = diaSemana;
     }
 
     /**
+     * Obtiene la hora de apertura del horario.
      *
-     * @return
+     * @return Hora de apertura.
      */
     public Date getHoraApertura() {
         return horaApertura;
     }
 
     /**
+     * Establece la hora de apertura del horario.
      *
-     * @param horaApertura
+     * @param horaApertura Nueva hora de apertura.
      */
     public void setHoraApartura(Date horaApertura) {
         this.horaApertura = horaApertura;
     }
 
     /**
+     * Obtiene la hora de cierre del horario.
      *
-     * @return
+     * @return Hora de cierre.
      */
     public Date getHoraCierre() {
         return horaCierre;
     }
 
     /**
+     * Establece la hora de cierre del horario.
      *
-     * @param horaCierre
+     * @param horaCierre Nueva hora de cierre.
      */
     public void setHoraCierre(Date horaCierre) {
         this.horaCierre = horaCierre;
     }
 
     /**
+     * Obtiene el restaurante asociado a este horario.
      *
-     * @return
+     * @return Restaurante asociado.
      */
     public Restaurante getRestaurante() {
         return restaurante;
     }
 
     /**
+     * Establece el restaurante asociado a este horario.
      *
-     * @param restaurante
+     * @param restaurante Nuevo restaurante asociado.
      */
     public void setRestaurante(Restaurante restaurante) {
         this.restaurante = restaurante;
     }
 
     /**
+     * Obtiene la lista de horarios de mesas asociadas a este horario.
      *
-     * @return
+     * @return Lista de horarios de mesas.
      */
     public List<HorarioMesa> getHorarioMesaList() {
         return horarioMesaList;
     }
 
     /**
+     * Establece la lista de horarios de mesas asociadas a este horario.
      *
-     * @param horarioMesaList
+     * @param horarioMesaList Nueva lista de horarios de mesas.
      */
     public void setHorarioMesaList(List<HorarioMesa> horarioMesaList) {
         this.horarioMesaList = horarioMesaList;
     }
 
     /**
+     * Genera un código hash para el objeto Horario basado en su ID.
      *
-     * @return
+     * @return Código hash del horario.
      */
     @Override
     public int hashCode() {
@@ -226,13 +250,15 @@ public class Horario implements Serializable {
     }
 
     /**
+     * Compara si dos objetos Horario son iguales, basándose en el ID.
      *
-     * @param object
-     * @return
+     * @param object Objeto a comparar.
+     * @return {@code true} si los objetos son iguales, {@code false} en caso
+     * contrario.
      */
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
+        // Advertencia: Este método no funciona si los campos de ID no están establecidos.
         if (!(object instanceof Horario)) {
             return false;
         }
@@ -244,12 +270,14 @@ public class Horario implements Serializable {
     }
 
     /**
+     * Genera una representación en cadena de texto del objeto Horario.
      *
-     * @return
+     * @return Cadena de texto que representa al horario.
      */
     @Override
     public String toString() {
-        return "Horario{" + "id=" + id + ", diaSemana=" + diaSemana + ", horaApertura=" + horaApertura + ", horaCierre=" + horaCierre + ", restaurante=" + restaurante + ", horarioMesaList=" + horarioMesaList + '}';
+        return "Horario{" + "id=" + id + ", diaSemana=" + diaSemana + ", horaApertura=" + horaApertura
+                + ", horaCierre=" + horaCierre + ", restaurante=" + restaurante + ", horarioMesaList=" + horarioMesaList + '}';
     }
 
 }

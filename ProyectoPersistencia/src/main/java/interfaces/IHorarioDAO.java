@@ -23,8 +23,7 @@ public interface IHorarioDAO {
      * Busca un horario por su ID.
      *
      * @param id El ID del horario a buscar.
-     * @return El objeto Horario correspondiente al ID proporcionado, o null si
-     * no se encuentra.
+     * @return El objeto Horario correspondiente al ID proporcionado.
      */
     Horario HorarioPorId(Long id);
 
@@ -65,7 +64,7 @@ public interface IHorarioDAO {
      *
      * @param idRestaurante el id del restaurante
      * @return la lista de ids de los horarios
-     * @throws PersistenciaException
+     * @throws PersistenciaException Si el horario es nulo o no se obtuvo.
      */
     Horario obtenerHorarioPorIdRestaurante(Long idRestaurante) throws PersistenciaException;
 
@@ -93,7 +92,7 @@ public interface IHorarioDAO {
      *
      * @param idRestaurante el id del restaurante
      * @return la lista de ids de los horarios
-     * @throws PersistenciaException
+     * @throws PersistenciaException Si el horario es nulo o no se obtuvo
      */
     List<Long> obtenerIdsHorariosPorIdRestaurante(Long idRestaurante) throws PersistenciaException;
 

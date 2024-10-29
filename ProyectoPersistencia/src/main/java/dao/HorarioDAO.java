@@ -74,7 +74,7 @@ public class HorarioDAO implements IHorarioDAO {
      *
      * @param idRestaurante el id del restaurante
      * @return la lista de ids de los horarios
-     * @throws PersistenciaException
+     * @throws PersistenciaException Si el horario es nulo o no se obtuvo
      */
     @Override
     public List<Long> obtenerIdsHorariosPorIdRestaurante(Long idRestaurante) throws PersistenciaException {
@@ -200,9 +200,9 @@ public class HorarioDAO implements IHorarioDAO {
     /**
      * Obtiene un horario por medio del id del restaurante.
      *
-     * @param idRestaurante
+     * @param idRestaurante El id del restaurante para encontrar el horario.
      * @return Un objeto horario con sus atributos.
-     * @throws PersistenciaException
+     * @throws PersistenciaException Si el horario es nulo o no se obtuvo
      */
     @Override
     public Horario obtenerHorarioPorIdRestaurante(Long idRestaurante) throws PersistenciaException {

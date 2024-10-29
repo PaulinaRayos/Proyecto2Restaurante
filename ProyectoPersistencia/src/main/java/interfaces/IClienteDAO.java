@@ -94,7 +94,8 @@ public interface IClienteDAO {
      * Obtiene los telefonos desencriptados de los clientes
      *
      * @return La lista de los telefonos desencriptados
-     * @throws PersistenciaException
+     * @throws PersistenciaException Si ocurre un error al obtener los telefonos
+     * desencriptados
      */
     List<String> obtenerTelefonosDesencriptados() throws PersistenciaException;
 
@@ -102,7 +103,8 @@ public interface IClienteDAO {
      * Obtiene todos los clientes con su telefono desencriptado
      *
      * @return La lista de los clientes con sus telefonos desencriptados
-     * @throws PersistenciaException
+     * @throws PersistenciaException Si ocurre un error al obtener todos los
+     * clientes con su telefono desencriptado
      */
     List<ClienteDTO> obtenerTodosLosClientesConTelefonoDesencriptado() throws PersistenciaException;
 

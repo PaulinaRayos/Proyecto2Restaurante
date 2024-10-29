@@ -20,9 +20,9 @@ import javax.persistence.Table;
 /**
  * Clase que representa la entidad Restaurante en la base de datos. Mapea la
  * tabla 'restaurante' y define los atributos correspondientes, así como las
- * relaciones con otras entidades.
- * Contribuciones de Paulina Rodríguez Rodríguez Rayos.
- * 
+ * relaciones con otras entidades. Contribuciones de Paulina Rodríguez Rodríguez
+ * Rayos.
+ *
  * @author Cristopher Alberto Elizalde Andrade - 240005
  */
 @Entity
@@ -30,15 +30,24 @@ import javax.persistence.Table;
 public class Restaurante implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    /**
+     * Identificador único del restaurante.
+     */
     @Id
     @Column(name = "id_restaurante")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "direccion")
+    /**
+     * Dirección del restaurante.
+     */
+    @Column(name = "direccion", length = 50, unique = true)
     private String direccion;
 
-    @Column(name = "ciudad")
+    /**
+     * Ciudad donde se ubica el restaurante.
+     */
+    @Column(name = "ciudad", length = 50)
     private String ciudad;
 
     /**
@@ -91,90 +100,101 @@ public class Restaurante implements Serializable {
     }
 
     //Getters & Setters
-
     /**
+     * Devuelve el ID del restaurante.
      *
-     * @return
+     * @return ID del restaurante.
      */
     public Long getId() {
         return id;
     }
 
     /**
+     * Establece el ID del restaurante.
      *
-     * @param id
+     * @param id ID del restaurante.
      */
     public void setId(Long id) {
         this.id = id;
     }
 
     /**
+     * Devuelve la lista de mesas del restaurante.
      *
-     * @return
+     * @return Lista de mesas.
      */
     public List<Mesa> getMesas() {
         return mesas;
     }
 
     /**
+     * Establece la lista de mesas del restaurante.
      *
-     * @param mesas
+     * @param mesas Lista de mesas.
      */
     public void setMesas(List<Mesa> mesas) {
         this.mesas = mesas;
     }
 
     /**
+     * Devuelve la lista de horarios del restaurante.
      *
-     * @return
+     * @return Lista de horarios.
      */
     public List<Horario> getHorarios() {
         return horarios;
     }
 
     /**
+     * Establece la lista de horarios del restaurante.
      *
-     * @param horarios
+     * @param horarios Lista de horarios.
      */
     public void setHorarios(List<Horario> horarios) {
         this.horarios = horarios;
     }
 
     /**
+     * Devuelve la dirección del restaurante.
      *
-     * @return
+     * @return Dirección del restaurante.
      */
     public String getDirrecion() {
         return direccion;
     }
 
     /**
+     * Establece la dirección del restaurante.
      *
-     * @param dirrecion
+     * @param dirrecion Dirección del restaurante.
      */
     public void setDirrecion(String dirrecion) {
         this.direccion = dirrecion;
     }
 
     /**
+     * Devuelve la ciudad del restaurante.
      *
-     * @return
+     * @return Ciudad del restaurante.
      */
     public String getCiudad() {
         return ciudad;
     }
 
     /**
+     * Establece la ciudad del restaurante.
      *
-     * @param ciudad
+     * @param ciudad Ciudad del restaurante.
      */
     public void setCiudad(String ciudad) {
         this.ciudad = ciudad;
     }
 
+    // Métodos de sobreescritura de Object
     /**
+     * Calcula y devuelve el código hash para el restaurante, basado en su ID.
      *
-     * @return
+     * @return Código hash del restaurante.
      */
     @Override
     public int hashCode() {
@@ -184,13 +204,14 @@ public class Restaurante implements Serializable {
     }
 
     /**
+     * Compara este restaurante con otro objeto para verificar igualdad,
+     * basándose en el campo ID.
      *
-     * @param object
-     * @return
+     * @param object Objeto a comparar.
+     * @return Verdadero si los objetos son iguales, falso en caso contrario.
      */
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Restaurante)) {
             return false;
         }
@@ -202,15 +223,16 @@ public class Restaurante implements Serializable {
     }
 
     /**
+     * Devuelve una representación en cadena de la clase `Restaurante`.
      *
-     * @return
+     * @return Cadena de texto con los detalles del restaurante.
      */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Restaurante{");
         sb.append("id=").append(id);
-        sb.append(", dirrecion=").append(direccion);
+        sb.append(", direccion=").append(direccion);
         sb.append(", ciudad=").append(ciudad);
         sb.append(", mesas=").append(mesas);
         sb.append(", horarios=").append(horarios);

@@ -16,10 +16,18 @@ import javax.persistence.Persistence;
  * interactuar con la base de datos utilizando JPA (Java Persistence API).
  * Utiliza una unidad de persistencia definida en el archivo de configuración
  * Contribuciones de Paulina Rodríguez Rodríguez Rayos.
- * 
+ *
  * @author Cristopher Alberto Elizalde Andrade - 240005
  */
 public class Conexion implements IConexion {
+
+    /**
+     * Constructor por defecto de la clase Conexion. Este constructor se utiliza
+     * para crear instancias de Conexion.
+     */
+    public Conexion() {
+        // Constructor por defecto
+    }
 
     /**
      * Crea una conexión con el gestor de persistencia.
