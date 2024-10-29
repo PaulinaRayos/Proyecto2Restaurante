@@ -121,10 +121,8 @@ public class AgregaMesasBO implements IAgregaMesasBO {
                     // Crear MesaDTO para convertirlo después en entidad Mesa
                     MesaDTO mesaDTO = new MesaDTO();
 
-                    int capacidadMesa = ThreadLocalRandom.current().nextInt(capacidadMin, capacidadMax + 1);
-
-                    mesaDTO.setCapacidad(0);
-                    mesaDTO.setCodigoMesa(generarCodigoMesa(ubicacion, capacidadMesa, numeroUnico));
+                    mesaDTO.setCapacidad(capacidadMax);
+                    mesaDTO.setCodigoMesa(generarCodigoMesa(ubicacion, capacidadMax, numeroUnico));
                     mesaDTO.setUbicacion(ubicacion);
                     mesaDTO.setIdTipoMesa(tipoMesa.getId()); // Suponiendo que en el DTO el tipo es String
                     mesaDTO.setIdRestaurante(restauranteDTO.getId());
