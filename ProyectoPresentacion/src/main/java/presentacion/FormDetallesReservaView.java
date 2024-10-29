@@ -308,7 +308,7 @@ public class FormDetallesReservaView extends javax.swing.JFrame {
             lblFechaHora.setText(reserva.getFechaHora().toString());
             lblUbicacion.setText(mesa.getUbicacion());
             lblNumMesa.setText(mesa.getCodigoMesa());
-            lblCantidad.setText(mesa.getCapacidad() + "");
+            lblCantidad.setText(reserva.getNumeroPersonas() + "");
         } catch (NegocioException ex) {
             Logger.getLogger(FormDetallesReservaView.class.getName()).log(Level.SEVERE, null, ex);
         }

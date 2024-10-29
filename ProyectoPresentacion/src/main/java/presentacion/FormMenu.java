@@ -277,13 +277,13 @@ public class FormMenu extends javax.swing.JFrame {
 
         tblMesas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "Mesa", "Ubicación", "Capacidad"
+                "Mesa", "Ubicación", "Capacidad", "Costo"
             }
         ));
         jScrollPane1.setViewportView(tblMesas);
@@ -737,33 +737,7 @@ public class FormMenu extends javax.swing.JFrame {
         }
     }
 
-    private void aplicarFiltros() {
-//        try {
-//            // Obtener los valores seleccionados en los filtros
-//            String ubicacionSeleccionada = (String) cbUbicacion.getSelectedItem();
-//            int capacidadSeleccionada = Integer.parseInt((String) cbCantidad.getSelectedItem());
-//            Date fechaSeleccionada = (Date) jFecha.getDate();
-//
-//            // Verificar que se ha seleccionado una fecha
-//            if (fechaSeleccionada == null) {
-//                return; // O manejarlo de otra manera si es necesario
-//            }
-//
-//            // Obtener el día de la semana de la fecha seleccionada
-//            Calendar calendarFecha = Calendar.getInstance();
-//            calendarFecha.setTime(fechaSeleccionada);
-//            String diaSemana = convertirDiaSemana(calendarFecha.get(Calendar.DAY_OF_WEEK));
-//
-//            // Obtener las mesas filtradas
-//            List<MesaDTO> mesasFiltradas = mesaBO.obtenerMesasFiltradas(ubicacionSeleccionada, capacidadSeleccionada, diaSemana);
-//
-//            // Actualizar la tabla con las mesas filtradas
-//            actualizarTablaMesas(mesasFiltradas);
-//        } catch (Exception e) {
-//            JOptionPane.showMessageDialog(this, "Error al aplicar los filtros: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-//        }
-    }
-
+    
     private void xd() {
         try {
             // Obtener los datos del cliente y de la mesa
@@ -842,11 +816,26 @@ public class FormMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_jFechaMouseClicked
 
     private void btnConsultarMesasDisponiblesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarMesasDisponiblesActionPerformed
+
         try {
+            // Verificar si se ha seleccionado un restaurante
+            if (idRestauranteSeleccionado == null) {
+                JOptionPane.showMessageDialog(this, "Por favor, seleccione un restaurante.", "Error", JOptionPane.WARNING_MESSAGE);
+                return; // Salir del método si no hay restaurante seleccionado
+            }
+
+            // Verificar si jFecha y jHora están seleccionados
+            if (jFecha.getDate() == null) {
+                JOptionPane.showMessageDialog(this, "Por favor, seleccione una fecha.", "Error", JOptionPane.WARNING_MESSAGE);
+                return; // Salir del método si no hay fecha
+            }
+
+            // Si todos los campos son válidos, cargar las mesas
             cargarMesasEnTabla();
         } catch (PersistenciaException ex) {
             Logger.getLogger(FormMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }//GEN-LAST:event_btnConsultarMesasDisponiblesActionPerformed
 
 
@@ -957,89 +946,7 @@ public class FormMenu extends javax.swing.JFrame {
         }
     }
 
-    /*private void cargarMesasEnTabla() {
-        try {
-            String ubicacionSeleccionada = cbUbicacion.getSelectedItem().toString();
-            String capacidadSeleccionada = cbCantidad.getSelectedItem().toString();
-            Date fechaSeleccionada = (Date) jFecha.getDate(); // Asumiendo que jFecha es un JDatePicker
-
-            List<MesaDTO> mesas = mesaBO.obtenerTodasLasMesas();
-
-            // Obtén los horarios asignados al restaurante
-            List<HorarioDTO> horariosRestaurante = horariobo.obtenerDiasAsignadosParaRestaurante(idRestauranteSeleccionado);
-
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-
-            // Crear un modelo de tabla
-            DefaultTableModel modelo = new DefaultTableModel();
-            modelo.addColumn("ID");
-            modelo.addColumn("Mesa");
-            modelo.addColumn("Día Semana");
-            modelo.addColumn("Ubicación");
-            modelo.addColumn("Capacidad");
-            modelo.addColumn("Horario Apertura");
-            modelo.addColumn("Horario Cierre");
-
-            // Verificar que la fecha seleccionada no sea nula
-            if (fechaSeleccionada != null) {
-                // Obtener el día de la semana de la fecha seleccionada
-                Calendar calendarFecha = Calendar.getInstance();
-                calendarFecha.setTime(fechaSeleccionada);
-                String diaSemana = convertirDiaSemana(calendarFecha.get(Calendar.DAY_OF_WEEK));
-
-                // Filtrar las mesas
-                for (MesaDTO mesa : mesas) {
-                    boolean coincideRestaurante = mesa.getIdRestaurante().equals(idRestauranteSeleccionado);
-                    boolean coincideUbicacion = mesa.getUbicacion().equals(ubicacionSeleccionada);
-                    boolean coincideCapacidad = mesa.getCapacidad() <= Integer.parseInt(capacidadSeleccionada);
-
-                    // Si coincide la ubicación, capacidad y restaurante, se agrega a la tabla
-                    if (coincideRestaurante && coincideUbicacion && coincideCapacidad) {
-                        // Iterar sobre los horarios asignados al restaurante y crear una fila para cada día
-                        for (HorarioDTO horario : horariosRestaurante) {
-                            if (horario.getDiaSemana().equals(diaSemana)) { // Filtrar por día de la semana
-                                Object[] fila = new Object[7];
-
-                                fila[0] = mesa.getIdMesa();
-                                fila[1] = mesa.getCodigoMesa();
-                                fila[2] = horario.getDiaSemana();
-                                fila[3] = mesa.getUbicacion();
-                                fila[4] = mesa.getCapacidad();
-                                fila[5] = sdf.format(horario.getHoraApertura());
-                                fila[6] = sdf.format(horario.getHoraCierre());
-
-                                modelo.addRow(fila);
-                            }
-                        }
-                    }
-                }
-            }
-
-            // Crear la JTable con el modelo
-            tablaMesas = new JTable(modelo);
-            tablaMesas.setFillsViewportHeight(true);
-
-            // Agregar un listener para la selección de filas
-            tablaMesas.getSelectionModel().addListSelectionListener(event -> {
-                if (!event.getValueIsAdjusting()) {
-                    int selectedRow = tablaMesas.getSelectedRow();
-                    if (selectedRow != -1) {
-                        Long idMesa = (Long) tablaMesas.getValueAt(selectedRow, 0);
-                        guardarIdMesaSeleccionada(idMesa);
-                    }
-                }
-            });
-
-            // Agregar la JTable al JScrollPane
-            jScrollPane1.setViewportView(tablaMesas);
-        } catch (NegocioException ex) {
-            Logger.getLogger(FormMenu.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    private void guardarIdMesaSeleccionada(Long idMesa) {
-        this.idMesaSeleccionada = idMesa;
-    }*/
+    
     // Método para cargar los clientes en una tabla.
     private void cargarClientesEnTabla() {
         try {
@@ -1210,9 +1117,11 @@ public class FormMenu extends javax.swing.JFrame {
 
             // Crear un modelo de tabla
             DefaultTableModel modelo = new DefaultTableModel();
+            modelo.addColumn("ID Mesa");
             modelo.addColumn("Mesa");
             modelo.addColumn("Ubicación");
             modelo.addColumn("Capacidad");
+            modelo.addColumn("Costo");
 
             // Llenar el modelo con los datos de las mesas filtradas
             List<MesaDTO> mesasFiltradas = aplicaFiltros(mesas);
@@ -1234,11 +1143,13 @@ public class FormMenu extends javax.swing.JFrame {
                     }
                     // Iterar sobre los horarios asignados al restaurante y crear una fila para cada día
 
-                    Object[] fila = new Object[4];
+                    Object[] fila = new Object[5];
 
-                    fila[0] = mesa.getCodigoMesa();
-                    fila[1] = mesa.getUbicacion();
-                    fila[2] = mesa.getCapacidad();
+                    fila[0] = mesa.getIdMesa();
+                    fila[1] = mesa.getCodigoMesa();
+                    fila[2] = mesa.getUbicacion();
+                    fila[3] = mesa.getCapacidad();
+                    fila[4] = mesaBO.obtenerCostoPorIdMesa(mesa.getIdMesa());
 
                     modelo.addRow(fila);
 
@@ -1251,6 +1162,10 @@ public class FormMenu extends javax.swing.JFrame {
             tblMesas.setModel(modelo);
             tblMesas.setFillsViewportHeight(true);
             jScrollPane1.setViewportView(tblMesas);
+
+            tblMesas.getColumnModel().getColumn(0).setMinWidth(0);
+            tblMesas.getColumnModel().getColumn(0).setMaxWidth(0);
+            tblMesas.getColumnModel().getColumn(0).setPreferredWidth(0);
 
             // Agregar un listener para la selección de filas
             tblMesas.getSelectionModel().addListSelectionListener(event -> {

@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import negocio.HorarioBO;
 import negocio.HorarioMesaBO;
@@ -103,8 +104,6 @@ public class FormMesas extends javax.swing.JFrame {
         bTiposMesa = new javax.swing.JButton();
         jLabel10 = new javax.swing.JLabel();
         cbRestaurante = new javax.swing.JComboBox<>();
-        cbDia = new javax.swing.JComboBox<>();
-        jLabel15 = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblMesas = new javax.swing.JTable();
@@ -122,7 +121,7 @@ public class FormMesas extends javax.swing.JFrame {
         jPanel4.setBackground(new java.awt.Color(204, 204, 204));
 
         jLabel9.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
-        jLabel9.setText("Ubicación:");
+        jLabel9.setText("Ubicación mesa:");
         jLabel9.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         cbUbicacion.setFont(new java.awt.Font("Times New Roman", 3, 14)); // NOI18N
@@ -191,13 +190,6 @@ public class FormMesas extends javax.swing.JFrame {
             }
         });
 
-        cbDia.setFont(new java.awt.Font("Times New Roman", 3, 14)); // NOI18N
-        cbDia.setBorder(null);
-
-        jLabel15.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
-        jLabel15.setText("Dia de la semana:");
-        jLabel15.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -211,43 +203,37 @@ public class FormMesas extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                 .addContainerGap(63, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(190, 190, 190)
-                        .addComponent(jLabel10))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jLabel12)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtPequeña, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(29, 29, 29)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel11)
+                            .addComponent(cbUbicacion, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbRestaurante, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(165, 165, 165))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel11)
+                        .addGap(226, 226, 226))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(bCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(jLabel12)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtPequeña, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(29, 29, 29)
                                 .addComponent(jLabel13)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txtMediana, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel14)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txtGrande, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(txtMediana, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel14)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtGrande, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(20, 20, 20))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                                .addComponent(bCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(167, 167, 167))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(cbUbicacion, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cbDia, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cbRestaurante, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(145, 145, 145))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                                .addComponent(jLabel9)
-                                .addGap(222, 222, 222))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                                .addComponent(jLabel15)
-                                .addGap(206, 206, 206)))))
-                .addGap(20, 20, 20))
+                        .addComponent(jLabel10)
+                        .addGap(247, 247, 247))))
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(238, 238, 238)
+                .addComponent(jLabel9)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -260,27 +246,23 @@ public class FormMesas extends javax.swing.JFrame {
                 .addComponent(jLabel10)
                 .addGap(12, 12, 12)
                 .addComponent(cbRestaurante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(24, 24, 24)
-                .addComponent(jLabel15)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cbDia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addGap(46, 46, 46)
                 .addComponent(jLabel9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cbUbicacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel11)
                 .addGap(18, 18, 18)
+                .addComponent(cbUbicacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30)
+                .addComponent(jLabel11)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12)
-                    .addComponent(jLabel13)
-                    .addComponent(jLabel14)
                     .addComponent(txtPequeña, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel13)
                     .addComponent(txtMediana, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel14)
                     .addComponent(txtGrande, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(26, 26, 26)
                 .addComponent(bCrear)
-                .addContainerGap())
+                .addGap(19, 19, 19))
         );
 
         jPanel6.setBackground(new java.awt.Color(204, 204, 204));
@@ -448,13 +430,12 @@ public class FormMesas extends javax.swing.JFrame {
                 }
             }
 
-            // Verificar si se ha seleccionado un día
+            /*// Verificar si se ha seleccionado un día
             String diaSeleccionado = (String) cbDia.getSelectedItem();
             if (diaSeleccionado == null || diaSeleccionado.isEmpty() || diaSeleccionado.equals("Seleccionar día")) {
                 JOptionPane.showMessageDialog(this, "Por favor, seleccione un día de la semana.", "Error", JOptionPane.ERROR_MESSAGE);
                 return; // Salir del método si no hay día seleccionado
-            }
-
+            }*/
             // Obtener la ubicación seleccionada
             String ubicacion = (String) cbUbicacion.getSelectedItem();
 
@@ -521,6 +502,12 @@ public class FormMesas extends javax.swing.JFrame {
 
             // Mostrar mensaje de éxito
             JOptionPane.showMessageDialog(this, "Mesas agregadas exitosamente.");
+            try {
+                cargarMesasEnTabla();
+                limpiarCuadrosTexto();
+            } catch (PersistenciaException ex) {
+                Logger.getLogger(FormMesas.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } catch (NegocioException e) {
             // Manejar excepciones y mostrar mensaje de error
             JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -558,7 +545,6 @@ public class FormMesas extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bCrear;
     private javax.swing.JButton bTiposMesa;
-    private javax.swing.JComboBox<String> cbDia;
     private javax.swing.JComboBox<String> cbRestaurante;
     private javax.swing.JComboBox<String> cbUbicacion;
     private javax.swing.JLabel jLabel10;
@@ -566,7 +552,6 @@ public class FormMesas extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel9;
@@ -661,14 +646,14 @@ private void SetImageLabel(JLabel labelname, String root) {
     private void cargarDia() {
         List<HorarioDTO> horarios = horariobo.obtenerDiasAsignadosParaRestaurante(idRestauranteSeleccionado);
 
-// Limpiar el JComboBox antes de llenarlo
+        /*// Limpiar el JComboBox antes de llenarlo
         cbDia.removeAllItems();
         cbDia.addItem("Selecciona el día");
 
 // Llenar el JComboBox con los días asignados
         for (HorarioDTO horario : horarios) {
             cbDia.addItem(horario.getDiaSemana());
-        }
+        }*/
     }
 
     private void cargarMesasEnTabla() throws PersistenciaException {
@@ -687,9 +672,9 @@ private void SetImageLabel(JLabel labelname, String root) {
             // Crear un modelo de tabla
             DefaultTableModel modelo = new DefaultTableModel();
             modelo.addColumn("Mesa");
-            modelo.addColumn("Dia semana");
             modelo.addColumn("Ubicación");
             modelo.addColumn("Capacidad");
+            modelo.addColumn("Costo");
 
             // Llenar el modelo con los datos de las mesas filtradas
             for (MesaDTO mesa : mesas) {
@@ -713,9 +698,10 @@ private void SetImageLabel(JLabel labelname, String root) {
                     Object[] fila = new Object[4];
 
                     fila[0] = mesa.getCodigoMesa();
-                    fila[1] = diasSemana.toString();
-                    fila[2] = mesa.getUbicacion();
-                    fila[3] = mesa.getCapacidad();
+                    fila[1] = mesa.getUbicacion();
+                    fila[2] = mesa.getCapacidad();
+                    fila[3] = mesaBO.obtenerCostoPorIdMesa(mesa.getIdMesa());
+                    
 
                     modelo.addRow(fila);
 
@@ -751,4 +737,9 @@ private void SetImageLabel(JLabel labelname, String root) {
         this.idMesaSeleccionada = idMesa;
     }
 
+    private void limpiarCuadrosTexto() {
+        txtPequeña.setText("");
+        txtMediana.setText("");
+        txtGrande.setText("");
+    }
 }
